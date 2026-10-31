@@ -1,0 +1,99 @@
+/*
+From: eeibht@eeiud.ericsson.se (Brendan Hassett)
+--------------------------------------------------------------------
+| Brendan Hassett      Tel +353-902-74601 ext 1109    ECN 830-1109 |
+| eeibht@eeiud.ericsson.se   EEI.EEIBHT@memo.ericsson.se     ~~~   |
+| Ericsson Systems Expertise Ltd,  Athlone,  Ireland,  EU. ( o o ) |
+---------------------------------------------------------ooO-(_)-Ooo
+#include <disclaimer.h>
+*/
+
+/*
+  Based on an original program by Ian Phillipps,
+  Cambridge Consultants Ltd., Cambridge, England
+*/
+
+#include <stdio.h>
+#define __ main
+
+__(t,_,a)
+char
+*
+a;
+{
+	return!
+
+0<t?
+t<3?
+
+__(-79,-13,a+
+__(-87,1-_,
+__(-86, 0, a+1 )
+
+
++a)):
+
+1,
+t<_?
+__(t+1, _, a )
+:3,
+
+__ ( -94, -27+t, a )
+&&t == 2 ?_
+<13 ?
+
+__ ( 2, _+1, "%s %d %d\n" )
+
+:9:16:
+t<0?
+t<-72?
+__( _, t,
+"k,#n'+,#'/\
+*{}w+/\
+w#cdnr/\
++,{}r/\
+*de}+,/\
+*{*+,/\
+w{%+,/\
+w#q#n+,/\
+#{l,+,/\
+n{n+,/\
++#n+,/#;\
+#q#n+,/\
++k#;*+,/\
+'-el' ))# }#r]'K:'K n l#}'w {r'+d'K#!/\
++#;;'+,#K'{+w' '*# +e}#]!/\
+w :'{+w'nd+'we))d}+#r]!/\
+c, nl#'+,#'rdceK#n+ +{dn]!/\
+-; K#'{+'dn'+,#', }rk }#]!/\
+*{nr' 'k :' }denr'{+]!/\
+w :'+,#:'n##r' n'e)l} r#]!/\
+}#{nw+ ;;'+,#'wd*+k }#]!/\
+ w['*d}' 'reK)]!/\
+ew#' 'r#-ell#}]!/\
++}:'+d'}#)}drec#'{+]!/\
+ w['+,#K',dk'+,#:'r{r'{+]!/\
+w##'{*'{+', ))#nw' l {n(!!/")
+:
+t<-50?
+_==*a ?
+putchar(a[31]):
+
+__(-65,_,a+1)
+:
+__((*a == '/') + t, _, a + 1 )
+:
+
+0<t?
+
+__ ( 2, 2 , "%s")
+:*a=='/'||
+
+__(0,
+
+__(-61,*a,
+"!ek;dc i@bK'(q)-[w]*\
+%n+r3#l,{}:\nuwloca-O\
+;m .vpbks,fxntdCeghiry")
+
+,a+1);}

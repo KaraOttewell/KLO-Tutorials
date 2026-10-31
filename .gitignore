@@ -1,0 +1,9 @@
+# Visual Studio: build output, intermediate files and per-user state.
+# Rebuilding the solution recreates all of these.
+bin/
+obj/
+.vs/
+*.user
+
+# Written by the fileio example program when it runs
+MYDATA.DAT
