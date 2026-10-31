@@ -16,8 +16,8 @@ Purpose:
     tells VMS users to type) converts the line endings for the system it is
     unpacked on.
 
-    Note: index.html also offers a detached PGP signature,
-    KarasCTutorial.zip.sig. Rebuilding the zip invalidates any old signature,
+    Note: index.html also offers a detached, ASCII-armoured PGP signature,
+    KarasCTutorial.zip.asc. Rebuilding the zip invalidates the old signature,
     so sign the new zip again before publishing it.
 
 Usage (cmd, from this c_course folder):
