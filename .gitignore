@@ -7,3 +7,6 @@ obj/
 
 # Written by the fileio example program when it runs
 MYDATA.DAT
+
+# Private notes on how the repository and its GitHub Pages site were set up
+TutorialWebPageCreationSteps.txt
