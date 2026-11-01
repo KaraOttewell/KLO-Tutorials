@@ -119,6 +119,8 @@ a { color: var(--link); }
 a:visited { color: var(--link-visited); }
 h1, h2, h3 { color: var(--heading); }
 h2 { border-bottom: 2px solid var(--heading-rule); padding-bottom: 0.15em; margin-top: 1.8em; }
+/* The divider above the KLO Software section at the end */
+hr { border: none; border-top: 2px solid var(--heading-rule); margin-top: 2em; }
 
 pre, code { font-family: Consolas, "Courier New", monospace; }
 pre { white-space: pre; overflow-x: auto; background: var(--code-background); border: 1px solid var(--code-border);
@@ -155,7 +157,7 @@ pre.output { background: var(--output-background); border: 1px solid var(--outpu
 <div id="theme-toggle-icon" title="Change theme">&#128421;&#65039;</div>
 <h1 id="Top_Of_Page">Kara&#8217;s C Tutorial</h1>
 
-<p><i>Version 1.3 © Kara Ottewell 1995-2020</i><br />
+<p><i>Version 1.3 © Kara Ottewell 1995-2026</i><br />
 These notes formed part of an internal course on C programming which I was asked to give to my colleagues at Yezerski Roper Ltd.</p>
 <p><a href="#Aims">Aims of this Course</a><br />
 <a href="#History">History</a><br />
@@ -185,7 +187,7 @@ These notes formed part of an internal course on C programming which I was asked
 <a href="#Bibliography">Bibliography</a><br />
 <a href="#Links">Links to C Resources</a></p>
 <h2><a id="Aims"></a>§0 Aims of this Course</h2>
-<p>This course is intended to help a good programmer (pause for mass exodus), particularly someone familiar with DEC <span class="fortran">FORTRAN</span>, start programming in <span class="c-code">C</span>, but should actually provide a reasonable introduction to <span class="c-code">C</span> for people who have used any programming language before. There are a number of program examples, copies of which you can download as <a href="KarasCTutorial.zip">KarasCTutorial.zip</a>. A detached <a href="KarasCTutorial.zip.asc">PGP signature file</a> (you do not need to download the latter unless you know what it&#8217;s for) is provided so you can be sure the archive has not been altered. When you unzip the archive on a Windows machine, note the solution file <code>KarasCTutorial.sln</code>. You should open this with Microsoft Visual Studio 2026 or later (earlier versions will offer to retarget the projects to their own tools), then &#8220;batch build&#8221; everything. To run an example, right-click it, choose &#8220;Set as Startup Project&#8221;, and press Ctrl+F5. The <code>key.c</code> example needs VMS, so it is in the solution for reading but is not built. VMS users should use <code>unzip -a karas_c_examples.zip</code> to get the correct file attributes for the text files, like the <code>.c</code> source files and <code>MAKE.COM</code>, the VMS command file which you can use to <a href="#Using_MAKE.COM">build the programs</a>.</p>
+<p>This course is intended to help a good programmer (pause for mass exodus), particularly someone familiar with DEC <span class="fortran">FORTRAN</span>, start programming in <span class="c-code">C</span>, but should actually provide a reasonable introduction to <span class="c-code">C</span> for people who have used any programming language before. There are a number of program examples, copies of which you can download as <a href="KarasCTutorial.zip">KarasCTutorial.zip</a>. A detached <a href="KarasCTutorial.zip.asc">PGP signature file</a> (you do not need to download the latter unless you know what it&#8217;s for) is provided so you can be sure the archive has not been altered. When you unzip the archive on a Windows machine, note the solution file <code>KarasCTutorial.sln</code>. You should open this with Microsoft Visual Studio 2026 or later (earlier versions will offer to retarget the projects to their own tools), then &#8220;batch build&#8221; everything. To run an example, right-click it, choose &#8220;Set as Startup Project&#8221;, and press Ctrl+F5. The <code>key.c</code> example needs VMS, so it is in the solution for reading but is not built. VMS users should use <code>unzip -a KarasCTutorial.zip</code> to get the correct file attributes for the text files, like the <code>.c</code> source files and <code>MAKE.COM</code>, the VMS command file which you can use to <a href="#Using_MAKE.COM">build the programs</a>.</p>
 <p>There are also several <em>programming challenges</em>. Have a go at these, nicking as much code as you can from the examples ! Using <span class="c-code">C</span> is the best way to learn it, and making mistakes is definitely the best way to find out how it really works. I mention the ANSI <span class="c-code">C</span> standard, ANSI/ISO 9899-1990, a lot in this document. Always try to adhere to the standard; experience has shown that it pays off in the long term. Some of the points I make are stylistic. However, many of these suggestions are made for one of two reasons; either the majority of the <span class="c-code">C</span> programming world has reached consensus that the style is good (which will make it easier for you to read and learn from other people&#8217;s code) or I have found that you can avoid errors by doing things in a particular way. I reckon that you can &#8220;learn&#8221; <span class="c-code">C</span> in about an hour, then spend the next year wishing you hadn&#8217;t done things in a particular way the hour after that. This course should help you avoid some of the pitfalls that are so easy to fall into (and, in fact, dig for yourself) because of the total control, power, and 0 to 60 ACCVIOs in under 10 seconds that <span class="c-code">C</span> can deliver to the programmer.</p>
 <h2><a id="History"></a>§1 Why is the language called C ?</h2>
 <p><span class="c-code">C</span> was developed under Unix on the PDP-11 in 1972 by Dennis Ritchie, building on the language B, written by Ken Thompson in 1970 on a PDP-7, also running Unix. B was, in turn, based on BCPL which was developed in 1967 by Martin Richards (and which is still available for the BBC Micro). BCPL and B were typeless languages &#8211; variables were all multiples of byte or word sized bits of memory. <span class="c-code">C</span> is more strongly typed than B, BCPL or <span class="fortran">FORTRAN</span>. Its basic types are <code>char</code>, <code>int</code>, <code>float</code> and <code>double</code>, which are characters, integers and single and double precision floating point numbers. An important addition, compared to <span class="fortran">FORTRAN</span>, is the pointer type, which points to the other types (including other pointers). All these types can be combined in structures or unions to provide composite types.</p>
@@ -213,7 +215,7 @@ int main( int argc, char *argv[] )
     exit(EXIT_SUCCESS);
 }</span></pre>
 <p>As you have probably gathered, comments in <span class="c-code">C</span> are delimited by <code><span class="fortran">/*</span></code> and <code>*/</code>, and comments must NOT be nested, or you will get some very interesting bugs. The perceived need for nested comments is usually for commenting out (say) a debug piece of code, and this can be done in a better way, which will be explained later. Some <span class="c-code">C</span> compilers let you use the trailing <span class="cplusplus">C++</span> style comments <span class="cplusplus">//</span>, which are like a trailing ! in DEC <span class="fortran">FORTRAN</span>. Never use these in <span class="c-code">C</span> code (but C99 made them standard, see <a href="#Since_ANSI">§1.1</a>). It is not ANSI standard, and immediately confuses people as to whether they are looking at <span class="c-code">C</span> or <span class="cplusplus">C++</span> code (and some meanings can subtly change).</p>
-<p>To compile this program under DEC <span class="c-code">C</span> (both <a href="../vms/vms.html#alpha">Alpha</a>s and <a href="../vms/vms.html#vax">VAX</a> should be using DEC <span class="c-code">C</span> now. VAX <span class="c-code">C</span> was retired around 1993, and you really should switch to DEC <span class="c-code">C</span> for both platforms now)</p>
+<p>To compile this program under DEC <span class="c-code">C</span> (both Alphas and VAX should be using DEC <span class="c-code">C</span> now. VAX <span class="c-code">C</span> was retired around 1993, and you really should switch to DEC <span class="c-code">C</span> for both platforms now)</p>
 <pre><span class="dcl">$ CC HELLO</span>
 <span class="dcl">$ LINK HELLO</span>
 </pre>
@@ -229,7 +231,7 @@ Exiting
 </pre>
 <p>where the <code>VAXCRTL.OPT</code> options file contains the line</p>
 <pre class="output">SYS$SHARE:VAXCRTL/SHARE</pre>
-<p>You are now ready to RUN HELLO . Not too many surprises there. Note the form of the code. The main entry point in a standard <span class="c-code">C</span> program is always called <code>main</code>, though you can override this on <a href="../vms/vms.html">VMS</a> platforms, as we will <a href="#MAIN_PROGRAM">discover</a>. The main program in <span class="c-code">C</span> is declared as <code>int main(input arguments..)</code>.<br />
+<p>You are now ready to RUN HELLO . Not too many surprises there. Note the form of the code. The main entry point in a standard <span class="c-code">C</span> program is always called <code>main</code>, though you can override this on VMS platforms, as we will <a href="#MAIN_PROGRAM">discover</a>. The main program in <span class="c-code">C</span> is declared as <code>int main(input arguments..)</code>.<br />
 This is because the main program should always return a value (usually to DCL or the Unix shell) indicating how things went. This is done by the call to <code>exit(EXIT_SUCCESS)</code>. There are two ANSI standard return codes, EXIT_SUCCESS and EXIT_FAILURE, both defined in <code>stdlib.h</code> . Always use these values, and don&#8217;t do what a lot of Unix programmers do which is <code>exit(0)</code> or some other magic number just because &#8220;everybody knows that <code>exit(0)</code> means success&#8221;. You can return VMS condition codes, e.g. <code>exit(SS$_NORMAL)</code>, but this should be avoided unless really necessary, and even then there are ways to fall back to the standard return codes if your code is compiled on a non-VMS machine.<br />
 The <code>(some funny stuff)</code> is the argument list, or the &#8220;formal parameters&#8221; of function <code>main</code>. Imagine <code>main</code> as a function called from your command shell (DCL on VMS, or the DOS window on Windows). The declaration <code>int main( int argc, char *argv[] )</code> means that main is a function returning an integer, which takes two arguments. The first is an integer, and is the number of arguments passed to main by DCL, and the second is a pointer to arrays of characters. The latter are, in fact, any command line arguments, as will be demonstrated in <code>args.c</code>, a demo program coming soon to a disk near you. The body of a function is delimited by <code>{</code> and <code>}</code>. Because <span class="c-code">C</span> is largely a free format language, the whole function can be on one line if you really want, but that tends to be unreadable and confusing. I like to start the function with a <code>{</code> in column one, just after the function declaration (which I can then nick for prototyping), and end the function with a <code>}</code> in the same column.<br />
 Notice how each statement ends with a semicolon. The &#8220;;&#8221; is known as a statement terminator. It is also a &#8220;sequence point&#8221;, as are the comma operator, and various other logical comparison operators, and the standard guarantees that side effects of expressions will be over once a sequence point is reached. This basically means that all the things you made happen in one statement will have happened by the time you start on the next statement or expression.<br />
@@ -1547,7 +1549,7 @@ int MyFunction( int meaningfulName ); /* This is not a function definition */
 <p>This technique is widely used to enable selection of the correct code at compile time. Try</p>
 <pre><span class="dcl">$ HELP CC Language_topics Predefined_Macros System_Identification_Macros</span>
 </pre>
-<p>which will give you some of the predefined (by the compiler) macros that let you switch code on and off depending on, say, whether you are on a <a href="../vms/vms.html#vax">VAX</a> or Alpha. See K&amp;R II pages 91 and 232 for more information on this subject.</p>
+<p>which will give you some of the predefined (by the compiler) macros that let you switch code on and off depending on, say, whether you are on a VAX or Alpha. See K&amp;R II pages 91 and 232 for more information on this subject.</p>
 <p>The definition of the EXT macro is another useful technique for ensuring that you only DEFINE a variable once (i.e. actually allocate space for, or initialize a variable with a value). Macros are explained in more detail below, but basically the text (if any) associated with the macro name is substituted wherever the macro appears, before compilation proper begins. In your main program, you <code>#define DEFINE_GLOBALS</code> and the header file then becomes</p>
 <pre><span class="c-code">.
 int tlaGlobalInt;
@@ -1691,7 +1693,7 @@ else
 <pre><span class="c-code">i = ( 2 &gt; 1); /* Sets i to be 1 */
 i = ( 1 &gt; 2); /* Sets i to be 0 */</span></pre>
 <p>So, in our MAX example <code>((a)&gt;(b))</code> will be 1, i.e. TRUE, if <code>a</code> is greater than <code>b</code>, 0 otherwise. So &#8220;expression_1&#8221; is TRUE if <code>a &gt; b</code>. Hence the value of &#8220;expression_2&#8221; i.e. <code>a</code> will be chosen. Otherwise &#8220;expression_3&#8221;, in this case <code>b</code> will be used.</p>
-<p>&#8220;Why define MAX as a macro at all ?&#8221; you might ask (pause until someone asks). Well, the reason is that if you used a function, you would need to write a version for floating point numbers, another for ints, another for long ints and so on. Of course, a macro can circumvent type checking, which some people don&#8217;t like very much, so in <span class="cplusplus">C++</span> macros have been effectively eliminated for most purposes by &#8220;templates&#8221; which you can learn about in <a href="../STL/stl.html">my STL Course</a>.</p>
+<p>&#8220;Why define MAX as a macro at all ?&#8221; you might ask (pause until someone asks). Well, the reason is that if you used a function, you would need to write a version for floating point numbers, another for ints, another for long ints and so on. Of course, a macro can circumvent type checking, which some people don&#8217;t like very much, so in <span class="cplusplus">C++</span> macros have been effectively eliminated for most purposes by &#8220;templates&#8221; which you can learn about in <a href="../cpp_stl_course/index.html">my STL Course</a>.</p>
 <p>When using the <code>#if</code> test mentioned in the &#8220;Header Files&#8221; section, you can use relational tests on constant expressions. Here is an example of checking that you are using Motif 1.2 or greater</p>
 <pre><span class="c-code">#if (XmVERSION &gt; 1 || (XmVERSION == 1 &amp;&amp; XmREVISION &gt;= 2))
 XtSetArg( argumentList[argumentCount], XmNtearOffModel, XmTEAR_OFF_ENABLED ); argumentCount++;
@@ -3175,7 +3177,7 @@ __(-61,*a,
 
 ,a+1);}</span></pre>
 <p>Beat that! This evokes a slight whinge in DEC <span class="c-code">C</span>&#8217;s strictest ANSI mode, because <code>main</code> takes more than two parameters, but compile, link, run and enjoy.</p>
-<h2><a id="VMS_Tricks"></a>§17 Changing from <a href="../vms/vms.html#vax">VAX</a> C or K&amp;R C to ANSI Compliant DEC C</h2>
+<h2><a id="VMS_Tricks"></a>§17 Changing from VAX C or K&amp;R C to ANSI Compliant DEC C</h2>
 <p>The main change with DEC <span class="c-code">C</span> for VAX or Alpha is that it is much stricter than K&amp;R/VAX <span class="c-code">C</span>. I have found this to be a very good thing (apart from the pain of bug fixing) because it has brought to light hitherto undiscovered errors &#8211; the type of thing that causes intermittent faults! You tend to get a lot of informational messages about &#8220;implicitly declared functions&#8221; (like <code>exit</code>) where people have been lazy and not included <code>&lt;stdlib.h&gt;</code> and <code>&lt;stdio.h&gt;</code>. You can always turn informational warnings off, but this is a bit suspect because you then don&#8217;t get alerted to other problems that might be important. I usually just ensure that every bit of code has</p>
 <pre><span class="c-code">#include &lt;stdlib.h&gt;
 #include &lt;stdio.h&gt;</span></pre>
@@ -3317,7 +3319,7 @@ $DESCRIPTOR( userDescriptor, user );
 status = CALL_FORTRAN_ROUTINE( &amp;userDescriptor );
 .</span></pre>
 <p>Be aware that the $DESCRIPTOR macro will set the string length to be one less than <code>sizeof(string)</code> to allow for the fact that <span class="c-code">C</span> may have a terminating null character. Hence, in the example above, CALL_FORTRAN_ROUTINE will think it has been passed a CHARACTER*15 string.</p>
-<h3>§17.6 <a href="../vms/vms.html">VMS</a> Message Codes</h3>
+<h3>§17.6 VMS Message Codes</h3>
 <p>In <span class="fortran">FORTRAN</span> we often use EXTERNAL MYAPP__ERROPEN to get the linker to pull in the correct message code as a &#8220;global value&#8221;. In <span class="c-code">C</span>, this is how to do the same thing portably.</p>
 <pre><span class="c-code">#ifdef __DECC
 # pragma extern_model save
@@ -3343,8 +3345,7 @@ extern myapp__erropen, myapp__errconn, myapp__errread, myapp__errwrite;
 <ul>
 <li><a href="http://www.amazon.com/exec/obidos/ISBN=0131103628/drkara-20/"> <i>The C Programming Language: ANSI C Version</i></a> by Brian W. Kernighan and Dennis M. Ritchie, Pub. Prentice Hall Press, ISBN 0-13-110362-8<br>
 Kernighan and Ritchie invented the C language, and this book is so well-written and concise that it really is a <em>must-have</em> for the serious C programmer.</li>
-<li><a href="http://www.amazon.com/exec/obidos/ISBN=0131774298/drkara-20/"><br />
-<i>Expert C Programming: Deep C Secrets</i></a> by Peter van der Linden, Pub. Prentice Hall Press, ISBN 0-13-177429-8<br>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0131774298/drkara-20/"><i>Expert C Programming: Deep C Secrets</i></a> by Peter van der Linden, Pub. Prentice Hall Press, ISBN 0-13-177429-8<br>
 This book manages the difficult task of being very informative and at the same time entertaining to read. An excellent book.</li>
 </ul>
 <h2><a id="Links"></a>§19 Links to C Resources</h2>
@@ -3355,7 +3356,10 @@ This book manages the difficult task of being very informative and at the same t
 <li>SoftIntegration&#8217;s <a href="https://www.softintegration.com/">Ch</a> Interpreted C</li>
 </ul>
 <p><a href="#Top_Of_Page">Back to Top</a></p>
-<!-- Light/dark/automatic theme switch, shared with the KLO-Software pages.
+<p>See also <a href="../cpp_stl_course/index.html">Kara&#8217;s STL Tutorial</a>, a Monty Python-themed tutorial on the <span class="cplusplus">C++</span> Standard Template Library, with its own example programs and Visual Studio solution.</p>
+<hr>
+<h3 id="KLO_Software">More from KLO Software</h3>
+<p>If you have enjoyed this tutorial, please have a look at my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. They describe a family of free Windows programs, all available from the Microsoft Store and each with its own help page: <b>BeebRFSMaker</b>, <b>BeebRFSTool</b> and <b>BeebFileUtilities</b> for BBC Micro enthusiasts, which view disk images, decode tokenised BASIC and pack files into compressed sideways ROMs; <b>KOContour</b>, which turns elevation data into contour maps; <b>KOBrot</b>, a Mandelbrot and Julia set explorer that redraws the matching Julia set live as you move the pointer; and <b>SnapDragger</b>, which tidies a folder of photographs and video clips into dated, sorted folders with an HTML contact sheet. Suggestions, bug reports and ideas for new features are always welcome.</p><!-- Light/dark/automatic theme switch, shared with the KLO-Software pages.
      KLO-Software and KLO-Tutorials are sibling folders, on disk and on Git. -->
 <script src="../../KLO-Software/KLODarkModeSwitch.js" defer></script>
 </body>

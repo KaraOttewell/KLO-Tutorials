@@ -1,0 +1,2207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Kara Ottewell's C++ Standard Template Library (STL) tutorial, with example programs and a Visual Studio solution.">
+<title>Kara's STL Tutorial</title>
+<style>
+/* Colours are CSS variables: light values here, dark values below. The theme
+   switch (KLODarkModeSwitch.js from KLO-Software) puts theme-light or
+   theme-dark on the body element; with neither, the system preference
+   decides. The scheme matches Kara's C Tutorial in ../c_course. */
+body {
+    --page-background: #FFFFFF;
+    --text: #1E1E1E;
+    --link: #0000EE;
+    --link-visited: #551A8B;
+    --heading: #4E342E;
+    --heading-rule: #D7BE8A;
+    --c-code: #0000FF;
+    --fortran: #008000;
+    --cplusplus: #00008B;
+    --highlight: #C62828;
+    --dcl: #00747A;
+    --quote: #2E6B30;
+    --code-background: #F7F9FC;
+    --code-border: #E3E8EF;
+    --reference-background: #FBF6EE;
+    --reference-border: #EADBC4;
+    --reference-edge: #C8A27A;
+    --output-background: #F2F2F2;
+    --output-border: #DDDDDD;
+    --output-edge: #9E9E9E;
+    --output-text: #212121;
+    --table-header-background: #EFE6D8;
+    --table-border: #D7BE8A;
+    --term: #9A4A16;
+    --explain: #37474F;
+    --note: #5F6B73;
+    --toggle-background: #F0F6F9;
+    --toggle-border: #0F4761;
+}
+body.theme-dark {
+    color-scheme: dark;
+    --page-background: #0D1117;
+    --text: #E6EDF3;
+    --link: #79C0FF;
+    --link-visited: #C58CFF;
+    --heading: #E8C48C;
+    --heading-rule: #5C4A2E;
+    --c-code: #79C0FF;
+    --fortran: #7EE787;
+    --cplusplus: #B4A7FF;
+    --highlight: #FF7B72;
+    --dcl: #39C5CF;
+    --quote: #8FD694;
+    --code-background: #161B22;
+    --code-border: #30363D;
+    --reference-background: #1E1A14;
+    --reference-border: #3D3426;
+    --reference-edge: #A0805C;
+    --output-background: #1B1F24;
+    --output-border: #30363D;
+    --output-edge: #6E7681;
+    --output-text: #E6EDF3;
+    --table-header-background: #2A2418;
+    --table-border: #5C4A2E;
+    --term: #E8A86E;
+    --explain: #C9D1D9;
+    --note: #9AA4AE;
+    --toggle-background: #161B22;
+    --toggle-border: #30363D;
+}
+@media (prefers-color-scheme: dark) {
+    body:not(.theme-light) {
+        color-scheme: dark;
+        --page-background: #0D1117;
+        --text: #E6EDF3;
+        --link: #79C0FF;
+        --link-visited: #C58CFF;
+        --heading: #E8C48C;
+        --heading-rule: #5C4A2E;
+        --c-code: #79C0FF;
+        --fortran: #7EE787;
+        --cplusplus: #B4A7FF;
+        --highlight: #FF7B72;
+        --dcl: #39C5CF;
+        --quote: #8FD694;
+        --code-background: #161B22;
+        --code-border: #30363D;
+        --reference-background: #1E1A14;
+        --reference-border: #3D3426;
+        --reference-edge: #A0805C;
+        --output-background: #1B1F24;
+        --output-border: #30363D;
+        --output-edge: #6E7681;
+        --output-text: #E6EDF3;
+        --table-header-background: #2A2418;
+        --table-border: #5C4A2E;
+        --term: #E8A86E;
+        --explain: #C9D1D9;
+        --note: #9AA4AE;
+        --toggle-background: #161B22;
+        --toggle-border: #30363D;
+    }
+}
+
+body { font-family: Georgia, "Times New Roman", serif; max-width: 60em; margin: 1em auto; padding: 0 1em; line-height: 1.4;
+       background: var(--page-background); color: var(--text); }
+a { color: var(--link); }
+a:visited { color: var(--link-visited); }
+h1, h2, h3, h4 { color: var(--heading); }
+h2 { border-bottom: 2px solid var(--heading-rule); padding-bottom: 0.15em; margin-top: 1.8em; }
+/* The divider above the KLO Software section at the end */
+hr { border: none; border-top: 2px solid var(--heading-rule); margin-top: 2em; }
+
+pre, code { font-family: Consolas, "Courier New", monospace; }
+pre { white-space: pre; overflow-x: auto; background: var(--code-background); border: 1px solid var(--code-border);
+      border-radius: 4px; padding: 0.5em 0.8em; }
+pre.reference { background: var(--reference-background); border: 1px solid var(--reference-border);
+                border-left: 4px solid var(--reference-edge); }
+pre.output { background: var(--output-background); border: 1px solid var(--output-border);
+             border-left: 4px solid var(--output-edge); color: var(--output-text); }
+p.listing-title { margin-bottom: 0.2em; }
+
+/* The table of sequence container overheads */
+table.overheads { border-collapse: collapse; margin: 0.8em 0; display: block; max-width: 100%; overflow-x: auto; }
+table.overheads th, table.overheads td { border: 1px solid var(--table-border); padding: 0.3em 0.9em; text-align: center; }
+table.overheads th { background: var(--table-header-background); color: var(--heading); }
+table.overheads td:first-child { text-align: left; }
+table.overheads caption { caption-side: bottom; font-weight: bold; padding-top: 0.4em; }
+
+/* What each colour means in the listings and the text */
+.c-code { color: var(--c-code); }
+.fortran { color: var(--fortran); }
+.cplusplus { color: var(--cplusplus); }
+.highlight { color: var(--highlight); }
+.dcl { color: var(--dcl); }
+.quote { color: var(--quote); font-style: italic; margin-left: 1.5em; }
+.term { color: var(--term); font-weight: bold; }
+.explain { color: var(--explain); }
+.note { color: var(--note); font-style: italic; }
+
+/* The floating theme switch, as on the KLO-Software pages */
+#theme-toggle-icon { position: fixed; top: 12px; right: 12px; font-size: 22px; cursor: pointer;
+                     background: var(--toggle-background); border: 1px solid var(--toggle-border);
+                     border-radius: 6px; padding: 6px 8px; z-index: 9999; user-select: none; }
+</style>
+</head>
+<body>
+<div id="theme-toggle-icon" title="Change theme">&#128421;&#65039;</div>
+<h1 id="Top_Of_Page">Kara’s STL Tutorial</h1>
+
+<p><i>A Monty Python-themed tutorial on the <span class="cplusplus">C++</span> Standard Template Library</i><br>
+<i>Version 1.3 © Kara Ottewell 1997-2026</i><br>
+These notes formed part of an internal course on the STL which I was asked to give to my colleagues at Yezerski Roper Ltd.</p>
+
+<h2 id="Contents">Table of Contents</h2>
+<ol>
+<li><a href="#Introduction">Introduction</a>
+<ul>
+<li><a href="#Since_Original">What Has Changed Since the Original STL</a></li>
+</ul></li>
+<li><a href="#Templates">Templates ite Domum</a>
+<ul>
+<li><a href="#Function_Templates">Function Templates</a></li>
+<li><a href="#Class_Templates">Class Templates</a></li>
+</ul></li>
+<li><a href="#What_STL_done">What has the STL ever done for us ?</a>
+<ul>
+<li><a href="#Vector">Vector</a></li>
+<li><a href="#Deque">Deque</a></li>
+<li><a href="#List">List</a></li>
+<li><a href="#Container_Caveats">Container Caveats</a></li>
+<li><a href="#Allocators">Allocators</a></li>
+</ul></li>
+<li><a href="#Sequence_Adapters">Sequence Adapters</a>
+<ul>
+<li><a href="#Stack">Stack</a></li>
+<li><a href="#Queue">Queue</a></li>
+<li><a href="#Priority_Queue">Priority Queue</a></li>
+</ul></li>
+<li><a href="#Strings">Strings</a></li>
+<li><a href="#Iterators">Iterators</a>
+<ul>
+<li><a href="#Iterator_Adapters">Iterator Adapters</a></li>
+</ul></li>
+<li><a href="#Associative_Container">We are searching for the Associative Container</a>
+<ul>
+<li><a href="#Map_and_Multimap">Map and Multimap</a></li>
+<li><a href="#Set_and_Multiset">Set and Multiset</a></li>
+<li><a href="#Unordered">Unordered Associative Containers</a></li>
+</ul></li>
+<li><a href="#Algorithms_and_Functions">Algorithms and Functions</a>
+<ul>
+<li><a href="#Algorithms">Algorithms</a></li>
+<li><a href="#Functions">Functions and Function Objects</a></li>
+<li><a href="#Lambdas">Lambda Expressions</a></li>
+</ul></li>
+<li><a href="#STL_URLS">STL Related Web Pages</a></li>
+<li><a href="#Bibliography">Bibliography</a></li>
+</ol>
+<p class="note">Warning for the humour-impaired: any strange references that you can’t understand are almost certainly a skit on Monty Python’s “Life of Brian” or “Monty Python and the Holy Grail”.</p>
+
+<h2 id="Introduction">1. Introduction</h2>
+<p>The <span class="cplusplus">C++</span> Standard Template Library, generally referred to as the <em>STL</em>, saves you, the programmer, from having to re-invent the wheel. This course is aimed at programmers who have reasonable familiarity with the <span class="cplusplus">C++</span> programming language, and know about classes, constructors and the like. Avoiding esoteric functionality, the examples have been written to demonstrate STL features clearly. The sample programs also use Standard Library (as distinct from Standard Template Library) features like <code>fstream</code> and <code>iostream</code>, providing examples of how to use these. A discussion of the Standard Library as a whole is beyond the scope of this document – see Stroustrup and others in the <a href="#Bibliography">bibliography</a> for more information.</p>
+<p>What motivated people to write the STL ? Many people felt that <span class="cplusplus">C++</span> classes were inadequate in situations requiring containers for user-defined types, and methods for common operations on them. For example, you might need self-expanding arrays, which can easily be searched, sorted, added to or removed from without messing about with memory reallocation and management. Other object-oriented languages used <em>templates</em> to implement this sort of thing, and hence they were incorporated into <span class="cplusplus">C++</span>.</p>
+<p>Driving forces behind the STL include Alexander Stepanov and Meng Lee at Hewlett-Packard in Palo Alto, California, Dave Musser at General Electric’s Research Center in Schenectady, New York, Andrew Koenig, and of course “Mr <span class="cplusplus">C++</span>” himself, Bjarne Stroustrup at AT&amp;T Bell Laboratories. The STL was accepted into the draft <span class="cplusplus">C++</span> standard in 1994, and became part of the first ISO <span class="cplusplus">C++</span> standard, ISO/IEC 14882:1998.</p>
+<p>The example programs were first written in 1997, when the STL was still in its infancy, for DEC <span class="cplusplus">C++</span> 5.6 on Alpha and VAX VMS 6.2. I was slightly embarrassed about some of the code I wrote back then, so in 2026 I corrected the examples and brought them up to date (<a href="#Since_Original">§1.1</a> describes what has changed). They now need a compiler that supports <span class="cplusplus">C++</span>17, such as <a href="https://visualstudio.microsoft.com/downloads/">Microsoft Visual Studio</a> 2026, whose free Community edition is fine, GCC, Clang or, on OpenVMS, a current <a href="https://products.vmssoftware.com/cxx">VSI C++</a>. The examples are intended to be illustrative, with a dose of cringe-worthy humour thrown in, and should not be regarded as paragons of great coding.</p>
+<p>You can download all the examples as <a href="KarasSTLTutorial.zip">KarasSTLTutorial.zip</a>. A detached <a href="KarasSTLTutorial.zip.asc">PGP signature file</a> (you do not need to download the latter unless you know what it’s for) is provided so you can be sure the archive has not been altered. On a Windows machine, open the solution file <code>KarasSTLTutorial.sln</code> with Microsoft Visual Studio 2026 or later (earlier versions will offer to retarget the projects to their own tools), then “batch build” everything. Each example is a separate project, with precompiled headers switched off to cut down on unnecessary files. To run an example, right-click it, choose “Set as Startup Project”, and press Ctrl+F5. Example 8.1 deliberately does not compile, so it is in the solution for reading but is not built.</p>
+<p>To build on <a href="https://vmssoftware.com/community/community-license/">OpenVMS</a>, unzip the archive with <code class="dcl">unzip -a KarasSTLTutorial.zip</code> so that the text files get the correct file attributes, then use the <code>MAKE.COM</code> command file. Just give a program name like <code>example_1_1</code> as its argument and it will look for files with extension <code>.CXX</code>, <code>.CPP</code> and <code>.C</code>, in that order. If you provide the extension then it uses that. On Alphas, output files get an <code>_ALPHA</code> suffix. Here is what it looked like with DEC <span class="cplusplus">C++</span> 5.6 (with a newer compiler you may need to change the compiler qualifiers in <code>MAKE.COM</code>, for example to ask for <span class="cplusplus">C++</span>17):</p>
+<pre><span class="dcl">$ @MAKE EXAMPLE_1_1 ! On an Alpha
+  DEV$DISK:[KARA.WWW.STL]
+CC/PREFIX=ALL EXAMPLE_1_1.C  -&gt; EXAMPLE_1_1.OBJ_ALPHA
+LINK EXAMPLE_1_1  -&gt; EXAMPLE_1_1.EXE_ALPHA
+
+$ @MAKE EXAMPLE_1_2 ! Now on a VAX
+  DEV$DISK:[KARA.WWW.STL]
+CXX/ASSUME=(NOHEADER_TYPE_DEFAULT)/EXCEPTIONS/TEMPLATE_DEFINE
+  EXAMPLE_1_2.CPP  -&gt; EXAMPLE_1_2.OBJ
+CXXLINK EXAMPLE_1_2  -&gt; EXAMPLE_1_2.EXE</span></pre>
+<p>A slight buglet introduced in DEC <span class="cplusplus">C++</span> 5.6 for Alpha VMS meant that you might get a warning in the CXXLINK step.</p>
+<pre><span class="dcl">%LINK-W-NUDFSYMS, 1 undefined symbol:
+%LINK-I-UDFSYM,         WHAT__K9BAD_ALLOCXV
+%LINK-W-USEUNDEF, undefined symbol WHAT__K9BAD_ALLOCXV referenced
+        in psect __VTBL_9BAD_ALLOC offset %X00000004
+        in module MEMORY file SYS$COMMON:[SYSLIB]LIBCXXSTD.OLB;1</span></pre>
+<p>The undefined symbol is harmless and never referenced. Digital issued an official patch, <code>cxxae01056.a-dcx_axpexe</code>, which you ran to unpack it before installing it with <code class="dcl">@SYS$UPDATE:VMSINSTAL</code> while logged on as <code>SYSTEM</code>, though Digital’s FTP site, which carried it, is long gone.</p>
+<p>The first two programs are implementations of expanding integer arrays which are sorted into value order. Example 1.1 is in ANSI <span class="c-code">C</span>, and 1.2 is <span class="cplusplus">C++</span> using the STL. I have tried to make the <span class="c-code">C</span> program as general as possible by using <code>typedef</code>, but this is still not really adequate, as we will see.</p>
+<p class="listing-title" id="example_1_1">Example 1.1: <a href="examples/example_1_1.c"><code>example_1_1.c</code></a></p>
+<!-- listing example_1_1.c -->
+<pre><span class="c-code">/*---- Expanding, sorted integer array in ANSI C ("example_1_1.c") ----------*/
+
+/* ANSI C Headers */
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+/* Typedef array type in case we need to change it */
+typedef int array_type;
+
+/* Function Prototypes */
+int CompareValues( const void *first, const void *second );
+array_type *GetArraySpace( int itemCount );
+
+int main( void )
+{
+    int i;
+    int itemCount = 0;
+    array_type inputValue;
+    array_type *values = NULL;
+/*  End of declarations ... */
+
+    printf( "Enter integers, &lt;Enter&gt; after each. To finish, type &lt;Ctrl&gt;Z &lt;Enter&gt;\n"
+            "at the start of a line (&lt;Ctrl&gt;D on Unix). Windows sometimes wants\n"
+            "&lt;Ctrl&gt;Z &lt;Enter&gt; more than once, but remember:\n\n"
+            "No more. No less. Three shalt be the number thou shalt count,\n"
+            "and the number of the counting shall be three.\n"
+            "Four shalt thou not count, nor either count thou two,\n"
+            "excepting that thou then proceed to three. Five is right out.\n\n" );
+
+/*  scanf returns the number of items it converted, so this loop also stops
+    at anything that isn't a number, instead of looping for ever */
+    while ( scanf( "%d", &amp;inputValue ) == 1 ) {
+      values = GetArraySpace( itemCount + 1 );
+      values[itemCount] = inputValue;
+      printf( "%6d: %d\n", itemCount, values[itemCount] );
+      ++itemCount;
+    }
+
+    if ( itemCount ) {
+      qsort( values, itemCount, sizeof(array_type), CompareValues );
+      for ( i = 0; i &lt; itemCount; ++i )
+        printf( "%d ", values[i] );
+      printf( "\n" );
+    }
+
+    free( values );
+    return( EXIT_SUCCESS );
+}
+
+/*---- Comparison func returns: -ve if a &lt; b,  0 if a == b,  +ve if a &gt; b ----*/
+int CompareValues( const void *first, const void *second )
+{
+    const array_type *firstValue = (const array_type *)first;
+    const array_type *secondValue = (const array_type *)second;
+/*  End of declarations ... */
+
+/*  Not "return *firstValue - *secondValue;", which overflows (undefined
+    behaviour) for values far apart, such as INT_MAX and -1 */
+    return( (*firstValue &gt; *secondValue) - (*firstValue &lt; *secondValue) );
+}
+
+/*---- Allocate space: n == 0 return pointer, n &gt; 0 expand/realloc if needed -*/
+array_type *GetArraySpace( int itemCount )
+{
+    const int extraSpace = 2;
+    array_type *newSpace;
+    static array_type *arraySpace;
+    static int maximumItems;
+/*  End of declarations ... */
+
+    if ( itemCount &gt; maximumItems ) {
+      itemCount += extraSpace;
+      if ( arraySpace ) {
+        newSpace = (array_type *)realloc( arraySpace, sizeof(array_type) * itemCount );
+        if ( newSpace ) {
+/*        Successfully expanded the space */
+          arraySpace = newSpace;
+/*        Clear new storage space */
+          memset( &amp;arraySpace[maximumItems], 0, sizeof(array_type) * (itemCount - maximumItems) );
+        } else {
+/*        Couldn't allocate the space */
+          exit( EXIT_FAILURE );
+        }
+      } else {
+        arraySpace = (array_type *)calloc( itemCount, sizeof(array_type) );
+        if ( !arraySpace ) {
+/*        Couldn't allocate the space */
+          exit( EXIT_FAILURE );
+        }
+      }
+      maximumItems = itemCount;
+    }
+    return( arraySpace );
+}</span></pre>
+<p>In this program (see <a href="../c_course/index.html">Kara’s C Tutorial</a> for an introduction to <span class="c-code">C</span>) I used a <code>typedef</code> for the type of item I want to store and sort, and a <code>GetArraySpace</code> function to allocate and/or expand the available space. Even with very basic error handling <code>GetArraySpace</code> is rather ungainly. It handles different types of data if I change the <code>typedef</code>, but if I wanted more than one type of data storing, or even more than one buffer of the same type, I would have to write a unique <code>GetArraySpace<i>Type</i></code> function for each. The <code>CompareValues</code> function would also have to be rewritten, though this is also the case in the <span class="cplusplus">C++</span> code, for user-defined types or pointers to values. Notice that <code>CompareValues</code> compares the two values rather than subtracting one from the other, because the subtraction can overflow, which is <a href="../c_course/index.html#Undefined">undefined behaviour</a>.</p>
+<p class="listing-title" id="example_1_2">Example 1.2: <a href="examples/example_1_2.cpp"><code>example_1_2.cpp</code></a></p>
+<!-- listing example_1_2.cpp -->
+<pre><span class="cplusplus">// ---- Expanding, sorted integer array using the STL ("example_1_2.cpp") -----
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main()
+{
+    int inputValue;
+    int itemCount = 0;
+    vector&lt;int&gt; values;
+
+    cout &lt;&lt; "Enter integers, &lt;Enter&gt; after each, &lt;Ctrl&gt;Z &lt;Enter&gt; to finish:" &lt;&lt; endl;
+
+//  The stream converts to false at end of file, or at anything not a number
+    while ( cin &gt;&gt; inputValue ) {
+      values.push_back( inputValue );
+      cout.width(6);
+      cout &lt;&lt; itemCount &lt;&lt; ": " &lt;&lt; values[itemCount] &lt;&lt; endl;
+      ++itemCount;
+    }
+
+    if ( itemCount ) {
+      sort( values.begin(), values.end() );
+      for ( vector&lt;int&gt;::const_iterator valueIterator = values.begin();
+            valueIterator != values.end(); ++valueIterator )
+        cout &lt;&lt; *valueIterator &lt;&lt; " ";
+      cout &lt;&lt; endl;
+    }
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Contrast the <span class="cplusplus">C++</span> program, <i>Example 1.2</i>, with the previous code. Using the STL, we invoke the <code>vector</code> template class, which allows us to store any data type we like in what is essentially a contiguous, self-expanding, random access array.</p>
+
+<h3 id="Since_Original">1.1 What Has Changed Since the Original STL</h3>
+<p>The STL described in these notes is the one standardised in <span class="cplusplus">C++</span>98. The standard has since been revised in 2011, 2014, 2017, 2020 and 2023, and <span class="cplusplus">C++</span>11 in particular changed the way most people write code that uses the STL. The examples now use some of these features, and the main changes are listed here so that both older code and newer books make sense.</p>
+<ul>
+<li><b>Everything is in namespace <code>std</code>.</b> Every standard library name lives in namespace <code>std</code>, so you either write <code>std::vector</code> or put <code>using namespace std;</code> after the headers, as the examples do. The original examples only did this on Windows, because DEC <span class="cplusplus">C++</span> 5.6 didn’t insist on it; every current compiler does. The header names have no <code>.h</code>, and the <span class="c-code">C</span> library headers are used in their <span class="cplusplus">C++</span> form, such as <code>&lt;cstdlib&gt;</code> for <code>&lt;stdlib.h&gt;</code>.</li>
+<li><b><code>auto</code> and range-based <code>for</code>.</b> <code>auto</code> lets the compiler work out a variable’s type, which saves typing iterator types like <code>map&lt;string,double&gt;::iterator</code>, and <code>for ( const string &amp;name : names )</code> loops over every element of a container or array, using <code>begin()</code> and <code>end()</code> behind the scenes (<a href="#example_3_3">Example 3.3</a>).</li>
+<li><b>Initializer lists.</b> <code>vector&lt;int&gt; years = { 1969, 1975, 1979 };</code> fills a container in one go (<a href="#example_8_2">Example 8.2</a>).</li>
+<li><b>Lambda expressions</b> are function objects written in place, where an algorithm needs them (<a href="#Lambdas">§8</a>). They replace the old binders and adapters, <code>bind1st</code>, <code>bind2nd</code>, <code>ptr_fun</code>, <code>mem_fun</code> and friends, which were removed in <span class="cplusplus">C++</span>17.</li>
+<li><b>Hash tables are standard.</b> <code>unordered_map</code>, <code>unordered_multimap</code>, <code>unordered_set</code> and <code>unordered_multiset</code> are the standard versions of the old <code>hash_map</code> (<a href="#Unordered">§7</a>).</li>
+<li><b>New containers.</b> <code>array</code> is a fixed-size array that knows its own size, and <code>forward_list</code> is a singly linked list. <span class="cplusplus">C++</span>17 added <code>string_view</code>, a cheap read-only view of a string, and <span class="cplusplus">C++</span>20 added <code>span</code>, a view of a run of contiguous elements.</li>
+<li><b>Move semantics.</b> Containers move elements rather than copying them where they can, and <code>emplace_back()</code> builds a new element in place (<a href="#Container_Caveats">Container Caveats</a>).</li>
+<li><b>Smart pointers.</b> <code>unique_ptr</code> and <code>shared_ptr</code> can be stored in containers, which the old <code>auto_ptr</code> (removed in <span class="cplusplus">C++</span>17) could not safely do.</li>
+<li><b>Random numbers.</b> <code>random_shuffle()</code> was removed in <span class="cplusplus">C++</span>17; use <code>shuffle()</code> with a random number engine from <code>&lt;random&gt;</code>, as <a href="#example_3_2">Example 3.2</a> does.</li>
+<li><b>Structured bindings</b> (<span class="cplusplus">C++</span>17) unpack a <code>pair</code>, so <code>for ( const auto &amp;[key, value] : myMap )</code> loops over a map without <code>first</code> and <code>second</code> (<a href="#example_7_3">Example 7.3</a>).</li>
+<li><b>Ranges and concepts</b> (<span class="cplusplus">C++</span>20). <code>std::ranges::sort( values )</code> takes the container itself instead of a pair of iterators, and concepts let the compiler say clearly when an algorithm gets the wrong kind of iterator, rather than the screenfuls of errors you get from <a href="#example_8_1">Example 8.1</a>. <span class="cplusplus">C++</span>20 also added a sixth iterator category, contiguous iterators.</li>
+<li><b>Smaller conveniences.</b> <span class="cplusplus">C++</span>17 added parallel versions of many algorithms, such as <code>sort( std::execution::par, values.begin(), values.end() )</code>. <span class="cplusplus">C++</span>20 added <code>contains()</code> to the associative containers, and <code>std::erase_if( container, predicate )</code>, which removes the matching elements from a container in one go.</li>
+</ul>
+
+<h2 id="Templates">2. Templates ite Domum</h2>
+<p>This is (incorrect) Latin for “Templates Go Home !” and represents the ambivalence that some new <span class="cplusplus">C++</span> programmers feel towards this language feature. I hope that you will be persuaded of its usefulness after reading this section.</p>
+<p><span class="cplusplus">C++</span> supports a number of OOP (Object-Oriented Programming) concepts. Broadly speaking, it supports <i>encapsulation</i> through the member functions and <code>private</code> or <code>protected</code> data members, <i>inheritance</i> by allowing classes to be derived from other classes and abstract base classes, and <i>polymorphism</i> through virtual functions, function signatures and templates. Templates achieve polymorphism by allowing us to define classes or functions in a generic way, and let the compiler generate an <i>instantiation</i> of the function or class using the actual types we require.</p>
+<p>The STL is built, as its name suggests, on the <span class="cplusplus">C++</span> <em>template</em> feature. There are two types of template: <i>function templates</i> and <i>class templates</i>. Both perform similar roles in that they allow functions or classes to be specified in a generic form, enabling the function or class to be generated for any data type – user-defined or built-in.</p>
+<p>At first sight this might not appear to be very different from macros in the <span class="c-code">C</span> language. In the <span class="c-code">C</span> program <a href="#example_1_1">Example 1.1</a> we could have made it more flexible by using a macro to define the comparison function.</p>
+<pre><span class="c-code">#define COMPARE_VALUES( value_type ) \
+int CompareValues_##value_type( const void *first, const void *second ) \
+{const value_type *a = (const value_type *)first, *b = (const value_type *)second; \
+ return( (*a &gt; *b) - (*a &lt; *b) );}
+
+COMPARE_VALUES( float )  /* Generate function for floats, */
+COMPARE_VALUES( double ) /* doubles and */
+COMPARE_VALUES( int )    /* ints */
+        .
+/*    Pick comparison function */
+      qsort( values, itemCount, sizeof(array_type), CompareValues_int );</span></pre>
+<p>The same method can be used for structure generation. There are a number of drawbacks to this approach. You have to explicitly generate functions for all the types you want to use, and there is no type checking in this particular case, so you could easily pass <code>CompareValues_float</code> when you meant to compare integers, and you would have to be rigorous about your naming convention. In addition, some people would argue that macros are not as transparent, since you can’t see what they expand into until compilation time.</p>
+<p>Templates avoid these problems. Because they are built into the language, they are able to provide full type safety checking and deduce the types of their arguments automatically, generating the code for whatever arguments are used. <span class="cplusplus">C++</span> allows you to overload operators like <code>&lt;</code> for user-defined types, so the same template definition often suffices for built-in and user-defined classes. The following two sections discuss the syntax and use of template functions and classes.</p>
+
+<h3 id="Function_Templates">Function Templates</h3>
+<p>Template functions have the following form:</p>
+<pre><span class="cplusplus">template &lt; <i>template-parameter-list</i> &gt;
+<i>function-definition</i></span></pre>
+<p>The <i>template-parameter-list</i> is one or more template parameters, whose names can be used within the template definition. Usually they are types, as in this code fragment.</p>
+<pre><span class="cplusplus">template &lt;class T&gt;
+T MyMin( T firstValue, T secondValue )
+{
+  return( (firstValue &lt; secondValue) ? firstValue : secondValue );
+}</span></pre>
+<p>The above example uses <code>class T</code>, but a parameter can also be a value of some known type, such as <code>template &lt;int Size&gt;</code>. For example, if you were doing some sort of buffer class, you might want people to be able to pre-allocate a particular size of buffer:</p>
+<pre><span class="cplusplus">template &lt;class T, int MaximumObjects = 256&gt;
+class MyBuffer {
+ protected:
+  T bufferObjects[MaximumObjects];
+ public:
+  void Func( const T &amp;buffer )
+  {
+       // Whatever
+  }
+};
+
+class StringBuffer : public MyBuffer&lt;wchar_t&gt; // Defaults to 256
+{
+   // Whatever
+};
+
+class ScreenBuffer : public MyBuffer&lt;wchar_t,1024&gt;
+{
+   // Whatever
+};</span></pre>
+<p>You can also use the <code>typename</code> keyword instead of <code>class</code> in your function (or class) template, like this:</p>
+<pre><span class="cplusplus">template &lt;typename T&gt;
+T MyMin( T firstValue, T secondValue )
+{
+  return( (firstValue &lt; secondValue) ? firstValue : secondValue );
+}</span></pre>
+<p>Here <code>class T</code> and <code>typename T</code> mean exactly the same thing, and every current compiler accepts both. Many people prefer <code>typename</code>, because <code>T</code> doesn’t have to be a class. These notes stick to <code>class T</code>, because in 1997 some compilers rejected <code>typename</code>, and the habit has stuck.</p>
+<p>Those of us who started programming using proper languages like <span class="fortran">FORTRAN</span> are used to the idea of the compiler selecting the correct function variant :-) Not many people using the <span class="fortran">FORTRAN</span> <code>MAX</code> function bother to specify <code>IMAX0</code>, <code>JMAX0</code>, <code>KMAX0</code> and so on. The compiler selects the specific function according to the arguments. Remember that the <code>class T</code> type doesn’t <em>have</em> to be a class. It can be a built-in type like <code>int</code> or <code>float</code>. When a template and an ordinary function match a call equally well, the <span class="cplusplus">C++</span> compiler chooses the ordinary, “real” function rather than generating one from the template, as in the following program.</p>
+<p class="listing-title" id="example_2_1">Example 2.1: <a href="examples/example_2_1.cpp"><code>example_2_1.cpp</code></a></p>
+<!-- listing example_2_1.cpp -->
+<pre><span class="cplusplus">// ---- A function template, and a "real" function ("example_2_1.cpp") -------
+
+// C++ Standard Library Headers
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+// Template function
+template &lt;class T&gt;
+T MyMin( T firstValue, T secondValue )
+{
+   return( (firstValue &lt; secondValue) ? firstValue : secondValue );
+}
+
+// "Real" function
+double MyMin( double firstValue, double secondValue )
+{
+// Here be found Porkies !!
+   return( (firstValue &gt; secondValue) ? firstValue : secondValue );
+//                     ^
+//                     |
+//                     Wrong sign just to show which function is being called
+}
+
+int main()
+{
+    string firstString("yo"), secondString("boys"), stringMinimum;
+    int firstInteger = 123, secondInteger = 456, integerMinimum;
+    double firstDouble = 3.1415926535898, secondDouble = 1.6180339887499, doubleMinimum;
+//  End of declarations ...
+
+    integerMinimum = MyMin( firstInteger, secondInteger );
+    cout &lt;&lt; "Minimum of " &lt;&lt; firstInteger &lt;&lt; " and " &lt;&lt; secondInteger
+         &lt;&lt; " is " &lt;&lt; integerMinimum &lt;&lt; endl;
+
+    stringMinimum = MyMin( firstString, secondString );
+    cout &lt;&lt; "Minimum of " &lt;&lt; firstString &lt;&lt; " and " &lt;&lt; secondString
+         &lt;&lt; " is " &lt;&lt; stringMinimum &lt;&lt; endl;
+
+    doubleMinimum = MyMin( firstDouble, secondDouble );
+    cout &lt;&lt; "$ SET PORKY/ON" &lt;&lt; endl;
+    cout &lt;&lt; "Wrong answer if \"real\" MyMin called instead of template" &lt;&lt; endl;
+    cout &lt;&lt; "Minimum of " &lt;&lt; firstDouble &lt;&lt; " and " &lt;&lt; secondDouble
+         &lt;&lt; " is " &lt;&lt; doubleMinimum &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_2_1 -->
+<pre class="output">Minimum of 123 and 456 is 123
+Minimum of yo and boys is boys
+$ SET PORKY/ON
+Wrong answer if "real" MyMin called instead of template
+Minimum of 3.14159 and 1.61803 is 3.14159</pre>
+<p>The “real” function matched the <code>double</code> case exactly, and was used in preference to the template. The <code>using namespace std</code> line lets us write <code>cout</code> and <code>string</code> rather than <code>std::cout</code> and <code>std::string</code> (see <a href="#Since_Original">§1.1</a>).</p>
+
+<h3 id="Class_Templates">Class Templates</h3>
+<p>Template classes have the following form:</p>
+<pre><span class="cplusplus">template &lt; <i>template-parameter-list</i> &gt;
+<i>class-definition</i></span></pre>
+<p>The <i>template-parameter-list</i> is one or more template parameters, whose names can be used within the template definition. For example:</p>
+<p class="listing-title" id="example_2_2">Example 2.2: <a href="examples/example_2_2.cpp"><code>example_2_2.cpp</code></a></p>
+<!-- listing example_2_2.cpp -->
+<pre><span class="cplusplus">// ---- A class template with a type and a size ("example_2_2.cpp") ----------
+
+// C++ Standard Library Headers
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+
+using namespace std;
+
+template &lt;class T, int Capacity&gt;
+class MyVector
+{
+  public:
+    MyVector() : maximumSize( Capacity ), usedCount( 0 ), objectList( new T[ Capacity ] ) {}
+    ~MyVector() { delete [] objectList; }
+
+//  Copying would leave two MyVectors deleting the same objectList, so
+//  forbid it (the "rule of three": a class that needs a destructor
+//  usually needs its own copy constructor and copy assignment too)
+    MyVector( const MyVector &amp; ) = delete;
+    MyVector &amp;operator=( const MyVector &amp; ) = delete;
+
+    void Append( const T &amp;newObject ) { if ( usedCount &lt; maximumSize )
+                                          objectList[usedCount++] = newObject; }
+
+    T &amp;operator[]( int index )
+    {
+       if ( index &lt; 0 || index &gt;= usedCount ) {
+         throw out_of_range( "up" ); // barf on error
+       }
+       return( objectList[index] );
+    }
+
+  private:
+    int maximumSize;
+    int usedCount;
+    T *objectList;
+};
+
+int main()
+{
+    const int maximumElements = 10;
+    MyVector&lt; int, maximumElements &gt; karasList;
+//  End of declarations ...
+
+//  Populate the list
+    for ( int i = 0; i &lt; maximumElements; i++ )
+      karasList.Append( i );
+
+//  Print out the list
+    for ( int i = 0; i &lt; maximumElements; i++ )
+      cout &lt;&lt; karasList[i] &lt;&lt; " ";
+
+    cout &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_2_2 -->
+<pre class="output">0 1 2 3 4 5 6 7 8 9 </pre>
+<p><code>MyVector</code> takes a type, <code>T</code>, and a value, <code>Capacity</code>, which the compiler fills in when it sees <code>MyVector&lt; int, maximumElements &gt;</code>. A bad index makes <code>operator[]</code> throw <code>out_of_range</code>, one of the standard exception classes from <code>&lt;stdexcept&gt;</code>. Notice the two functions marked <code>= delete</code>: <code>MyVector</code> owns the memory it allocates, so if it were copied, both copies would try to delete the same array.</p>
+
+<h2 id="What_STL_done">3. What has the STL ever done for us ?</h2>
+<div class="quote">
+<p>“Well, yes, vectors, I mean obviously the vectors are good ...”</p>
+<p>“Don’t forget queues Reg, I mean, where would we be without properly organized queues and iterators for any data type ?” <i>General murmurs of agreement</i></p>
+<p>“Yes, alright, apart from vectors and queues ...”</p>
+<p>“Sorts Reg – I hated having to code up a new sort routine for every class.” <i>Hear, hear, etc.</i></p>
+<p>“Right. So apart from vectors, queues and associative container classes, iterators, various useful algorithms and functions, what has the STL ever done for us ?”</p>
+<p>“Memory allocators Reg. We can allocate container memory using any scheme we like, and change it without rewriting all the code. It keeps things in order.” <i>Reg loses his temper</i></p>
+<p>“Order ? Order ? Oh shut up!”</p>
+</div>
+<p>At the end of this section, the waffle above should start making sense to you, but is unlikely to become more humorous as a result of your studies.</p>
+<p>There were three types of <i>sequence container</i> in the original STL. These, as their name suggests, store data in linear sequence. They are:</p>
+<ul>
+<li><code>vector</code></li>
+<li><code>deque</code></li>
+<li><code>list</code></li>
+</ul>
+<p><span class="cplusplus">C++</span>11 added two more, <code>array</code> and <code>forward_list</code> (see <a href="#Since_Original">§1.1</a>). To choose a container, decide what sort of operations you will most frequently perform on your data, then use the following table to help you.</p>
+<table class="overheads">
+<caption>Time overhead of operations on sequence containers</caption>
+<tr><th>Operation</th><th>Vector</th><th>Deque</th><th>List</th></tr>
+<tr><td>Access first element</td><td>Constant</td><td>Constant</td><td>Constant</td></tr>
+<tr><td>Access last element</td><td>Constant</td><td>Constant</td><td>Constant</td></tr>
+<tr><td>Access “random” element</td><td>Constant</td><td>Constant</td><td><span class="highlight">Linear</span></td></tr>
+<tr><td>Add/Delete at beginning</td><td><span class="highlight">Linear</span></td><td>Constant</td><td>Constant</td></tr>
+<tr><td>Add/Delete at end</td><td>Constant*</td><td>Constant</td><td>Constant</td></tr>
+<tr><td>Add/Delete at “random”</td><td><span class="highlight">Linear</span></td><td><span class="highlight">Linear</span></td><td>Constant**</td></tr>
+</table>
+<p class="note">* On average (“amortised”): now and then the vector has to reallocate, and copy or move every element.<br>
+** Once you have an iterator pointing at the position; finding the position is linear.</p>
+<p>Each container has attributes suited to particular applications. The subsections and code samples below should further clarify when and how to use each type of sequence container.</p>
+<p id="Header_Files">Throughout this tutorial, I have given the <code>#include</code> file needed to use a feature immediately after the subsection heading. Note that some of the header names changed between the early versions of the STL and the standard, and the <code>.h</code> suffix was dropped. Older books may refer to, for example, <code>&lt;algo.h&gt;</code>, which you should replace with <code>&lt;algorithm&gt;</code>. The ANSI <span class="c-code">C</span> headers, like <code>&lt;stdlib.h&gt;</code>, also have <span class="cplusplus">C++</span> versions, prefixed by the letter “c” and minus the <code>.h</code>, such as <code>&lt;cstdlib&gt;</code>. Every current compiler supports these, they are the ones to use in <span class="cplusplus">C++</span>, and the examples use them.</p>
+<p>On OpenVMS systems with DEC <span class="cplusplus">C++</span>, a reference copy of the source code for the STL can be found in <code>SYS$COMMON:[CXX$LIB.REFERENCE.CXXL$ANSI_DEF]</code>, so for <code>&lt;vector&gt;</code> look in there for the file <code>VECTOR.;</code> . In Visual Studio, right-click the header name in an <code>#include</code> line, such as <code>#include &lt;vector&gt;</code>, and choose “Go To Definition” (F12) to open the header itself.</p>
+
+<h3 id="Vector">Vector</h3>
+<pre><span class="cplusplus">#include <b>&lt;vector&gt;</b></span></pre>
+<p>We introduced the <code>vector</code> in Example 1.2, where we used it instead of an array. The <code>vector</code> class is similar to an array, and allows array-type syntax, e.g. <code>myVector[2]</code>. A <code>vector</code> is able to access elements at any position (referred to as “random” access in the preceding table) with a constant time overhead, <b>O</b>(1). Insertion or deletion at the <em>end</em> of a <code>vector</code> is “cheap”. As with the <a href="#Strings"><code>string</code></a>, <b>no bounds checking</b> is performed when you use <code>operator []</code>; use <code>at()</code> if you want the index checked.</p>
+<p>Insertions and deletions anywhere other than at the end of the <code>vector</code> incur overhead <b>O</b>(N), N being the number of elements in the vector, because all the following entries have to be shuffled along to make room for the new entries, the storage being contiguous. The memory overhead of a <code>vector</code> is very low and comparable to a normal array.</p>
+<p>The table below shows some of the main <code>vector</code> functions.</p>
+<pre class="reference">  <span class="term">Some Vector Access Functions</span>    <span class="term">Purpose</span>
+  ----------------------------    -------
+  <span class="term">begin()</span>                         <span class="explain">Returns <a href="#Iterators">iterator</a> pointing to first element</span>
+  <span class="term">end()</span>                           <span class="explain">Returns iterator pointing _after_ last element</span>
+  <span class="term">push_back(...)</span>                  <span class="explain">Add element to end of vector</span>
+  <span class="term">pop_back()</span>                      <span class="explain">Destroy element at end of vector</span>
+  <span class="term">insert(...)</span>                     <span class="explain">Insert new element</span>
+  <span class="term">erase(...)</span>                      <span class="explain">Delete elements</span>
+  <span class="term">clear()</span>                         <span class="explain">Delete all the elements</span>
+  <span class="term">swap(...)</span>                       <span class="explain">Swap the contents of two vectors</span>
+  <span class="term">size()</span>                          <span class="explain">Number of elements in vector</span>
+  <span class="term">capacity()</span>                      <span class="explain">Element capacity before more memory needed</span>
+  <span class="term">reserve(...)</span>                    <span class="explain">Make room for at least this many elements</span>
+  <span class="term">empty()</span>                         <span class="explain">True if vector is empty</span>
+  <span class="term">[]</span>                              <span class="explain">Random access operator, no bounds checking</span>
+  <span class="term">at(...)</span>                         <span class="explain">Random access, with bounds checking</span></pre>
+<p>The next example shows a <code>vector</code> in use.</p>
+<p class="listing-title" id="example_3_1">Example 3.1: <a href="examples/example_3_1.cpp"><code>example_3_1.cpp</code></a></p>
+<!-- listing example_3_1.cpp -->
+<pre><span class="cplusplus">// ---- Some of the vector access functions in use ("example_3_1.cpp") -------
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;stdexcept&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+// Print every element, then the size, using an iterator
+void PrintVector( const char *title, const vector&lt;int&gt; &amp;values )
+{
+    cout &lt;&lt; title &lt;&lt; ": ";
+    for ( vector&lt;int&gt;::const_iterator valueIterator = values.begin();
+          valueIterator != values.end(); ++valueIterator )
+      cout &lt;&lt; *valueIterator &lt;&lt; " ";
+    cout &lt;&lt; " [size() = " &lt;&lt; values.size() &lt;&lt; "]" &lt;&lt; endl;
+}
+
+int main()
+{
+    const int years[] = { 1975, 1969, 1983, 1979, 1971 };
+    vector&lt;int&gt; values;
+//  End of declarations ...
+
+    cout &lt;&lt; "empty() is " &lt;&lt; (values.empty() ? "true" : "false") &lt;&lt; " to start with" &lt;&lt; endl;
+
+//  push_back() adds to the end, growing the vector as needed
+    for ( int year : years )
+      values.push_back( year );
+    PrintVector( "After push_back()", values );
+
+//  sort() takes a range: begin() up to, but not including, end()
+    sort( values.begin(), values.end() );
+    PrintVector( "After sort()", values );
+
+//  [] and at() give random access; only at() checks the index
+    cout &lt;&lt; "values[1] = " &lt;&lt; values[1] &lt;&lt; ", values.at(2) = " &lt;&lt; values.at(2) &lt;&lt; endl;
+    try {
+      cout &lt;&lt; values.at( 99 ) &lt;&lt; endl;
+    } catch ( const out_of_range &amp; ) {
+      cout &lt;&lt; "values.at(99) threw out_of_range" &lt;&lt; endl;
+    }
+
+//  insert() in the middle shuffles the later elements along, O(N)
+    values.insert( values.begin() + 2, 1974 );
+    PrintVector( "After insert() at position 2", values );
+
+//  erase() in the middle shuffles them back again
+    values.erase( values.begin() );
+    PrintVector( "After erase() of the first", values );
+
+//  pop_back() destroys the last element, cheaply
+    values.pop_back();
+    PrintVector( "After pop_back()", values );
+
+//  reserve() makes room in advance; capacity() is at least size()
+    values.reserve( 100 );
+    cout &lt;&lt; "After reserve(100), capacity() is at least " &lt;&lt; values.capacity() &lt;&lt; endl;
+
+    values.clear();
+    PrintVector( "After clear()", values );
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_3_1 -->
+<pre class="output">empty() is true to start with
+After push_back(): 1975 1969 1983 1979 1971  [size() = 5]
+After sort(): 1969 1971 1975 1979 1983  [size() = 5]
+values[1] = 1971, values.at(2) = 1975
+values.at(99) threw out_of_range
+After insert() at position 2: 1969 1971 1974 1975 1979 1983  [size() = 6]
+After erase() of the first: 1971 1974 1975 1979 1983  [size() = 5]
+After pop_back(): 1971 1974 1975 1979  [size() = 4]
+After reserve(100), capacity() is at least 100
+After clear():  [size() = 0]</pre>
+<p>Note how <code>sort</code> takes <code>values.begin()</code> and <code>values.end()</code> as range arguments. This is very common in the STL, and you will meet it again. The STL also provides two classes for special purposes: <code>bitset</code>, a fixed-size array of bits which allows array-like addressing of individual bits, and <code>valarray</code>, which is intended for numeric work with real or integer quantities. To use them, include the <code>&lt;bitset&gt;</code> or <code>&lt;valarray&gt;</code> header. Be careful if you <code>erase()</code> or <code>insert()</code> elements in the middle of a <code>vector</code>. This invalidates iterators pointing at the elements after that position, and if the <code>vector</code> has to grow, it invalidates <em>all existing iterators</em>. To erase all elements in a <code>vector</code> use the <code>clear()</code> member function.</p>
+
+<h3 id="Deque">Deque</h3>
+<pre><span class="cplusplus">#include <b>&lt;deque&gt;</b></span></pre>
+<p>The double-ended queue, <code>deque</code> (pronounced “deck”), has similar properties to a <code>vector</code>, but as the name suggests you can efficiently insert or delete elements at <em>either end</em>.</p>
+<p>The table shows some of the main <code>deque</code> functions.</p>
+<pre class="reference">  <span class="term">Some Deque Access Functions</span>    <span class="term">Purpose</span>
+  ---------------------------    -------
+  <span class="term">begin()</span>                        <span class="explain">Returns iterator pointing to first element</span>
+  <span class="term">end()</span>                          <span class="explain">Returns iterator pointing _after_ last element</span>
+  <span class="term">push_front(...)</span>                <span class="explain">Add element to front of deque</span>
+  <span class="term">pop_front()</span>                    <span class="explain">Destroy element at front of deque</span>
+  <span class="term">push_back(...)</span>                 <span class="explain">Add element to end of deque</span>
+  <span class="term">pop_back()</span>                     <span class="explain">Destroy element at end of deque</span>
+  <span class="term">insert(...)</span>                    <span class="explain">Insert new element</span>
+  <span class="term">erase(...)</span>                     <span class="explain">Delete elements</span>
+  <span class="term">swap(...)</span>                      <span class="explain">Swap the contents of two deques</span>
+  <span class="term">size()</span>                         <span class="explain">Number of elements in deque</span>
+  <span class="term">empty()</span>                        <span class="explain">True if deque is empty</span>
+  <span class="term">[]</span>                             <span class="explain">Random access operator, no bounds checking</span>
+  <span class="term">at(...)</span>                        <span class="explain">Random access, with bounds checking</span></pre>
+<p>A <code>deque</code>, like a <code>vector</code>, is not very good at inserting or deleting elements at random positions, but it does allow random access to elements using the array-like <code>[]</code> syntax, though not quite as efficiently as a <code>vector</code> or array. An <code>insert()</code> in the middle invalidates <em>all existing iterators</em>, and so does an <code>erase()</code> anywhere except at the two ends.</p>
+<p>The following program shows a <code>deque</code> representing a deck of cards. The queue is double-ended, so you could modify it to cheat and deal off the bottom :-)</p>
+<p class="listing-title" id="example_3_2">Example 3.2: <a href="examples/example_3_2.cpp"><code>example_3_2.cpp</code></a></p>
+<!-- listing example_3_2.cpp -->
+<pre><span class="cplusplus">// ---- A deque as a deck of cards, for a game of pontoon ("example_3_2.cpp") -
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cctype&gt;
+#include &lt;cstdlib&gt;
+#include &lt;deque&gt;
+#include &lt;iostream&gt;
+#include &lt;random&gt;
+
+using namespace std;
+
+class Card
+{
+  public:
+    Card() : suit( 0 ), rank( 1 ) {}
+    Card( int newSuit, int newRank ) : suit( newSuit ), rank( newRank ) {}
+    friend ostream &amp; operator&lt;&lt;( ostream &amp;os, const Card &amp;card );
+    int Value() const { return( rank &gt; 10 ? 10 : rank ); } // Picture cards count 10
+  private:
+    int suit, rank;
+};
+
+ostream &amp; operator&lt;&lt;( ostream &amp;os, const Card &amp;card )
+{
+   static const char *suitNames[] = { "Hearts", "Clubs", "Diamonds", "Spades" };
+   static const char *rankNames[] = { "Ace", "2", "3", "4", "5", "6", "7",
+                                      "8", "9", "10", "Jack", "Queen", "King" };
+   return( os &lt;&lt; rankNames[card.rank-1] &lt;&lt; " of " &lt;&lt; suitNames[card.suit] );
+}
+
+class Deck
+{
+  public:
+    Deck() : randomNumbers( random_device()() ) { NewPack(); }
+    void NewPack() {
+      cards.clear(); // Throw away what is left of the old pack first
+      for ( int suit = 0; suit &lt; 4; ++suit ) {
+        for ( int rank = 1; rank &lt;= 13; ++rank ) cards.push_back( Card( suit, rank ) );
+      }
+    }
+//  Shuffle() uses the STL sequence modifying algorithm, shuffle()
+    void Shuffle() { shuffle( cards.begin(), cards.end(), randomNumbers ); }
+    bool Empty() const { return( cards.empty() ); }
+    Card Twist() { Card next = cards.front(); cards.pop_front(); return( next ); }
+  private:
+    deque&lt; Card &gt; cards;
+    mt19937 randomNumbers;    // Random number engine for shuffle()
+};
+
+// Read a one letter answer, in upper case
+char GetResponse()
+{
+    char response = 'N';
+    cin &gt;&gt; response;
+    if ( !cin.good() ) {
+      cin.clear(); // Catch Ctrl-Z, which leaves cin in an error state
+      response = 'N';
+    }
+    return( (char)toupper( (unsigned char)response ) );
+}
+
+int main()
+{
+    Deck deck;
+    Card card;
+    int playerTotal, bankTotal;
+    char response;
+//  End of declarations ...
+
+    while ( true ) {
+      cout &lt;&lt; "\n\n ---- New deck ----" &lt;&lt; endl;
+      playerTotal = bankTotal = 0;
+      deck.Shuffle();
+      response = 'T';
+
+      while ( true ) {
+        if ( playerTotal &gt; 0 &amp;&amp; playerTotal != 21 ) {
+          cout &lt;&lt; "Twist or Stick ? ";
+          response = GetResponse();
+        } else {
+          if ( playerTotal == 21 ) response = 'S'; // Stick at 21
+        }
+
+        if ( response == 'Y' || response == 'T' ) {
+          card = deck.Twist();
+          playerTotal += card.Value();
+          cout &lt;&lt; card &lt;&lt; " makes a total of " &lt;&lt; playerTotal &lt;&lt; endl;
+          if ( playerTotal &gt; 21 ) {
+            cout &lt;&lt; "Bust !" &lt;&lt; endl;
+            break;
+          }
+        } else {
+          cout &lt;&lt; "You stuck at " &lt;&lt; playerTotal &lt;&lt; "\n"
+               &lt;&lt; "Bank tries to beat you" &lt;&lt; endl;
+
+          while ( bankTotal &lt; playerTotal &amp;&amp; !deck.Empty() ) {
+            card = deck.Twist();
+            bankTotal += card.Value();
+            cout &lt;&lt; card &lt;&lt; " makes bank's total " &lt;&lt; bankTotal &lt;&lt; endl;
+          }
+          if ( bankTotal &gt; 21 ) {
+            cout &lt;&lt; "Bank has bust - You win !" &lt;&lt; endl;
+          } else if ( bankTotal &gt;= playerTotal ) {
+            cout &lt;&lt; "Bank has won !" &lt;&lt; endl;
+          } else {
+            cout &lt;&lt; "Bank has run out of cards - You win !" &lt;&lt; endl;
+          }
+          break;
+        }
+      }
+
+      cout &lt;&lt; "New game [Y/N] ? ";
+      response = GetResponse();
+      if ( response != 'Y' &amp;&amp; response != 'T' ) break;
+      deck.NewPack();
+    }
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>The card game is a version of pontoon, the idea being to get as close to 21 as possible. Aces are counted as one, picture cards as 10. Try to modify the program to do smart addition and count aces as 11 or 1; use a <code>vector</code> to store your “hand” and give alternative totals.</p>
+<p><code>Shuffle()</code> calls the <code>shuffle()</code> algorithm with an <code>mt19937</code> random number engine, seeded from <code>random_device</code> so that every run deals differently. Notice the check on the state of the input stream in <code>GetResponse()</code>. This is needed because if you type <code>Ctrl/Z</code>, the input stream will be in an error state and the next read will return immediately, causing a loop if you don’t clear <code>cin</code> to a good state.</p>
+
+<h3 id="List">List</h3>
+<pre><span class="cplusplus">#include <b>&lt;list&gt;</b></span></pre>
+<p>Lists don’t provide <code>[]</code> random access like an array or <code>vector</code>, but are suited to applications where you want to add or remove elements to or from the <em>middle</em>. They are implemented as doubly linked lists in order to support <a href="#Iterators">bidirectional iterators</a>, and are the most memory-hungry standard container, <code>vector</code> being the least so. In compensation, lists allow low-cost growth at either end or in the middle.</p>
+<p>Here are some of the main <code>list</code> functions.</p>
+<pre class="reference">  <span class="term">Some List Access Functions</span>    <span class="term">Purpose</span>
+  --------------------------    -------
+  <span class="term">begin()</span>                       <span class="explain">Returns iterator pointing to first element</span>
+  <span class="term">end()</span>                         <span class="explain">Returns iterator pointing _after_ last element</span>
+  <span class="term">push_front(...)</span>               <span class="explain">Add element to front of list</span>
+  <span class="term">pop_front()</span>                   <span class="explain">Destroy element at front of list</span>
+  <span class="term">push_back(...)</span>                <span class="explain">Add element to end of list</span>
+  <span class="term">pop_back()</span>                    <span class="explain">Destroy element at end of list</span>
+  <span class="term">insert(...)</span>                   <span class="explain">Insert new element</span>
+  <span class="term">erase(...)</span>                    <span class="explain">Delete elements</span>
+  <span class="term">swap(...)</span>                     <span class="explain">Swap the contents of two lists</span>
+  <span class="term">size()</span>                        <span class="explain">Number of elements in list</span>
+  <span class="term">empty()</span>                       <span class="explain">True if list is empty</span>
+  <span class="term">sort()</span>                        <span class="explain">Specific function, because the &lt;algorithm&gt;
+                                sort routines expect random access iterators</span>
+  <span class="term">splice(...)</span>                   <span class="explain">Move elements from another list, without copying</span></pre>
+<p class="listing-title" id="example_3_3">Example 3.3: <a href="examples/example_3_3.cpp"><code>example_3_3.cpp</code></a></p>
+<!-- listing example_3_3.cpp -->
+<pre><span class="cplusplus">// ---- Finding and inserting in a list ("example_3_3.cpp") ------------------
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;list&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main()
+{
+    const string names[] = { "JAF", "ROB", "KARA", "ELLIOTT", "ANDRZEJ" };
+    list&lt; string &gt; staffList;
+    list&lt; string &gt;::iterator staffIterator;
+//  End of declarations ...
+
+    for ( const string &amp;name : names ) staffList.push_back( name );
+    for ( staffIterator = staffList.begin(); staffIterator != staffList.end(); ++staffIterator )
+      cout &lt;&lt; *staffIterator &lt;&lt; endl;
+
+//  Find "ELLIOTT"
+    cout &lt;&lt; "\nNow look for ELLIOTT" &lt;&lt; endl;
+    staffIterator = find( staffList.begin(), staffList.end(), "ELLIOTT" );
+
+//  Mary should be ahead of Elliott
+    if ( staffIterator != staffList.end() ) {
+      cout &lt;&lt; "\nInsert MARY before ELLIOTT" &lt;&lt; endl;
+      staffList.insert( staffIterator, "MARY" );
+    } else {
+      cout &lt;&lt; "\nCouldn't find ELLIOTT" &lt;&lt; endl;
+    }
+    for ( staffIterator = staffList.begin(); staffIterator != staffList.end(); ++staffIterator )
+      cout &lt;&lt; *staffIterator &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_3_3 -->
+<pre class="output">JAF
+ROB
+KARA
+ELLIOTT
+ANDRZEJ
+
+Now look for ELLIOTT
+
+Insert MARY before ELLIOTT
+JAF
+ROB
+KARA
+MARY
+ELLIOTT
+ANDRZEJ</pre>
+<p>The loop over elements starts at <code>staffList.begin()</code> and ends <em>just before</em> <code>staffList.end()</code>. The STL <code>end()</code> functions return iterators pointing <em>just past the last element</em>, so loops should do a <code>!=</code> test and not try to dereference this, most likely invalid, position. Take care not to reuse (e.g. <code>++</code>) an iterator after it has been used with <code>erase()</code> – it will be invalid (<code>erase()</code> returns an iterator to the next element instead). Other iterators into a <code>list</code>, however, are still valid after <code>erase()</code> or <code>insert()</code>.</p>
+
+<h3 id="Container_Caveats">Container Caveats</h3>
+<p>Be aware that copy constructors and copy assignment are used when elements are added to and (in the case of the <code>vector</code> and <code>deque</code>) deleted from containers, respectively. To refresh your memories, copy constructor and copy assignment member functions look like this example:</p>
+<pre><span class="cplusplus">class MyClass {
+public:
+  .
+  // Copy constructor
+  MyClass( const MyClass &amp;mc )
+  {
+    // Initialize new object by copying mc.
+    // If you have *this = mc , you'll call the copy assignment function
+  }
+
+  // Copy assignment
+  MyClass &amp; operator =( const MyClass &amp;mcRHS )
+  {
+    // Avoid self-assignment
+    if ( this != &amp;mcRHS ) {
+      // Be careful not to do *this = mcRHS or you'll loop
+      .
+    }
+    return( *this );
+  }
+};</span></pre>
+<p>When you put an object in a container, the copy constructor will be called. If you erase elements, then destructors and copy assignments (if other elements need to be shuffled down) will be called. See the supplementary example, <a href="examples/refcount.cpp"><code>refcount.cpp</code></a>, for a demonstration of this. Since <span class="cplusplus">C++</span>11, containers <em>move</em> elements instead of copying them when the element type has a move constructor and move assignment, which is usually much cheaper; a growing <code>vector</code> only moves if the move constructor is marked <code>noexcept</code>. <code>emplace_back()</code> goes one better, building the new element in place from its constructor arguments, with no copy or move at all.</p>
+<p>Another point to bear in mind is that, if you know in advance how many elements you are going to add to a container, you can <code>reserve()</code> space, avoiding the need for the STL to reallocate or move the container.</p>
+<pre><span class="cplusplus">  vector&lt;MyClass&gt; things;
+  things.reserve( 30000 );
+  for ( ... ) {
+    things.push_back( nextThing );
+  }</span></pre>
+<p>The above code fragment reserves enough space for 30000 objects up front, and produced a significant speed-up in the program it came from.</p>
+
+<h3 id="Allocators">Allocators</h3>
+<p>Allocators do exactly what it says on the tin. They allocate raw memory, and return it. They do not create or destroy objects. Allocators are very “low level” features in the STL, and are designed to encapsulate memory allocation and deallocation. This allows for efficient storage by use of different schemes for particular container classes. The default allocator, <code>std::allocator</code>, is thread-safe and has good performance characteristics. On the whole, it is best to regard allocators as a “black box”, because the defaults work well for most applications. (<span class="cplusplus">C++</span>17 added polymorphic allocators, in namespace <code>std::pmr</code>, for when you really do need control.) Leave well alone !</p>
+
+<h2 id="Sequence_Adapters">4. Sequence Adapters</h2>
+<p>Sequence container adapters are used to change the “user interface” to other STL sequence containers, or to user-written containers if they satisfy the access function requirements. Why might you want to do this ? Well, if you wanted to implement a stack of items, you might at first decide to base your stack class on the <code>list</code> container – let’s call it <code>ListStack</code> – and define public member functions for <code>push()</code>, <code>pop()</code>, <code>empty()</code> and <code>top()</code>. However, you might later decide that another container like a <code>vector</code> might be better suited to the task. You would then have to define a new stack class, with the same public interface, but based on the <code>vector</code>, e.g. <code>VectorStack</code>, so that other programmers could choose a <code>list</code> or a <code>vector</code> based stack. It is obvious that the number of names for what is essentially the same thing starts to mushroom. In addition, this approach rules out the programmer using his or her own underlying class as the container.</p>
+<p>Container adapters neatly solve this by presenting the same public interface irrespective of the underlying container. Being templates, they avoid name proliferation. Provided the container type used supports the operations required by the adapter class (see the individual sections below) you can use any type for the underlying implementation. It is important to note that the adapters provide a restricted interface to the underlying container, and you <em>cannot</em> use <a href="#Iterators">iterators</a> with adapters.</p>
+
+<h3 id="Stack">Stack</h3>
+<pre><span class="cplusplus">#include <b>&lt;stack&gt;</b></span></pre>
+<p>The <code>stack</code> implements a Last In First Out, or LIFO, structure, which provides the public functions <code>push()</code>, <code>pop()</code>, <code>top()</code>, <code>empty()</code> and <code>size()</code>. Again, these are self-explanatory – <code>empty()</code> returns a <code>bool</code> value which is true if the <code>stack</code> is empty. To support this functionality <code>stack</code> expects the underlying container to support <code>push_back()</code>, <code>pop_back()</code>, <code>back()</code>, <code>empty()</code> and <code>size()</code>.</p>
+<pre class="reference">  <span class="term">Container Function</span>    <span class="term">Stack Adapter Function</span>
+  ------------------    ----------------------
+  <span class="term">back()</span>                <span class="explain">top()</span>
+  <span class="term">push_back()</span>           <span class="explain">push()</span>
+  <span class="term">pop_back()</span>            <span class="explain">pop()</span>
+  <span class="term">empty()</span>               <span class="explain">empty()</span>
+  <span class="term">size()</span>                <span class="explain">size()</span></pre>
+<p>You would be correct in surmising that you can use <code>vector</code>, <code>deque</code> (the default) or <code>list</code> as the underlying container type. If you wanted a user-written type as the container, then provided it had the necessary public interfaces, you could just “plug” it into a container adapter.</p>
+<p>Example 4.1 demonstrates a stack implemented with a <code>vector</code> of pointers to <code>char</code>. (The syntax for container adapters in some early books, such as Musser and Saini’s and Nelson’s, differs from the standard one used here.)</p>
+<p class="listing-title" id="example_4_1">Example 4.1: <a href="examples/example_4_1.cpp"><code>example_4_1.cpp</code></a></p>
+<!-- listing example_4_1.cpp -->
+<pre><span class="cplusplus">// ---- A stack adapter on a vector ("example_4_1.cpp") ----------------------
+
+// C++ Standard Library Headers
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;stack&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main()
+{
+    stack&lt; const char *, vector&lt;const char *&gt; &gt; wordStack;
+
+//  Push on stack in reverse order
+    wordStack.push("order");
+    wordStack.push("correct"); // Oh no it isn't !
+    wordStack.push("the");
+    wordStack.push("in");
+    wordStack.push("is");
+    wordStack.push("This");
+
+//  Pop off stack which reverses the push() order
+    while ( !wordStack.empty() ) {
+      cout &lt;&lt; wordStack.top() &lt;&lt; " "; wordStack.pop(); // Oh yes it is !
+    }
+    cout &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_4_1 -->
+<pre class="output">This is in the correct order </pre>
+<p>Note how the <code>stack</code> declaration uses two arguments. The first is the type of object stored, and the second is a container of the same type of object.</p>
+
+<h3 id="Queue">Queue</h3>
+<pre><span class="cplusplus">#include <b>&lt;queue&gt;</b></span></pre>
+<p>A <code>queue</code> implements a First In First Out, or FIFO, structure, which provides the public functions <code>push()</code>, <code>pop()</code>, <code>front()</code>, <code>back()</code>, <code>empty()</code> and <code>size()</code> (<code>empty()</code> returns a <code>bool</code> value which is true if the <code>queue</code> is empty). To support these, <code>queue</code> expects the underlying container to have <code>push_back()</code>, <code>pop_front()</code>, <code>front()</code>, <code>back()</code>, <code>empty()</code> and <code>size()</code>.</p>
+<pre class="reference">  <span class="term">Container Function</span>    <span class="term">Queue Adapter Function</span>
+  ------------------    ----------------------
+  <span class="term">front()</span>               <span class="explain">front()</span>
+  <span class="term">back()</span>                <span class="explain">back()</span>
+  <span class="term">push_back()</span>           <span class="explain">push()</span>
+  <span class="term">pop_front()</span>           <span class="explain">pop()</span>
+  <span class="term">empty()</span>               <span class="explain">empty()</span>
+  <span class="term">size()</span>                <span class="explain">size()</span></pre>
+<p>You can use <code>deque</code> or <code>list</code> as the underlying container type, or a user-written type. You can’t use a <code>vector</code> because <code>vector</code> doesn’t support <code>pop_front()</code>. You could write a <code>pop_front()</code> function for <code>vector</code>, but this would be inefficient because removing the first element would require a potentially large memory shuffle for all the other elements, taking time <b>O</b>(N).</p>
+<p>The following code shows how to use a <code>queue</code>.</p>
+<p class="listing-title" id="example_4_2">Example 4.2: <a href="examples/example_4_2.cpp"><code>example_4_2.cpp</code></a></p>
+<!-- listing example_4_2.cpp -->
+<pre><span class="cplusplus">// ---- A queue adapter on the default deque ("example_4_2.cpp") -------------
+
+// C++ Standard Library Headers
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;queue&gt;
+
+using namespace std;
+
+int main()
+{
+    queue&lt; const char * &gt; wordQueue;
+
+//  Push onto the back of the queue in the correct order
+    wordQueue.push("First");
+    wordQueue.push("come");
+    wordQueue.push("first");
+    wordQueue.push("served");
+    wordQueue.push("- why");
+    wordQueue.push("don't");
+    wordQueue.push("bars");
+    wordQueue.push("do");
+    wordQueue.push("this ?");
+
+//  Pop off front of queue which preserves the order
+    while ( !wordQueue.empty() ) {
+      cout &lt;&lt; wordQueue.front() &lt;&lt; " "; wordQueue.pop();
+    }
+    cout &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_4_2 -->
+<pre class="output">First come first served - why don't bars do this ? </pre>
+<p>Note how we haven’t given a second argument in the <code>queue</code> declaration, but used the default <code>deque</code> given in the header file.</p>
+
+<h3 id="Priority_Queue">Priority Queue</h3>
+<pre><span class="cplusplus">#include <b>&lt;queue&gt;</b></span></pre>
+<p>A <code>priority_queue</code>, defined in the <code>&lt;queue&gt;</code> header, is similar to a <code>queue</code>, with the additional capability of ordering the objects according to a user-defined priority. The order of objects with equal priority is not really predictable, except of course that they will be grouped together. This might be required by an operating system process scheduler, or batch queue manager. The underlying container has to support <code>push_back()</code>, <code>pop_back()</code>, <code>front()</code>, <code>empty()</code> and <code>size()</code>, plus random access iterators, and the adapter needs a comparison function to decide the priority order.</p>
+<pre class="reference">  <span class="term">Container Function</span>    <span class="term">Priority Queue Adapter Function</span>
+  ------------------    -------------------------------
+  <span class="term">front()</span>               <span class="explain">top()</span>
+  <span class="term">push_back()</span>           <span class="explain">push()</span>
+  <span class="term">pop_back()</span>            <span class="explain">pop()</span>
+  <span class="term">empty()</span>               <span class="explain">empty()</span>
+  <span class="term">size()</span>                <span class="explain">size()</span>
+  <span class="term">[] random iterators</span>   <span class="explain">Required to support heap ordering operations</span></pre>
+<p>Hence a <code>vector</code> (the default) or a <code>deque</code> can be used as the underlying container, or a suitable user-provided class.</p>
+<p>The next sample program demonstrates a <code>priority_queue</code> implemented with a <code>vector</code> of task objects.</p>
+<p class="listing-title" id="example_4_3">Example 4.3: <a href="examples/example_4_3.cpp"><code>example_4_3.cpp</code></a></p>
+<!-- listing example_4_3.cpp -->
+<pre><span class="cplusplus">// ---- A priority_queue of tasks ("example_4_3.cpp") ------------------------
+
+// C++ Standard Library Headers
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;queue&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+class TaskObject {
+public:
+    friend class PrioritizeTasks;
+    friend ostream &amp; operator&lt;&lt;( ostream &amp;os, const TaskObject &amp;task );
+    TaskObject( const char *newProcessName = "", unsigned int newPriority = 4 )
+      : priority( newPriority ), processName( newProcessName ) {}
+private:
+    unsigned int priority;
+    string processName;
+};
+
+// Friend function for "printing" TaskObject to an output stream
+ostream &amp; operator&lt;&lt;( ostream &amp;os, const TaskObject &amp;task )
+{
+    os &lt;&lt; "Process: " &lt;&lt; task.processName &lt;&lt; " Priority: " &lt;&lt; task.priority;
+    return ( os );
+}
+
+// Friend class with function object for comparison of TaskObjects
+class PrioritizeTasks {
+public :
+    bool operator()( const TaskObject &amp;x, const TaskObject &amp;y ) const
+    {
+      return x.priority &lt; y.priority;
+    }
+};
+
+int main()
+{
+    priority_queue&lt;TaskObject, vector&lt;TaskObject&gt;, PrioritizeTasks&gt; taskQueue;
+
+    const TaskObject tasks[] = { "JAF", "ROB", "KARA", "JOHN"
+                                ,TaskObject("OPCOM",6)  , TaskObject("Swapper",16)
+                                ,TaskObject("NETACP",8) , TaskObject("REMACP",8) };
+
+    for ( const TaskObject &amp;task : tasks )
+      taskQueue.push( task );
+
+    while ( !taskQueue.empty() ) {
+        cout &lt;&lt; taskQueue.top() &lt;&lt; endl; taskQueue.pop();
+    }
+    cout &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_4_3 -->
+<pre class="output">Process: Swapper Priority: 16
+Process: NETACP Priority: 8
+Process: REMACP Priority: 8
+Process: OPCOM Priority: 6
+Process: KARA Priority: 4
+Process: JOHN Priority: 4
+Process: ROB Priority: 4
+Process: JAF Priority: 4</pre>
+<p>Example 4.3 shows a user-defined comparison <a href="#Functions">function object</a> (discussed later), the only member of the <code>PrioritizeTasks</code> class. This is used to determine the relative priority of tasks and, like the <code>&lt;&lt;</code> operator, is made a friend of the <code>TaskObject</code> class so that it can access the private data members. It takes its parameters as <code>const TaskObject &amp;</code>, is itself <code>const</code>, and returns a <code>bool</code>, as the STL expects of a comparison. When the tasks are pulled off the <code>priority_queue</code>, they are in our notional execution order, highest priority first; notice that the four tasks of priority 4 come out in no particular order.</p>
+
+<h2 id="Strings">5. Strings</h2>
+<pre><span class="cplusplus">#include <b>&lt;string&gt;</b></span></pre>
+<p>A member of the <span class="cplusplus">C++</span> standards committee was allegedly told that if strings didn’t appear pretty darn quickly, then there was going to be a lynching. There hasn’t been a lynching, and whilst we can debate the merits of this, I think there is general agreement that it is a good thing to have strings at last. Those of us who started programming with proper languages, like <span class="fortran">FORTRAN</span>, have long criticized the rather ugly syntax of <span class="c-code">C</span> string manipulation; “What ? You have to call a function to add two strings ?” being a typical comment.</p>
+<p>The <span class="cplusplus">C++</span> <code>string</code> class is an instantiation of the <code>basic_string</code> template, <code>basic_string&lt;char&gt;</code>. Providing much of the functionality of the container classes like <code>vector</code>, it also comes in versions for wide characters, such as <code>wstring</code>, which holds the UTF-16 used by Windows. The string class also provides a variety of specialized search functions for finding substrings. The characteristics of the character set stored in the string are described by the <code>char_traits</code> structure within the string, there being a different definition of this for each type of character. On the whole you needn’t concern yourself too much with these details if you are using strings of ASCII characters. Strings, like the <code>vector</code>, expand as you add to them, which is much more convenient than <span class="c-code">C</span>-style strings, where you either have to know how big they will be before you use them, or <code>malloc</code> and <code>realloc</code>. The largest possible string that can be accommodated is given by the <code>max_size()</code> access function.</p>
+<pre class="reference">  <span class="term">Some String Access Functions</span>    <span class="term">Purpose</span>
+  ----------------------------    -------
+  <span class="term">find(...)</span>                       <span class="explain">Find substring or character, starting from the start</span>
+  <span class="term">find_first_of(...)</span>              <span class="explain">Find first occurrence of any characters in
+                                  given set, starting from start of string</span>
+  <span class="term">find_last_of(...)</span>               <span class="explain">Find last occurrence of any characters in
+                                  given set, searching back from end of string</span>
+  <span class="term">find_first_not_of(...)</span>          <span class="explain">Find first occurrence of characters _not_
+                                  in given set, starting from start of string</span>
+  <span class="term">find_last_not_of(...)</span>           <span class="explain">Find last occurrence of characters _not_ in
+                                  given set, searching back from end of string</span>
+  <span class="term">rfind(...)</span>                      <span class="explain">Find substring or character, searching back from end</span>
+  <span class="term">substr(...)</span>                     <span class="explain">Copy part of the string</span>
+  <span class="term">size(), length()</span>                <span class="explain">Number of characters in string</span>
+  <span class="term">[]</span>                              <span class="explain">Random access to return a single character
+                                  - no bounds checking</span>
+  <span class="term">at(...)</span>                         <span class="explain">Random access to return a single character
+                                  - with bounds checking</span>
+  <span class="term">+</span>                               <span class="explain">Concatenate strings</span>
+  <span class="term">swap(...)</span>                       <span class="explain">Swap the contents of two strings</span>
+  <span class="term">insert(...)</span>                     <span class="explain">Insert a string at the specified position</span>
+  <span class="term">erase(...)</span>                      <span class="explain">Remove characters</span>
+  <span class="term">replace(...)</span>                    <span class="explain">Replace selected substring with another string</span>
+  <span class="term">c_str()</span>                         <span class="explain">Pointer to the characters as a C style string</span></pre>
+<p>The <code>string</code> provides the highest level of <a href="#Iterators">iterator</a> functionality, including <code>[]</code> random access. Hence all relevant standard <a href="#Algorithms">algorithms</a> work with <code>string</code>. You can <code>sort</code>, <code>reverse</code>, <code>merge</code> and so on. Specialized versions of some algorithms, like <code>swap()</code>, are provided for strings to take advantage of certain optimization techniques. The <code>operator []</code> allows you to access a single character in a string, but without any bounds checking. Use the <code>at()</code> function if you want bounds checking. The <code>operator+</code> allows easy string concatenation, so you can now do things like</p>
+<pre><span class="cplusplus">  string firstName, lastName, name;
+  .
+  name = firstName + " " + lastName;</span></pre>
+<p>or</p>
+<pre><span class="cplusplus">  name = firstName;
+  name += " ";
+  name += lastName;</span></pre>
+<p>The <a href="#STL_URLS">web pages</a> in §9 document every string function, so here is just some sample code to illustrate the main facilities.</p>
+<p class="listing-title" id="example_5_1">Example 5.1: <a href="examples/example_5_1.cpp"><code>example_5_1.cpp</code></a></p>
+<!-- listing example_5_1.cpp -->
+<pre><span class="cplusplus">// ---- The string class in use ("example_5_1.cpp") --------------------------
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main()
+{
+    size_t position;
+    string needle = "needle";     // Initialize with C style string literal
+    string line("my string");     // Ditto
+    string haystack(line,3,6);    // Initialize with another string, line,
+                                  // starting at element 3, i.e. "string"
+    string firstTwo(line,0,2);    // Initialize with first 2 characters of
+                                  // line, i.e. "my"
+    string firstString;           // INITIALIZING with a single character, e.g.
+    string secondString;          // = 'A' or ('A'), or with an integer, is
+                                  // NOT ALLOWED - use string(1,'A') instead.
+                                  // These will currently have .length() of zero
+    string dashes(80,'-');        // You can initialize using a character like
+                                  // this, and character ASSIGNMENT is legal
+
+    char oldCString[64];
+
+//  Concatenation using + operator
+    firstString = "Now is the Winter ";
+    secondString = "of our discontent made Summer";
+    cout &lt;&lt; "firstString = \"" &lt;&lt; firstString &lt;&lt; "\", secondString = \"" &lt;&lt; secondString &lt;&lt; "\"\n"
+         &lt;&lt; "firstString + secondString = \"" &lt;&lt; firstString + secondString &lt;&lt; "\"" &lt;&lt; endl
+         &lt;&lt; dashes &lt;&lt; endl;
+
+//  Find a substring in a string
+    haystack = "Where is that " + needle + ", eh ?";
+    cout &lt;&lt; "haystack = \"" &lt;&lt; haystack &lt;&lt; "\"" &lt;&lt; endl;
+    position = haystack.find(needle);
+//  Use substr function to get substring - use string::npos (the "too large"
+//  character count) to get the rest of the string
+    cout &lt;&lt; "position = haystack.find(needle) found \""
+         &lt;&lt; haystack.substr(position,string::npos)
+         &lt;&lt; "\" at position " &lt;&lt; position &lt;&lt; endl &lt;&lt; dashes &lt;&lt; endl;
+
+//  Demonstrate use of Algorithms with strings
+    line = "a man a Plan a canal Panama";
+    cout &lt;&lt; line &lt;&lt; " [Algorithm: reverse(line.begin(),line.end())]" &lt;&lt; endl;
+    reverse( line.begin(), line.end() );
+    cout &lt;&lt; line &lt;&lt; " [line.length() = " &lt;&lt; line.length() &lt;&lt; "]" &lt;&lt; endl
+         &lt;&lt; dashes &lt;&lt; endl;
+
+//  Passing a string to a function requiring a C style string
+    line = "copyright";
+    strncpy( oldCString, line.c_str(), sizeof(oldCString)-1 );
+    oldCString[sizeof(oldCString)-1] = '\0';
+    cout &lt;&lt; "strncpy \"" &lt;&lt; line &lt;&lt; "\" to C string which now contains \""
+         &lt;&lt; oldCString &lt;&lt; "\"" &lt;&lt; endl &lt;&lt; dashes &lt;&lt; endl;
+
+//  Insert into a string
+    firstString = "piggy middle";
+    secondString = "in the ";
+    cout &lt;&lt; "firstString = \"" &lt;&lt; firstString &lt;&lt; "\", secondString = \"" &lt;&lt; secondString &lt;&lt; "\"" &lt;&lt; endl;
+    firstString.insert(6,secondString); // Insert secondString in firstString
+    cout &lt;&lt; "firstString.insert(6,secondString) = " &lt;&lt; firstString &lt;&lt; endl &lt;&lt; dashes &lt;&lt; endl;
+
+//  Erase
+    cout &lt;&lt; "[Use firstString.erase(position,4) to get rid of \"the \"]" &lt;&lt; endl;
+    position = firstString.find("the");
+    if ( position != string::npos ) firstString.erase( position, 4 ); // Note check on ::npos
+    cout &lt;&lt; firstString &lt;&lt; endl &lt;&lt; dashes &lt;&lt; endl;
+
+//  Replace
+    cout &lt;&lt; "[Use firstString.replace(position,2,\"is not in the\") to replace "
+         &lt;&lt; "\"in\" with \"is not in the\"]" &lt;&lt; endl;
+    position = firstString.find("in");
+//  Note inequality check on string::npos to see if search string was found
+    if ( position != string::npos ) firstString.replace( position, 2, "is not in the" );
+    cout &lt;&lt; firstString &lt;&lt; endl &lt;&lt; dashes &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_5_1 -->
+<pre class="output">firstString = "Now is the Winter ", secondString = "of our discontent made Summer"
+firstString + secondString = "Now is the Winter of our discontent made Summer"
+--------------------------------------------------------------------------------
+haystack = "Where is that needle, eh ?"
+position = haystack.find(needle) found "needle, eh ?" at position 14
+--------------------------------------------------------------------------------
+a man a Plan a canal Panama [Algorithm: reverse(line.begin(),line.end())]
+amanaP lanac a nalP a nam a [line.length() = 27]
+--------------------------------------------------------------------------------
+strncpy "copyright" to C string which now contains "copyright"
+--------------------------------------------------------------------------------
+firstString = "piggy middle", secondString = "in the "
+firstString.insert(6,secondString) = piggy in the middle
+--------------------------------------------------------------------------------
+[Use firstString.erase(position,4) to get rid of "the "]
+piggy in middle
+--------------------------------------------------------------------------------
+[Use firstString.replace(position,2,"is not in the") to replace "in" with "is not in the"]
+piggy is not in the middle
+--------------------------------------------------------------------------------</pre>
+<p>The next program puts some of the string functions to use in a simple expression evaluator, which takes arithmetic-style expressions, turns them into reverse Polish notation and evaluates them. It uses <code>at()</code>, which, unlike <code>operator[]</code>, will throw an <code>out_of_range</code> exception for a bad index. Try calculating the rest energy of an electron or a proton (<code>me*c^2</code> or <code>mp*c^2</code>, from <i>E</i> = <i>mc</i><sup>2</sup>). Give the expression as the program’s argument, or type it when the program asks; in Visual Studio the project already passes <code>me*c^2</code>.</p>
+<p class="listing-title" id="example_5_2">Example 5.2: <a href="examples/example_5_2.cpp"><code>example_5_2.cpp</code></a></p>
+<!-- listing example_5_2.cpp -->
+<pre><span class="cplusplus">// ---- An expression evaluator using strings, stacks and a map ("example_5_2.cpp")
+
+// C++ Standard Library Headers
+#include &lt;cctype&gt;
+#include &lt;cfloat&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdlib&gt;
+#include &lt;iomanip&gt;
+#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;sstream&gt;
+#include &lt;stack&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+// Function prototypes
+string FormatNumber( double value );
+double PerformOperation( char operation, double firstOperand, double secondOperand );
+int Precedence( char operation );
+
+int main( int argc, char *argv[] )
+{
+    size_t position;
+    double firstOperand, secondOperand;
+    char nextCharacter;
+    string expression, item;
+    stack&lt; string &gt; outputStack;      // Reverse Polish order, last item on top
+    stack&lt; string &gt; operatorStack;    // Operators waiting to go on outputStack
+    stack&lt; string &gt; evaluationOrder;  // outputStack turned over, first item on top
+    stack&lt; double &gt; operandStack;     // Values waiting for an operator
+    map&lt; string, double &gt; symbolValues;
+//  End of declarations ...
+
+//  Set a few built-in symbols (CODATA 2018 values)
+    symbolValues["pi"] = 3.14159265358979;
+    symbolValues["c"]  = 299792458.0;        // Speed of light, m/s (exact)
+    symbolValues["e"]  = 1.602176634e-19;    // Electron charge, Coulombs (exact)
+    symbolValues["me"] = 9.1093837015e-31;   // Electron rest mass, kg
+    symbolValues["mp"] = 1.67262192369e-27;  // Proton rest mass, kg
+    symbolValues["mn"] = 1.67492749804e-27;  // Neutron rest mass, kg
+
+    if ( argc &lt; 2 ) {
+      cout &lt;&lt; "Enter expression: ";
+      getline( cin, expression );
+    } else {
+      expression = argv[1]; // Use expression from command line if given
+    }
+
+//  Junk everything except alphanumerics, decimal points, brackets and operators
+    position = 0;
+    while ( position &lt; expression.length() ) {
+      nextCharacter = expression.at( position );
+      if ( isspace( (unsigned char)nextCharacter ) ||
+           ( !isalnum( (unsigned char)nextCharacter ) &amp;&amp; !Precedence( nextCharacter ) &amp;&amp;
+             nextCharacter != '.' &amp;&amp; nextCharacter != '(' &amp;&amp; nextCharacter != ')' ) ) {
+        expression.erase( position, 1 );
+      } else {
+        ++position;
+      }
+    }
+    if ( expression.empty() ) {
+      cout &lt;&lt; "Bye" &lt;&lt; endl;
+      return( EXIT_SUCCESS );
+    }
+
+//  Add space as an end of expression marker and to allow final pass thru loop
+    expression += " ";
+
+//  Process the expression, moving operators to outputStack in precedence order
+    while ( !expression.empty() ) {
+      nextCharacter = expression.at( 0 );
+      if ( nextCharacter == '(' ) {
+        operatorStack.push( expression.substr( 0, 1 ) ); // Push '(' onto operator stack
+        expression.erase( 0, 1 );
+
+      } else if ( nextCharacter == ')' ) {
+        while ( !operatorStack.empty() ) { // If right bracket loop until left bracket reached
+          item = operatorStack.top(); operatorStack.pop();
+          if ( item.at( 0 ) == '(' ) {
+            break;
+          } else {
+            outputStack.push( item );
+          }
+        }
+        expression.erase( 0, 1 );
+
+      } else if ( !Precedence( nextCharacter ) ) {
+//      If not brackets or operator stick value or variable on stack
+        position = expression.find_first_of( "^*/+-() " );
+        if ( position == string::npos ) position = expression.length();
+        item = expression.substr( 0, position );
+        outputStack.push( item ); // Push value string onto stack
+        expression.erase( 0, position );
+
+      } else {
+//      nextCharacter is an operator, or the space at the end
+        while ( true ) {
+          if ( operatorStack.empty() ) {
+            operatorStack.push( expression.substr( 0, 1 ) );
+            break;
+          }
+
+          item = operatorStack.top(); operatorStack.pop();
+//        ^ works right to left, so 2^3^2 is 2^(3^2): a ^ never pushes out an earlier ^
+          if ( item.at( 0 ) == '(' || Precedence( nextCharacter ) &gt; Precedence( item.at( 0 ) ) ||
+               ( nextCharacter == '^' &amp;&amp; item.at( 0 ) == '^' ) ) {
+            operatorStack.push( item );
+            operatorStack.push( expression.substr( 0, 1 ) );
+            break;
+          } else {
+            outputStack.push( item );
+          }
+        }
+        expression.erase( 0, 1 );
+      }
+    }
+
+//  Turn outputStack over, so the first item to evaluate is on top
+    while ( !outputStack.empty() ) {
+      evaluationOrder.push( outputStack.top() ); outputStack.pop();
+    }
+
+//  Now evaluate, using operandStack to hold values until we meet an operator
+    cout &lt;&lt; "Reverse Polish:";
+    while ( !evaluationOrder.empty() ) {
+      item = evaluationOrder.top(); evaluationOrder.pop();
+      cout &lt;&lt; " " &lt;&lt; item;
+      nextCharacter = item.at( 0 );
+      if ( item.length() == 1 &amp;&amp; Precedence( nextCharacter ) ) {
+        if ( operandStack.empty() ) {
+          cout &lt;&lt; endl &lt;&lt; "Operator " &lt;&lt; item &lt;&lt; " has nothing to work on" &lt;&lt; endl;
+          return( EXIT_FAILURE );
+        }
+//      A leading minus has only one value to work on: -5 means 0 - 5
+        secondOperand = operandStack.top(); operandStack.pop();
+        firstOperand = 0.0;
+        if ( !operandStack.empty() ) {
+          firstOperand = operandStack.top(); operandStack.pop();
+        }
+        operandStack.push( PerformOperation( nextCharacter, firstOperand, secondOperand ) );
+      } else if ( isdigit( (unsigned char)nextCharacter ) || nextCharacter == '.' ) {
+        operandStack.push( atof( item.c_str() ) ); // A number
+      } else {
+        operandStack.push( symbolValues[item] );   // Not oper or number, must be a symbol
+      }
+    }
+    cout &lt;&lt; endl;
+
+    if ( operandStack.size() != 1 ) {
+      cout &lt;&lt; "That doesn't look like a complete expression" &lt;&lt; endl;
+      return( EXIT_FAILURE );
+    }
+    cout &lt;&lt; "Result: " &lt;&lt; FormatNumber( operandStack.top() ) &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}
+
+string FormatNumber( double value )
+{
+//  Show as many significant digits as a double reliably holds
+    ostringstream formatted;
+    formatted &lt;&lt; setprecision( DBL_DIG ) &lt;&lt; value;
+    return( formatted.str() );
+}
+
+int Precedence( char operation )
+{
+//  Returns the precedence of an operator, or 0 if it isn't a known operator
+//  Known Operators: " ","+","-","*","/","^"
+//                    |                   |
+//                  Do nothing           Raise to power
+
+    if ( operation == '^' ) return( 4 );
+    if ( operation == '*' || operation == '/' ) return( 3 );
+    if ( operation == '+' || operation == '-' ) return( 2 );
+    if ( operation == ' ' ) return( 1 );
+    return( 0 ); // Not operator
+}
+
+double PerformOperation( char operation, double firstOperand, double secondOperand )
+{
+//  Return the result of performing the required operation on the operands.
+
+    if ( operation == '^' ) return( pow( firstOperand, secondOperand ) );
+    if ( operation == '*' ) return( firstOperand * secondOperand );
+    if ( operation == '/' ) return( firstOperand / secondOperand );
+    if ( operation == '+' ) return( firstOperand + secondOperand );
+    if ( operation == '-' ) return( firstOperand - secondOperand );
+    return( 0.0 ); // Invalid operator
+}</span></pre>
+<p>Run as <code>example_5_2 "me*c^2"</code>, its output (in joules) is:</p>
+<!-- output example_5_2 -->
+<pre class="output">Reverse Polish: me c 2 ^ *
+Result: 8.18710577682389e-14</pre>
+<p>The expression evaluator above introduces <a href="#Map_and_Multimap"><code>map</code>s</a>, discussed later. Here one is used to get a numeric value from the symbolic name stored in a string.</p>
+
+<h2 id="Iterators">6. Iterators</h2>
+<pre><span class="cplusplus">#include <b>&lt;iterator&gt;</b></span></pre>
+<p>(You only need <code>&lt;iterator&gt;</code> yourself for things like <code>ostream_iterator</code> and <code>back_inserter</code>; each container’s header brings in its own iterators.) An iterator you will already be familiar with is a pointer into an array.</p>
+<pre><span class="cplusplus">  char name[] = "Word";
+  char ch, *p;
+
+  p = name;   // or &amp;name[0] if you like
+  ch = p[3];  // Use [] for random access
+  ch = *(p+3);// Equivalent to the above
+  *p = 'C';   // Write "through" p into name
+  while ( *p &amp;&amp; *p++ != 'r' ); // Read name through p, look for letter 'r'</span></pre>
+<p>Looking at the above code sample shows how flexible and powerful iterators can be. The above code fragment uses <code>p</code> in at least 5 different ways. We take it for granted that the compiler will generate the appropriate offset for array elements, using the size of a single element.</p>
+<p>The STL iterators you’ve already met are those returned by the <code>begin()</code> and <code>end()</code> container access functions, that let you loop over container elements. For example:</p>
+<pre><span class="cplusplus">  list&lt;int&gt; numbers;
+  list&lt;int&gt;::iterator numberIterator; // Iterator for looping over list elements
+  for ( numberIterator = numbers.begin(); numberIterator != numbers.end(); ++numberIterator )
+  {
+    *numberIterator = 0;
+  }</span></pre>
+<p>The end-of-loop condition is slightly different to normal. Usually the end condition would be a less than <code>&lt;</code> comparison, but as you can see from the table of iterator categories below, not all iterators support <code>&lt;</code>, so we increment the iterator from <code>begin()</code> and stop just before it becomes equal to <code>end()</code>. It is <b>important</b> to <b>note</b> that, for virtually all STL purposes, <b><code>end()</code> returns an iterator</b> “pointing” to an element <b>just after the last element</b>, which it is not safe to dereference, but is safe to use in equality tests with another iterator of the same type. The pre-increment <code>++</code> operator can sometimes yield better performance because there is no need to create a temporary copy of the previous value, though the compiler usually optimizes this away. Since <span class="cplusplus">C++</span>11 the compiler can write this whole loop for you: <code>for ( int &amp;number : numbers ) number = 0;</code> does the same thing.</p>
+<p>Iterators are a generalized abstraction of pointers, designed to allow programmers to access different container types in a consistent way. To put it more simply, you can think of iterators as a “black box” between containers and algorithms. When you use a telephone to directly dial someone in another country, you don’t need to know how the other phone system works. Provided it supports certain basic operations, like dialling, ringing, reporting an engaged tone, hanging up after the call, then you can talk to the remote person. Similarly, if a container class supports the minimum required iterator types for an algorithm, then that algorithm will work with the container.</p>
+<p>This is important because it means that you can use <a href="#Algorithms">algorithms</a> such as the <code>sort</code> and <code>shuffle</code> we’ve seen in earlier examples, without their authors having to know anything about the containers they are acting on, provided we support the type of iterator required by that algorithm. The <code>sort</code> algorithm, for example, only needs to know how to move through the container elements, how to compare them, and how to swap them. The original STL had 5 categories of iterator:</p>
+<ul>
+<li>Random access iterators</li>
+<li>Bidirectional iterators</li>
+<li>Forward iterators</li>
+<li>Input iterators</li>
+<li>Output iterators</li>
+</ul>
+<p>(<span class="cplusplus">C++</span>20 added a sixth, above random access: contiguous iterators, for elements stored next to each other in memory, as in a <code>vector</code>, <code>array</code> or <code>string</code>.) They are not all as powerful in terms of the operations they support – most don’t allow <code>[]</code> random access, as we’ve seen with the difference between <code>vector</code> and <code>list</code>. The following is a summary of the iterator hierarchy, most capable at the top, operations supported on the right.</p>
+<pre>                      <b>The Iterator Hierarchy</b>
+
+           Iterator Type                   Operations Supported
+
+                 ^               +-------------------------------------+
+                / \               \          == != &lt; &gt; &gt;= &lt;=          /
+               /   \               \         ++ -- + - += -=         /
+              / []  \               \             *p=               /
+             /Random \               \          -&gt;     []          /
+            / Access  \               \            =*p            /
+           /-----------\               \-------------------------/
+          /Bidirectional\               \       == != ++ --     /
+         /               \               \      *p= -&gt; =*p     /
+        /-----------------\               \-------------------/
+       /      Forward      \               \     == != ++    /
+      /                     \               \   *p= -&gt; =*p  /
+     /-----------+-----------\               \-------+-----/
+    /Input       |      Output\               \ == !=| ++ /
+   /             |             \               \++ -&gt;|*p=/
+  +--------------+--------------+               \ =*p|  /
+                                                 \   | /
+                                                  \  |/
+                                                   \ /
+                                                    v</pre>
+<p>The higher layers have all the functionality of the layers below, plus some extra. Only random access iterators provide the ability to add or subtract an integer to or from the iterator, like <code>*(p+3)</code>. If you write an iterator it must provide all the operations needed for its category, e.g. if it is a forward iterator it must provide <code>==</code>, <code>!=</code>, <code>++</code>, <code>*p=</code>, <code>-&gt;</code> and <code>=*p</code>. Remember that <code>++p</code> and <code>p++</code> <em>are different</em>. The former increments the iterator then returns a <em>reference to itself</em>, whereas the latter returns a <em>copy of itself</em> then increments.</p>
+<p>Operators must retain their conventional meaning, and elements must have the conventional copy semantics. In a nutshell, this means that the copy operation must produce an object that, when tested for equality with the original item, must match. Because only random access iterators support integer add and subtract, the STL provides a <code>distance()</code> function to find the “distance” between any two iterators (other than output iterators). The type of the value returned is</p>
+<pre><span class="cplusplus">template &lt;class Iterator&gt; typename iterator_traits&lt;Iterator&gt;::difference_type</span></pre>
+<p>This is useful if, for example, you <code>find()</code> a value in a container, and want to know the “position” of the element you’ve found.</p>
+<pre><span class="cplusplus">  map&lt; key_type, data_type &gt;::iterator mapIterator;
+  map&lt; key_type, data_type &gt;::difference_type difference;
+  mapIterator = myMap.find( key );
+  difference = distance( myMap.begin(), mapIterator );</span></pre>
+<p>Of course, this operation might well be inefficient if the container doesn’t support random access iterators, since in that case it will have to “walk through” the elements counting them.</p>
+<p>Just as you can declare pointers to <code>const</code> objects, you can have iterators to <code>const</code> elements. The <code>const_</code> prefix is used for this purpose, e.g.</p>
+<pre><span class="cplusplus">  vector&lt;MyType&gt;::iterator i;        // Similar to   MyType *i
+  vector&lt;MyType&gt;::const_iterator ci; // Similar to   const MyType *ci</span></pre>
+<p>A <code>const</code> container gives you <code>const_iterator</code>s from <code>begin()</code> and <code>end()</code>, and since <span class="cplusplus">C++</span>11 <code>cbegin()</code> and <code>cend()</code> give them from any container.</p>
+<p id="Iterator_Tags">The <code>iterator_traits</code> for a particular class is a collection of information, like the “iterator tag” category, which helps the STL “decide” on the best algorithm to use when calculating distances. The calculation is trivial for random access iterators, but if you only have forward iterators then it may be a case of slogging through a linked list to find the distance. If you write a new class of container, then this is one of the things you must be aware of. As it happens, the <code>vector</code>, <code>list</code>, <code>deque</code>, <code>map</code> and <code>set</code> all provide at least bidirectional iterators, but if you write a new <a href="#Algorithms">algorithm</a>, you should not assume any capability better than that which you really need. The lower the category of iterator you use in your algorithm, the wider the range of containers your algorithm will work with.</p>
+<p>Although the input and output iterators seem rather poor in capability, in fact they do add the useful ability to be able to read and write containers to or from files. This is demonstrated in the program below, and again in <a href="#example_7_2">Example 7.2</a>.</p>
+<p class="listing-title" id="example_6_1">Example 6.1: <a href="examples/example_6_1.cpp"><code>example_6_1.cpp</code></a></p>
+<!-- listing example_6_1.cpp -->
+<pre><span class="cplusplus">// ---- Stream iterators writing and reading a file ("example_6_1.cpp") ------
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+int main()
+{
+    const int numbers[] = { 1,3,5,7,11,13,17,19 };
+    vector&lt;int&gt; writtenValues( begin(numbers), end(numbers) );
+    vector&lt;int&gt; readValues;
+//  End of declarations ...
+
+//  Write writtenValues to the file through an output iterator
+    ofstream outputFile( "vector.dat" );
+    copy( writtenValues.begin(), writtenValues.end(), ostream_iterator&lt;int&gt;( outputFile, " " ) );
+    outputFile.close();
+    cout &lt;&lt; "Wrote vector writtenValues to file vector.dat" &lt;&lt; endl;
+
+//  Read it back into readValues through an input iterator
+    ifstream inputFile( "vector.dat" );
+    copy( istream_iterator&lt;int&gt;( inputFile ),  // Start of inputFile
+          istream_iterator&lt;int&gt;(),             // Value that means end of file
+          back_inserter( readValues ) );       // Adds each value with push_back()
+
+    cout &lt;&lt; "Read vector readValues from file vector.dat" &lt;&lt; endl;
+    for ( vector&lt;int&gt;::const_iterator valueIterator = readValues.begin();
+          valueIterator != readValues.end(); ++valueIterator )
+      cout &lt;&lt; *valueIterator &lt;&lt; " ";
+    cout &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_6_1 -->
+<pre class="output">Wrote vector writtenValues to file vector.dat
+Read vector readValues from file vector.dat
+1 3 5 7 11 13 17 19 </pre>
+<p>The result of the possible restrictions on an iterator is that most algorithms have <b>two iterators</b> as their arguments, or (perhaps less safely) an iterator and a count of elements. In particular, when you are using iterators, you need to be aware that <b>it isn’t a good idea to test an iterator against <code>NULL</code></b> (or <code>nullptr</code>), or to test if one iterator is greater than another. Testing for equality or inequality is safe except for output iterators, which is why the loops in the example code use <code>iterator != x.end()</code> as their termination test.</p>
+
+<h3 id="Iterator_Adapters">Iterator Adapters</h3>
+<p>Like the container adapters, <code>queue</code>, <code>priority_queue</code> and <code>stack</code>, iterators have adapters too. The original STL had three types:</p>
+<ul>
+<li>Reverse iterators</li>
+<li>Insert iterators</li>
+<li>Raw storage iterators (removed in <span class="cplusplus">C++</span>20)</li>
+</ul>
+<p>The reverse iterator reverses the behaviour of the <code>++</code> and <code>--</code> operators, so you can write code like this:</p>
+<pre><span class="cplusplus">  vector&lt;int&gt; values;
+  vector&lt;int&gt;::reverse_iterator reverseIterator;
+    .
+  for ( reverseIterator = values.rbegin(); reverseIterator != values.rend(); ++reverseIterator ) {
+//  Whatever, going from end to start of vector
+    value = *reverseIterator;
+  }</span></pre>
+<p>Standard containers all provide <code>rbegin()</code> and <code>rend()</code> functions to support this kind of thing.</p>
+<p>The insert iterators will, depending on the type of container, allow insertion at the front, back or middle of the elements, using <code>front_insert_iterator</code>, <code>back_insert_iterator</code> or <code>insert_iterator</code>. Because you might just as well use <code>container.push_back()</code> and so forth, their main use is as the return value of functions like <code>front_inserter()</code>, <code>back_inserter()</code> and <code>inserter()</code>, which modify how a particular <a href="#Algorithms_and_Functions">algorithm</a> works. In Example 6.1, <code>back_inserter( readValues )</code> makes <code>copy()</code> call <code>readValues.push_back()</code> for each value it reads, so the <code>vector</code> grows as needed.</p>
+<p>Raw storage iterators, <code>raw_storage_iterator</code>, were used for efficiency when copying existing container elements to regions of uninitialized memory, such as that obtained by <code>get_temporary_buffer()</code>. Both were deprecated in <span class="cplusplus">C++</span>17 and removed in <span class="cplusplus">C++</span>20; functions like <code>uninitialized_copy()</code>, in <code>&lt;memory&gt;</code>, do that job now. Look in the <code>&lt;algorithm&gt;</code> header for examples of iterator use.</p>
+
+<h2 id="Associative_Container">7. We are searching for the Associative Container</h2>
+<div class="quote">
+<p>“We’ve already got one !”</p>
+<p><i>Mumbles of “Ask them what it looks like”</i></p>
+<p>“Well what does it look like ?”</p>
+<p>“It’s a verra naice !”</p>
+</div>
+<p>There are four types of <i>associative container</i> in the original STL. Associative containers are used to store objects that we want to be able to retrieve using a key. We could use a map as a simple token/value database, where a token might be a character string, and the value might be an integer.</p>
+<p>Associative containers store items in key order, based on a user-supplied comparison function, and the <i>multi</i> variants allow duplicate keys. Lookup is <b>O</b>(log N), N being the number of items stored. The associative containers are:</p>
+<ul>
+<li><code>map&lt;Key, Type, Compare&gt;</code></li>
+<li><code>multimap&lt;Key, Type, Compare&gt;</code></li>
+<li><code>set&lt;Key, Compare&gt;</code></li>
+<li><code>multiset&lt;Key, Compare&gt;</code></li>
+</ul>
+<p>All four associative containers store the keys in sorted order to facilitate fast traversal. For built-in types the <i>Compare</i> function can simply be a suitable STL <a href="#Functions">function object</a>, e.g. <code>map&lt;string, int, less&lt;string&gt; &gt;</code>, and <code>less</code> is the default if you leave <i>Compare</i> out. If you are storing <em>pointers</em> to objects rather than the objects themselves, then you will need to provide your own comparison function object <em>even for built-in types</em>, or the container will sort the pointers by address (see <a href="#example_7_2">Example 7.2</a>). The <code>multi</code> variant of the container is able to store more than one entry with the same key, whereas <code>map</code> and <code>set</code> can only have one entry with a particular key.</p>
+<p>In his book Stroustrup showed how to make a <code>hash_map</code> variant of <code>map</code>, and several libraries provided one. <span class="cplusplus">C++</span>11 made hash tables standard, as the <a href="#Unordered">unordered associative containers</a> described below.</p>
+
+<h3 id="Map_and_Multimap">Map and Multimap</h3>
+<pre><span class="cplusplus">#include <b>&lt;map&gt;</b></span></pre>
+<p>A <code>map</code> is used to store key-value pairs, with the values retrieved using the key. The <code>multimap</code> allows duplicate keys, whereas maps insist on unique keys. Items in a map are, when they are dereferenced through an iterator for example, returned as a <b id="Pair">pair</b>, which is a class defined in the <code>&lt;utility&gt;</code> header. The <code>pair</code> has two members, <b>first</b> and <b>second</b>, which are the key and the data respectively. The <code>pair</code> is used throughout the STL when a function needs to return two values.</p>
+<pre class="reference">  <span class="term">Some Map Access Functions</span>    <span class="term">Purpose</span>
+  -------------------------    -------
+  <span class="term">begin()</span>                      <span class="explain">Returns iterator pointing to first element</span>
+  <span class="term">end()</span>                        <span class="explain">Returns iterator pointing _after_ last element</span>
+  <span class="term">find(...)</span>                    <span class="explain">Returns iterator to the element with this key, or end()</span>
+  <span class="term">count(...)</span>                   <span class="explain">Number of elements with this key</span>
+  <span class="term">insert(...)</span>                  <span class="explain">Insert a new element</span>
+  <span class="term">erase(...)</span>                   <span class="explain">Delete elements</span>
+  <span class="term">swap(...)</span>                    <span class="explain">Swap the contents of two maps</span>
+  <span class="term">size()</span>                       <span class="explain">Number of elements in map</span>
+  <span class="term">max_size()</span>                   <span class="explain">Maximum possible number of elements in map</span>
+  <span class="term">empty()</span>                      <span class="explain">True if map is empty</span>
+  <span class="term">[]</span>                           <span class="explain">"Subscript search" access operator, adds the key if missing</span>
+  <span class="term">at(...)</span>                      <span class="explain">Access by key, throws out_of_range if missing</span></pre>
+<p>In the sample program below, which uses <code>first</code> and <code>second</code>, a list of tokens and values in the form</p>
+<pre>pi = 3.1415926535898
+c = 299792458.0</pre>
+<p>is read in from the file <a href="examples/tokens.dat"><code>tokens.dat</code></a>, and then you are prompted to enter a token name for which the corresponding value is displayed. Because <code>map</code> supports the <code>[]</code> subscript operator, you can access the stored value using the key as the subscript.</p>
+<p class="listing-title" id="tokens_dat"><a href="examples/tokens.dat"><code>tokens.dat</code></a></p>
+<!-- listing tokens.dat -->
+<pre>pi = 3.1415926535898
+c = 299792458.0
+N = 6.02214076e23
+R = 8.314462618
+rubbish = Total %^#$(^$*&amp;( nonsense</pre>
+<p class="listing-title" id="example_7_1">Example 7.1: <a href="examples/example_7_1.cpp"><code>example_7_1.cpp</code></a></p>
+<!-- listing example_7_1.cpp -->
+<pre><span class="cplusplus">// ---- A map as a token database read from a file ("example_7_1.cpp") ------
+
+// C++ Standard Library Headers
+#include &lt;cstdlib&gt;
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main( int argc, char *argv[] )
+{
+    size_t equalsPosition, position;
+    size_t lineNumber = 0;
+    ifstream tokenFile;
+    string fileName, line, token, value;
+    map&lt; string, double &gt; tokenData;
+//  End of declarations ...
+
+    if ( argc &gt; 1 ) {
+      fileName = argv[1];
+    } else {
+      fileName = "tokens.dat";
+    }
+
+//  Open the file for reading
+    cout &lt;&lt; "Opening data file: " &lt;&lt; fileName &lt;&lt; endl;
+    tokenFile.open( fileName );
+    if ( !tokenFile ) {
+      cerr &lt;&lt; "Cannot open " &lt;&lt; fileName &lt;&lt; endl;
+      return( EXIT_FAILURE );
+    }
+
+//  Read each line and parse it; getline() is false at end of file
+    while ( getline( tokenFile, line ) ) {
+//    Parse out the tokens and values
+      ++lineNumber;
+      equalsPosition = line.find( '=' );
+      if ( equalsPosition == string::npos ) {
+        cerr &lt;&lt; "Invalid Line " &lt;&lt; lineNumber &lt;&lt; ": " &lt;&lt; line &lt;&lt; endl;
+        continue;
+      }
+//    The token is everything before the "=", without trailing spaces
+      token = line.substr( 0, equalsPosition );
+      position = token.find_last_not_of( " \t" );
+      token.erase( position == string::npos ? 0 : position + 1 );
+
+      value = line.substr( equalsPosition + 1 );
+      position = value.find_first_of( "0123456789.+-" );
+      if ( position != string::npos ) {
+//      Store token and value; a later line with the same token replaces it
+        value = value.substr( position );
+        tokenData[token] = atof( value.c_str() );
+      } else {
+        cerr &lt;&lt; "Bad value at line " &lt;&lt; lineNumber &lt;&lt; ": " &lt;&lt; token &lt;&lt; " =" &lt;&lt; value &lt;&lt; endl;
+      }
+    }
+
+    if ( !lineNumber ) {
+      cerr &lt;&lt; "Invalid or empty file: " &lt;&lt; fileName &lt;&lt; endl;
+    } else {
+      map&lt; string, double &gt;::iterator mapIterator;
+      for ( mapIterator = tokenData.begin(); mapIterator != tokenData.end(); ++mapIterator )
+        cout &lt;&lt; "\"" &lt;&lt; mapIterator-&gt;first &lt;&lt; "\"  = " &lt;&lt; mapIterator-&gt;second &lt;&lt; endl;
+
+      cout &lt;&lt; "Enter token name: ";
+      getline( cin, token );
+
+//    Use the find function so we can spot a "miss"
+      mapIterator = tokenData.find( token );
+      if ( mapIterator != tokenData.end() ) {
+        cout &lt;&lt; " Found \"" &lt;&lt; mapIterator-&gt;first &lt;&lt; "\"  = "
+             &lt;&lt; mapIterator-&gt;second &lt;&lt; endl;
+      } else {
+        cout &lt;&lt; "tokenData.find(...) shows no token matches \""
+             &lt;&lt; token &lt;&lt; "\"" &lt;&lt; endl;
+        cout &lt;&lt; "Lookup using tokenData[\""
+             &lt;&lt; token &lt;&lt; "\"] would have given "
+             &lt;&lt; tokenData[token] &lt;&lt; endl;
+      }
+    }
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>In Example 5.2 we used the following lookup method with a <code>map</code>:</p>
+<pre><span class="cplusplus">        operandStack.push( symbolValues[item] );   // Not oper or number, must be a symbol</span></pre>
+<p>This is fine where we know that <code>item</code> is definitely in <code>symbolValues</code>, but if it isn’t, <code>[]</code> quietly adds it with a value of zero, which is why Example 5.2 treats an unknown symbol as 0. Generally you must use the <code>find(...)</code> function and test against <code>end()</code>, which is the value returned if the key doesn’t exist (<span class="cplusplus">C++</span>20 also has <code>contains()</code>, if you only need a yes or a no):</p>
+<pre><span class="cplusplus">  map&lt; key_type, data_type &gt;::iterator mapIterator;
+  mapIterator = myMap.find( key );
+  if ( mapIterator != myMap.end() ) {
+    // Got it
+  }</span></pre>
+<p>Several variants of an <code>insert()</code> function exist for the <code>map</code>. The single argument version of <code>insert</code> allows you to test whether the item was already in the <code>map</code> by returning a <code>pair</code>. If successful the <code>.second</code> <code>bool</code> value will be true and the iterator, <code>.first</code>, will “point” at the inserted item. On failure <code>.second</code> will be false and the iterator will point at the duplicate key that caused the insertion to fail.</p>
+<p>The <code>map</code> can only store one value against each key. Example 7.1 stores each value with <code>tokenData[token] = ...</code>, so if <code>tokens.dat</code> has a second line with the same key, its value supersedes the first one; <code>insert()</code> would have kept the first and failed instead. Edit the <code>tokens.dat</code> file used by Example 7.1 and convince yourself that this is the case. In situations where this restriction is not acceptable, the <code>multimap</code> should be used.</p>
+
+<h3 id="Set_and_Multiset">Set and Multiset</h3>
+<pre><span class="cplusplus">#include <b>&lt;set&gt;</b></span></pre>
+<p>The <code>set</code> stores unique keys only, i.e. the key <em>is</em> the value. Here are some of the <code>set</code> access functions:</p>
+<pre class="reference">  <span class="term">Some Set Access Functions</span>    <span class="term">Purpose</span>
+  -------------------------    -------
+  <span class="term">begin()</span>                      <span class="explain">Returns iterator pointing to first element</span>
+  <span class="term">end()</span>                        <span class="explain">Returns iterator pointing _after_ last element</span>
+  <span class="term">find(...)</span>                    <span class="explain">Returns iterator to this key, or end()</span>
+  <span class="term">count(...)</span>                   <span class="explain">Number of elements with this key</span>
+  <span class="term">insert(...)</span>                  <span class="explain">Insert a new element</span>
+  <span class="term">erase(...)</span>                   <span class="explain">Delete elements</span>
+  <span class="term">swap(...)</span>                    <span class="explain">Swap the contents of two sets</span>
+  <span class="term">size()</span>                       <span class="explain">Number of elements in set</span>
+  <span class="term">max_size()</span>                   <span class="explain">Maximum possible number of elements in set</span>
+  <span class="term">empty()</span>                      <span class="explain">True if set is empty</span></pre>
+<p>Like <code>map</code>, <code>set</code> supports the <code>insert()</code> function. Entries are kept in order, but you can provide your own comparison function to determine that order. Useful algorithms operating on a <code>set</code> are <code>includes()</code>, <code>set_union()</code>, <code>set_intersection()</code>, <code>set_difference()</code> and <code>set_symmetric_difference()</code>. The <code>set</code> supports bidirectional iterators, and <em>all set iterators are effectively const_iterators</em>, even if you declare them as <code>set&lt;MyType&gt;::iterator</code>, because changing an element could spoil the set’s ordering. So watch out for that.</p>
+<p class="listing-title" id="example_7_2">Example 7.2: <a href="examples/example_7_2.cpp"><code>example_7_2.cpp</code></a></p>
+<!-- listing example_7_2.cpp -->
+<pre><span class="cplusplus">// ---- Sets, and the set algorithms ("example_7_2.cpp") ---------------------
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;set&gt;
+
+using namespace std;
+
+// Function object comparing the strings that two pointers point at. Without
+// it, the set would sort the pointers themselves, by address.
+struct LessThanString
+{
+  bool operator()( const char *first, const char *second ) const
+  { return strcmp( first, second ) &lt; 0; }
+};
+
+int main()
+{
+  const char *namesA[] = { "Gray", "Pete", "Oggy", "Karen", "JAF", "Simon", "Nick",
+                           "Elliott", "Roy", "David", "Tony", "Nigel" };
+  const char *namesB[] = { "Sandy", "John", "Andrzej", "Rob", "Kara", "Happy",
+                           "Elliott", "Roy", "David", "Tony", "Nigel" };
+
+  set&lt;const char *, LessThanString&gt; setA( begin(namesA), end(namesA) );
+  set&lt;const char *, LessThanString&gt; setB( begin(namesB), end(namesB) );
+  set&lt;const char *, LessThanString&gt; setC;
+
+  cout &lt;&lt; "Set A: ";
+  copy( setA.begin(), setA.end(), ostream_iterator&lt;const char *&gt;( cout, " " ) );
+  cout &lt;&lt; endl;
+  cout &lt;&lt; "Set B: ";
+  copy( setB.begin(), setB.end(), ostream_iterator&lt;const char *&gt;( cout, " " ) );
+  cout &lt;&lt; endl;
+
+  cout &lt;&lt; "Union: ";
+  set_union( setA.begin(), setA.end(), setB.begin(), setB.end(),
+             ostream_iterator&lt;const char *&gt;( cout, " " ), LessThanString() );
+  cout &lt;&lt; endl;
+
+  cout &lt;&lt; "Intersection: ";
+  set_intersection( setA.begin(), setA.end(), setB.begin(), setB.end(),
+                    ostream_iterator&lt;const char *&gt;( cout, " " ), LessThanString() );
+  cout &lt;&lt; endl;
+
+  set_difference( setA.begin(), setA.end(), setB.begin(), setB.end(),
+                  inserter( setC, setC.begin() ), LessThanString() );
+  cout &lt;&lt; "Set C (difference of A and B, i.e. in A but not B): ";
+  copy( setC.begin(), setC.end(), ostream_iterator&lt;const char *&gt;( cout, " " ) );
+  cout &lt;&lt; endl;
+
+  setC.clear(); // Empty setC before using it again
+  set_symmetric_difference( setA.begin(), setA.end(), setB.begin(), setB.end(),
+                            inserter( setC, setC.begin() ), LessThanString() );
+  cout &lt;&lt; "Set C (symmetric difference of A and B,"
+          " i.e. in A OR B but not both): ";
+  copy( setC.begin(), setC.end(), ostream_iterator&lt;const char *&gt;( cout, " " ) );
+  cout &lt;&lt; endl;
+
+  return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_7_2 -->
+<pre class="output">Set A: David Elliott Gray JAF Karen Nick Nigel Oggy Pete Roy Simon Tony 
+Set B: Andrzej David Elliott Happy John Kara Nigel Rob Roy Sandy Tony 
+Union: Andrzej David Elliott Gray Happy JAF John Kara Karen Nick Nigel Oggy Pete Rob Roy Sandy Simon Tony 
+Intersection: David Elliott Nigel Roy Tony 
+Set C (difference of A and B, i.e. in A but not B): Gray JAF Karen Nick Oggy Pete Simon 
+Set C (symmetric difference of A and B, i.e. in A OR B but not both): Andrzej Gray Happy JAF John Kara Karen Nick Oggy Pete Rob Sandy Simon </pre>
+<p>This example also shows the use of an output iterator, <code>ostream_iterator</code>, which in this case is directing the output to <code>cout</code>, but this could just as well be a file. The sets hold pointers, so the <code>LessThanString</code> function object makes them compare the strings rather than the pointers. Notice <code>setC.clear()</code> before <code>setC</code> is used a second time; without it, the symmetric difference would be added to what was already there. The <code>set</code> can only store unique keys, hence if you try and insert a second instance of the same key a failure will result. The single argument version of <code>insert( const value_type&amp; )</code> returns a <code>pair&lt;iterator, bool&gt;</code> with the same meaning as for <code>map</code>. Remember that you can define what equality means, so the situation may arise where two “identical” set elements have different data members. In situations where this restriction is not acceptable, the <code>multiset</code> should be used.</p>
+
+<h3 id="Unordered">Unordered Associative Containers</h3>
+<pre><span class="cplusplus">#include <b>&lt;unordered_map&gt;</b>
+#include <b>&lt;unordered_set&gt;</b></span></pre>
+<p><span class="cplusplus">C++</span>11 added four hash table versions of the associative containers: <code>unordered_map</code>, <code>unordered_multimap</code>, <code>unordered_set</code> and <code>unordered_multiset</code>. They have almost the same access functions as their sorted cousins, but they use a hash function (<code>std::hash</code>, provided for the built-in types and <code>string</code>) instead of a comparison, and they store their elements in no particular order. When working well, even with large data sets they can find an element in <b>O</b>(1) time, compared to <b>O</b>(log N) for a <code>map</code>. However, hashing can exhibit pathological behaviour if many keys hash to the same value, and when the hash table has to grow (“rehash”) that can be a slow operation. Use a <code>map</code> when you need the keys in order, or can’t afford the occasional slow insertion.</p>
+<p class="listing-title" id="example_7_3">Example 7.3: <a href="examples/example_7_3.cpp"><code>example_7_3.cpp</code></a></p>
+<!-- listing example_7_3.cpp -->
+<pre><span class="cplusplus">// ---- Counting words with an unordered_map ("example_7_3.cpp") -------------
+
+// C++ Standard Library Headers
+#include &lt;cctype&gt;
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;map&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+
+using namespace std;
+
+int main()
+{
+    const string quotation = "Bring out your dead. I'm not dead. Yes he is. I'm not dead yet.";
+    unordered_map&lt; string, int &gt; wordCounts;   // Hash table: in no particular order
+    istringstream words( quotation );
+    string word;
+//  End of declarations ...
+
+//  Read word by word, folding to lower case and dropping punctuation
+    while ( words &gt;&gt; word ) {
+      string cleanWord;
+      for ( char character : word ) {
+        if ( isalpha( (unsigned char)character ) || character == '\'' )
+          cleanWord += (char)tolower( (unsigned char)character );
+      }
+//    [] adds a word it hasn't seen before with a count of 0, then ++ counts it
+      if ( !cleanWord.empty() ) ++wordCounts[cleanWord];
+    }
+
+//  auto works out the type, and [wordText, count] unpacks each pair
+    cout &lt;&lt; "In the unordered_map's own (hash) order, which may vary:" &lt;&lt; endl;
+    for ( const auto &amp;[wordText, count] : wordCounts )
+      cout &lt;&lt; "  " &lt;&lt; wordText &lt;&lt; " " &lt;&lt; count &lt;&lt; endl;
+
+//  Copy into a map to see the same words in key order
+    map&lt; string, int &gt; sortedCounts( wordCounts.begin(), wordCounts.end() );
+    cout &lt;&lt; "In a map, sorted by key:" &lt;&lt; endl;
+    for ( const auto &amp;[wordText, count] : sortedCounts )
+      cout &lt;&lt; "  " &lt;&lt; wordText &lt;&lt; " " &lt;&lt; count &lt;&lt; endl;
+
+//  Use count() or find() to ask without adding, as [] would
+    if ( wordCounts.count( "parrot" ) == 0 )
+      cout &lt;&lt; "No \"parrot\": this parrot is no more" &lt;&lt; endl;
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output, from Visual Studio 2026 (the first list may come out in a different order with another compiler), is:</p>
+<!-- output example_7_3 -->
+<pre class="output">In the unordered_map's own (hash) order, which may vary:
+  bring 1
+  dead 3
+  out 1
+  not 2
+  your 1
+  i'm 2
+  yes 1
+  he 1
+  is 1
+  yet 1
+In a map, sorted by key:
+  bring 1
+  dead 3
+  he 1
+  i'm 2
+  is 1
+  not 2
+  out 1
+  yes 1
+  yet 1
+  your 1
+No "parrot": this parrot is no more</pre>
+<p>The loops use two features from <a href="#Since_Original">§1.1</a>: <code>auto</code>, which saves writing out the element type, and structured bindings, <code>[wordText, count]</code>, which unpack each <code>pair</code> into named variables instead of <code>first</code> and <code>second</code>.</p>
+
+<h2 id="Algorithms_and_Functions">8. Algorithms and Functions</h2>
+<p>We’ve already met and used several of the STL algorithms and functions in the example programs, <code>sort(...)</code> being one of them. In the STL, <i>algorithms</i> are all template functions, parameterized by iterator types. For example, <code>sort(...)</code> might be implemented like this:</p>
+<pre><span class="cplusplus">template &lt;class RandomAccessIterator&gt;
+inline void sort( RandomAccessIterator first, RandomAccessIterator last )
+{
+    if ( !(first == last) ) {
+//     Do the sort
+    }
+}</span></pre>
+<p>Because algorithms only depend on the iterator type, they need no knowledge of the container they are acting on. This allows you to write your own container and, if it satisfies the iterator requirements, the STL algorithms will work with a container type “unknown” when they were written. Because the algorithms are all templates, the compiler should be able to generate inline code to do the operation just as efficiently as if you had “hand coded” the routine.</p>
+<p>Many algorithms need a little help from the programmer to determine, for example, whether one item in a container is greater than, less than or equal to another. This is where <i>function objects</i> come into the picture. <a href="#Functions">Function objects</a> are used similarly to function pointers in <span class="c-code">C</span>. We have seen one example of function pointers in <code>qsort</code> used by <a href="#example_1_1">Example 1.1</a>. In <i>OSF/Motif</i> programs we often need to supply a “callback function” that will be executed when a particular event is seen by a “Widget”, e.g. someone clicking on a button widget. In <span class="c-code">C</span> we might do this:</p>
+<pre><span class="c-code">typedef void (*CallbackProcedure)( Context c, Event e, Userdata u );
+struct {
+  CallbackProcedure callback;
+  Userdata userData;
+} CallbackRecord;
+      .
+/*  My function to be called when button is pressed */
+void ButtonPressedCallback( Context c, Event e, Userdata u );
+      .
+  CallbackRecord myCallbackList[] = { {ButtonPressedCallback, myData}, {NULL,NULL} };
+      .
+  SetButtonCallback( quitButton, myCallbackList );</span></pre>
+<p>Problems with this approach are the lack of type safety, the overhead associated with indirecting function calls, lack of inline optimization, and problems with interpreting “user data”, which tends to end up being a <code>(void *)</code> pointer. STL <a href="#Functions">function objects</a> avoid these problems because they are templates, so provided the function object is fully defined at the point of use, the compiler can generate the code inline at compilation time. User data can be kept in the function object, and maintains type safety. You can, of course, pass function pointers to algorithms if you wish, but in the following sections it should become apparent that function objects are generally a better idea.</p>
+
+<h3 id="Algorithms">Algorithms</h3>
+<pre><span class="cplusplus">#include <b>&lt;algorithm&gt;</b></span></pre>
+<p>We all know that an algorithm is an abstract logical, arithmetical or computational procedure that, if correctly applied, ensures the solution of a problem. But what is an STL algorithm ? STL algorithms are template functions parameterized by the iterator types they require. In the <a href="#Iterators">iterators section</a> I likened iterators to a “black box” that allowed algorithms to act on any container type which supported the correct iterators, as shown in the diagram below.</p>
+<pre>    +------------------+                     +------------------+
+    |                  +---------------------+                  |
+    |    Algorithms    |  &lt;-- Iterators --&gt;  |    Containers    |
+    |                  +---------------------+                  |
+    +------------------+                     +------------------+</pre>
+<p>The “abstraction layer” provided by iterators decouples algorithms from containers, and vastly increases the capability of the STL. Not all containers support the same level of iterators, so there are often several variants of the same algorithm to allow it to work across a range of containers without sacrificing speed benefits for containers with more capable iterators. The appropriate version of the algorithm is automatically selected by the compiler using the <a href="#Iterator_Tags">iterator tag</a> mechanism mentioned earlier. It does this by looking up <code>iterator_traits&lt;Iterator&gt;::iterator_category</code> and calling the version written for that category, a rather convoluted mechanism which you don’t really need to worry about (see <a href="#Bibliography">Mark Nelson’s book</a>, pages 338-346, if you really want to know the grisly details; <span class="cplusplus">C++</span>20 concepts do the same job more directly).</p>
+<p>Something you should worry about is whether the containers you are using support the iterators you need for an algorithm. The best way to determine this is to use a reference book or web page, or look at the <code>&lt;algorithm&gt;</code> <a href="#Header_Files">header file</a>. For example, the <code>min_element</code> algorithm will have a definition similar to this:</p>
+<pre><span class="cplusplus">template &lt;class ForwardIterator&gt;
+ForwardIterator min_element( ForwardIterator first, ForwardIterator last );</span></pre>
+<p>Hence it requires a container that supports at least forward iterators. It can lead to strange errors if you try an algorithm with a container that doesn’t provide the necessary iterators, because the compiler will try to generate code from the various templates and get confused before collapsing with an error. On VMS, with DEC <span class="cplusplus">C++</span>, this might result in a lot of</p>
+<pre><span class="dcl">%CXX-E-PARMTYPLIST, Ill-formed parameter type list.
+%CXX-E-BADTEMPINST, Previous error was detected during the instantiation of ..
+%CXX-E-OVERLDFAIL, In this statement, the argument list .. matches no ..</span></pre>
+<p>errors. In Windows you tend to get lots of</p>
+<pre>.. &lt;`template-parameter-1',`template-parameter-2', ..
+.. could not deduce template argument for  ..
+.. does not define this operator or a conversion to a type
+     acceptable to the predefined operator</pre>
+<p>Try compiling the example code and see what errors you get. In Visual Studio, Example 8.1 is in the solution but not built; right-click it and choose “Build” to see them.</p>
+<p class="listing-title" id="example_8_1">Example 8.1: <a href="examples/example_8_1.cpp"><code>example_8_1.cpp</code></a></p>
+<!-- listing example_8_1.cpp -->
+<pre><span class="cplusplus">// ---- The wrong iterators for an algorithm ("example_8_1.cpp") -------------
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+#include &lt;iterator&gt;
+#include &lt;set&gt;
+
+void PrintIntegerSet( const std::set&lt;int&gt; &amp;integers );
+int TechnoTrousers( std::set&lt;int&gt; &amp;exNasa );
+
+int main()
+{
+    std::set&lt;int&gt; integers = { 4,9,2,8,17,3 };
+    PrintIntegerSet( integers );
+    std::cout &lt;&lt; "Smallest element is: " &lt;&lt; TechnoTrousers( integers ) &lt;&lt; std::endl;
+    return 0; // Compile and note error messages
+}
+
+void PrintIntegerSet( const std::set&lt;int&gt; &amp;integers )
+{
+    std::cout &lt;&lt; "Set of integers:" &lt;&lt; std::endl;
+    for ( std::set&lt;int&gt;::const_iterator setIterator = integers.begin();
+          setIterator != integers.end(); ++setIterator )
+    {
+        std::cout &lt;&lt; *setIterator &lt;&lt; " ";
+    }
+    std::cout &lt;&lt; std::endl;
+}
+
+int TechnoTrousers( std::set&lt;int&gt; &amp;exNasa )
+{
+    // Oh dear - sort() needs random access iterators, which a set doesn't have
+    std::sort( exNasa.begin(), exNasa.end() ); // To make this work, comment out this line
+    // min_element() only needs forward iterators, so it works with a set
+    return *std::min_element( exNasa.begin(), exNasa.end() );
+}</span></pre>
+<p>The original STL had about 60 algorithms. The current standard has more than 100, in <code>&lt;algorithm&gt;</code> and <code>&lt;numeric&gt;</code>; see <a href="#Bibliography">Stroustrup</a> (Third Edition), pages 507-511, for the original list, or <a href="https://en.cppreference.com/w/cpp/algorithm">cppreference.com</a> for the current one. They fall into these main categories:</p>
+<ul>
+<li><b>Nonmodifying Sequence Operations</b> – these extract information, find, position within or move through elements but <b>don’t change</b> them, e.g. <code>find()</code>, <code>count_if()</code>.</li>
+<li><b>Modifying Sequence Operations</b> – these are miscellaneous functions that <b>do change</b> the elements they act on, e.g. <code>swap()</code>, <code>transform()</code>, <code>fill()</code>, <code>shuffle()</code>.</li>
+<li><b>Sorted Sequences</b> – sorting and binary searching functions, e.g. <code>sort()</code>, <code>lower_bound()</code>.</li>
+<li><b>Set Algorithms</b> – create sorted unions, intersections and so on, e.g. <code>set_union()</code>, <code>set_intersection()</code>.</li>
+<li><b>Heap Operations</b> – e.g. <code>make_heap()</code>, <code>push_heap()</code>, <code>sort_heap()</code>.</li>
+<li><b>Minimum and Maximum</b> – e.g. <code>min()</code>, <code>max()</code>, <code>min_element()</code>, <code>max_element()</code>.</li>
+<li><b>Permutations</b> – e.g. <code>next_permutation()</code>, <code>prev_permutation()</code>.</li>
+<li><b>Numeric</b> – include <code>&lt;numeric&gt;</code> for general numerical algorithms, e.g. <code>accumulate()</code>, <code>partial_sum()</code>.</li>
+</ul>
+<p>Some of the algorithms, like <code>remove()</code> or <code>unique()</code> (which removes adjacent duplicates), can’t actually remove elements, because they only have iterators, not the container itself. What they do is shuffle the elements you want to keep to the front of the sequence and return an iterator pointing just past them, and it is then up to you to <code>erase()</code> the others; <a href="#example_8_2">Example 8.2</a> shows this “erase-remove idiom”. Several algorithms also have a version with a <code>_copy</code> suffix, such as <code>remove_copy()</code>, which produces a new sequence as its output, containing only the required elements. (<span class="cplusplus">C++</span>20 added <code>std::erase_if()</code>, which does both steps on a container.)</p>
+<p>Algorithms whose names end with the <code>_if</code> suffix only perform their operation on objects that meet certain criteria. To ascertain whether the necessary conditions, known as <em>predicates</em>, have been met, you pass a <a href="#Functions">function object</a> returning a <code>bool</code> value. There are two types of predicate: <em>Predicate</em> and <em>BinaryPredicate</em>. Predicates dereference a single item to test, whereas BinaryPredicates dereference two items, which they might compare for instance.</p>
+<pre><span class="cplusplus">template &lt;class InputIterator, class Predicate&gt;
+typename iterator_traits&lt;InputIterator&gt;::difference_type
+count_if( InputIterator first, InputIterator last, Predicate pred );</span></pre>
+<p>This returns the number of objects in the range <code>first</code> to just before <code>last</code> for which the Predicate function object <code>pred</code>, which takes one argument (a reference to the data type you are checking), returns true. (The original STL’s <code>count_if</code> returned nothing, and added the count to a fourth, reference, argument instead.) The next algorithm requires a BinaryPredicate.</p>
+<pre><span class="cplusplus">template &lt;class ForwardIterator, class BinaryPredicate&gt;
+ForwardIterator adjacent_find( ForwardIterator first, ForwardIterator last,
+                               BinaryPredicate binaryPred );</span></pre>
+<p>This will look in the range <code>first</code> to just before <code>last</code> for two adjacent objects that “match”. If no match is found, then it returns <code>last</code>. Because a match is determined by the BinaryPredicate function object <code>binaryPred</code>, which takes two arguments (references to the appropriate data types), you can match on any conditions you like. In fact, there are two versions of <code>adjacent_find</code>: one just requires <code>first</code> and <code>last</code> and uses the <code>==</code> operator to determine equality, and the one above which gives you more control over the match test.</p>
+<p>With the information above, you should now be able to look at an algorithm in the header file or reference manual, and determine what sort of function object, if any, you need to provide, and what sort of iterators your container must support if the algorithm is to be used on it.</p>
+
+<h3 id="Functions">Functions and Function Objects</h3>
+<pre><span class="cplusplus">#include <b>&lt;functional&gt;</b></span></pre>
+<p>Function objects are the STL’s replacement for traditional <span class="c-code">C</span> function pointers, and if you look at the STL algorithms, they are written as they would be if function objects were function pointers. This is why you can use function pointers (or plain, old functions) with the correct argument signature if you wish, though function objects offer several advantages, as we will see.</p>
+<p>We have already seen a function object used in <a href="#example_4_3">Example 4.3</a> to compare two task objects. This is superior to the <code>qsort</code> style comparison function in many respects. The function object provides type safety, allows an object’s copy constructors to be used if necessary (rather than just doing a binary copy), and doesn’t require that the objects be contiguous in memory – it can use the appropriate <a href="#Iterators">iterators</a> to walk through the objects. Function objects can be used to “tuck away” data that would otherwise have to be global, or passed in a “user data” pointer. The usual template features like inline optimization and automatic code generation for different data types also apply.</p>
+<p>“Why a ‘function object’?”, you might ask. What would be wrong with using a function template like this:</p>
+<pre><span class="cplusplus">template &lt;class T&gt;
+bool IsLessThan( const T &amp;x, const T &amp;y ) { return x &lt; y; }
+    .
+    sort( first, last, IsLessThan&lt;MyObjects&gt; );   // Passes a pointer to the function
+    sort( first, last, IsLessThan&lt;MyObjects&gt;() ); // Wrong: calls it with no arguments</span></pre>
+<p>The first <code>sort</code> is legal: <code>IsLessThan&lt;MyObjects&gt;</code> instantiates the template for <code>MyObjects</code>, and <code>sort</code> receives a pointer to the result. The second is a mistake, because the brackets <em>call</em> the function, with no arguments. Even the legal version is often slower than it need be, because <code>sort</code> has to call the comparison through a pointer, which the compiler can rarely inline. The usual alternative is to declare a template class with <code>operator()</code> in it, a function object:</p>
+<pre><span class="cplusplus">template &lt;class T&gt;
+struct IsLessThan {                             // A function object
+  bool operator()( const T &amp;x, const T &amp;y ) const { return x &lt; y; }
+};
+    .
+  sort( first, last, IsLessThan&lt;MyObjects&gt;() );</span></pre>
+<p>Here the brackets are right: they create an <code>IsLessThan&lt;MyObjects&gt;</code> object, which <code>sort</code> then calls like a function. (It is a <code>struct</code> so that <code>operator()</code> is public; in a <code>class</code> it would be private by default, and <code>sort</code> couldn’t call it.) There are three main uses for function objects within the STL. The <em>comparison</em> and <em>predicate</em> function objects which we have met already return a <code>bool</code> value indicating the result of a comparison, e.g. one object greater than another, or telling an algorithm whether to perform a conditional action, e.g. remove all objects with a particular attribute. The <em>numeric</em> function objects perform operations like addition, subtraction, multiplication or division. These usually apply to numeric types, but some, like <code>plus</code>, can be used with strings. Several function objects are built in to the STL, such as <code>plus</code>, <code>minus</code>, <code>multiplies</code>, <code>divides</code>, <code>modulus</code>, <code>negate</code>, <code>equal_to</code>, <code>not_equal_to</code>, <code>greater</code>, and so on. See the header file for a complete list. If the data type defines the correct operator, you can use the predefined template function objects like this:</p>
+<pre><span class="cplusplus">  some_algorithm( first, last, greater&lt;MyObjects&gt;() );</span></pre>
+<p>so you don’t always need to create your own function object from scratch (since <span class="cplusplus">C++</span>14 you can write <code>greater&lt;&gt;()</code> and let the compiler work out the type). Try to use one of the library versions if it is available. This saves effort, reduces the chances of error and improves portability.</p>
+<p>To increase the flexibility of STL function objects, the original STL provided <em>adapters</em> which allowed us to compose slightly modified function objects from the standard ones. If we wanted to find values greater than 1997 in a <code>vector</code> of integers, we would use a <i>binder</i> to take advantage of the <code>greater()</code> function, which takes two arguments, to compare each value with 1997.</p>
+<pre><span class="cplusplus">  iter = find_if( v.begin(), v.end(), bind2nd( greater&lt;int&gt;(), 1997 ) );</span></pre>
+<p>Other adapters existed to allow negation of predicates, calling of member functions, or use of “real” function pointers with binders, and Stroustrup covers them in some detail from page 518 onwards. <code>bind1st</code>, <code>bind2nd</code>, <code>ptr_fun</code>, <code>mem_fun</code> and their friends were deprecated in <span class="cplusplus">C++</span>11 and removed in <span class="cplusplus">C++</span>17, and <code>std::bind</code> replaced them. Today you would usually write a lambda expression instead.</p>
+
+<h3 id="Lambdas">Lambda Expressions</h3>
+<p>A <i>lambda expression</i>, added in <span class="cplusplus">C++</span>11, is a function object that the compiler writes for you, right where you need it. It has the form <code>[<i>capture</i>]( <i>parameters</i> ) { <i>body</i> }</code>. The capture list says which of the surrounding local variables the lambda can use: <code>[cutOff]</code> copies <code>cutOff</code> into it, <code>[&amp;total]</code> lets it use and change <code>total</code> itself, and <code>[]</code> captures nothing. With a lambda, the binder example above becomes</p>
+<pre><span class="cplusplus">  iter = find_if( v.begin(), v.end(), []( int value ) { return value &gt; 1997; } );</span></pre>
+<p>which says what it means. Example 8.2 uses lambdas with several algorithms.</p>
+<p class="listing-title" id="example_8_2">Example 8.2: <a href="examples/example_8_2.cpp"><code>example_8_2.cpp</code></a></p>
+<!-- listing example_8_2.cpp -->
+<pre><span class="cplusplus">// ---- Lambda expressions with the algorithms ("example_8_2.cpp") ----------
+
+// C++ Standard Library Headers
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;iostream&gt;
+#include &lt;numeric&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+
+void PrintYears( const char *title, const vector&lt;int&gt; &amp;years )
+{
+    cout &lt;&lt; title &lt;&lt; ":";
+    for ( int year : years ) cout &lt;&lt; " " &lt;&lt; year;
+    cout &lt;&lt; endl;
+}
+
+int main()
+{
+    vector&lt;int&gt; years = { 1969, 1975, 1979, 1983, 1971, 1997, 2001, 1996 };
+    const int cutOff = 1997;
+    int total = 0;
+//  End of declarations ...
+
+    PrintYears( "Years", years );
+
+//  find_if with a lambda: the first year after cutOff. [cutOff] captures the
+//  variable by value so the lambda can use it. This replaces the old
+//  find_if( ..., bind2nd( greater&lt;int&gt;(), 1997 ) ), removed in C++17.
+    auto found = find_if( years.begin(), years.end(),
+                          [cutOff]( int year ) { return year &gt; cutOff; } );
+    if ( found != years.end() )
+      cout &lt;&lt; "First year after " &lt;&lt; cutOff &lt;&lt; ": " &lt;&lt; *found &lt;&lt; endl;
+
+//  count_if with a lambda predicate
+    auto seventiesCount = count_if( years.begin(), years.end(),
+                                    []( int year ) { return year &gt;= 1970 &amp;&amp; year &lt; 1980; } );
+    cout &lt;&lt; "Years in the 1970s: " &lt;&lt; seventiesCount &lt;&lt; endl;
+
+//  sort with a lambda comparison, newest first; greater&lt;&gt;() would do the same
+    sort( years.begin(), years.end(), []( int first, int second ) { return first &gt; second; } );
+    PrintYears( "Newest first", years );
+
+//  for_each with a lambda that captures total by reference, so it can change it
+    for_each( years.begin(), years.end(), [&amp;total]( int year ) { total += year; } );
+    cout &lt;&lt; "Total " &lt;&lt; total &lt;&lt; ", and accumulate() agrees: "
+         &lt;&lt; accumulate( years.begin(), years.end(), 0 ) &lt;&lt; endl;
+
+//  remove_if shuffles the unwanted years to the end and returns where they
+//  start; erase() then gets rid of them (the "erase-remove idiom")
+    years.erase( remove_if( years.begin(), years.end(),
+                            []( int year ) { return year &lt; 1975; } ),
+                 years.end() );
+    PrintYears( "Without the years before 1975", years );
+
+    return( EXIT_SUCCESS );
+}</span></pre>
+<p>Its output is:</p>
+<!-- output example_8_2 -->
+<pre class="output">Years: 1969 1975 1979 1983 1971 1997 2001 1996
+First year after 1997: 2001
+Years in the 1970s: 3
+Newest first: 2001 1997 1996 1983 1979 1975 1971 1969
+Total 15871, and accumulate() agrees: 15871
+Without the years before 1975: 2001 1997 1996 1983 1979 1975</pre>
+<p>The type the compiler gives a lambda has no name you can write, which is why <code>auto</code> is so useful with them: <code>auto isRecent = []( int year ) { return year &gt; 1997; };</code> keeps a lambda in a variable so that you can use it more than once.</p>
+
+<h2 id="STL_URLS">9. STL Related Web Pages</h2>
+<p>Here are a few of the web pages I’ve collected relating to the STL and the <span class="cplusplus">C++</span> standard.</p>
+<ul>
+<li><a href="https://en.cppreference.com/w/cpp">cppreference.com</a> – the reference most <span class="cplusplus">C++</span> programmers keep open, with a page for every <a href="https://en.cppreference.com/w/cpp/container">container</a> and <a href="https://en.cppreference.com/w/cpp/algorithm">algorithm</a>, and notes on which standard added what.</li>
+<li><a href="https://www.stroustrup.com/">Bjarne Stroustrup’s home page</a> – a man who needs no introduction, with his FAQs and links to other useful <span class="cplusplus">C++</span> sites.</li>
+<li><a href="https://isocpp.org/">Standard C++</a> – the Standard C++ Foundation’s site, with news, the <a href="https://isocpp.org/faq">C++ Super-FAQ</a> and the state of the standard.</li>
+<li><a href="https://eel.is/c++draft/">The current working draft of the C++ standard</a>, as browsable HTML.</li>
+<li><a href="https://www.cs.rpi.edu/~musser/stl.html">Standard Template Library</a> – Dave Musser’s page, from one of the STL’s authors.</li>
+<li><a href="http://stepanovpapers.com/">Collected Papers of Alexander A. Stepanov</a>, including the original 1995 HP STL report by Stepanov and Meng Lee.</li>
+<li><a href="https://www.boost.org/sgi/stl/">The SGI Standard Template Library Programmer’s Guide</a> – the classic STL reference manual, now hosted by Boost (with some nonstandard features).</li>
+<li><a href="https://learn.microsoft.com/en-us/cpp/standard-library/cpp-standard-library-reference">Microsoft’s C++ Standard Library reference</a>, for Visual Studio. Microsoft’s implementation of the library is itself <a href="https://github.com/microsoft/STL">open source on GitHub</a>.</li>
+<li>VMS Software Inc.’s <a href="https://products.vmssoftware.com/cxx">VSI C++ compiler</a> for OpenVMS. VSI’s <a href="https://vmssoftware.com/community/community-license/">Community License</a> lets you download OpenVMS free of charge for learning, open source development and sharing knowledge of the system.</li>
+</ul>
+
+<h2 id="Bibliography">10. Bibliography</h2>
+<p>This is an <b>approved Amazon.com Associates site</b>, and if you click on the titles below it will take you straight to the secure Amazon order page for that book.</p>
+<ul>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0321563840/drkara-20/"><i>The C++ Programming Language (Fourth Edition)</i></a> by Bjarne Stroustrup, Pub. Addison-Wesley, ISBN 978-0-321-56384-2<br>
+Covers <span class="cplusplus">C++</span>11, including the standard library as it is used today.</li>
+<li><a href="https://www.amazon.com/gp/product/0201889544/ref=as_li_tl?ie=UTF8&amp;tag=drkara-20&amp;camp=1789&amp;creative=9325&amp;linkCode=as2&amp;creativeASIN=0201889544&amp;linkId=fcfcf24ac3d01a6465ee242fb1b02c3e"><i>The C++ Programming Language (Third Edition)</i></a> by Bjarne Stroustrup, Pub. Addison-Wesley, ISBN 0-201-88954-4<br>
+300 more pages than the 2nd edition, much of the new material concerning the STL. The page numbers quoted in these notes are from this edition.</li>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0321623215/drkara-20/"><i>The C++ Standard Library: A Tutorial and Reference (Second Edition)</i></a> by Nicolai M. Josuttis, Pub. Addison-Wesley, ISBN 0-321-62321-5<br>
+The standard library, STL and all, as revised by <span class="cplusplus">C++</span>11, explained thoroughly and readably.</li>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0201749629/drkara-20/"><i>Effective STL</i></a> by Scott Meyers, Pub. Addison-Wesley, ISBN 0-201-74962-9<br>
+50 pieces of advice on using the STL well, most of which still apply.</li>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0201633981/drkara-20/"><i>STL Tutorial and Reference Guide: C++ Programming with the Standard Template Library</i></a> by David R. Musser and Atul Saini, Pub. Addison-Wesley, ISBN 0-201-63398-1<br>
+Fairly useful in conjunction with Nelson.</li>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=1568843143/drkara-20/"><i>C++ Programmer’s Guide to the Standard Template Library</i></a> by Mark Nelson, Pub. IDG Books Worldwide, ISBN 1-56884-314-3<br>
+Plenty of examples and more readable than most of the other books.</li>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0201514591/drkara-20/"><i>The Annotated C++ Reference Manual</i></a> (known as the ARM) by Margaret A. Ellis and Bjarne Stroustrup, Pub. Addison-Wesley, ISBN 0-201-51459-1<br>
+Explains templates – a “must have” book for anyone doing <span class="cplusplus">C++</span> programming in the 1990s.</li>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0534949746/drkara-20/"><i>Data Structures and Algorithms in C++</i></a> by Adam Drozdek, Pub. PWS Publishing Company, ISBN 0-534-94974-6<br>
+Not about the STL, but useful for understanding the implementation.</li>
+<li><a href="http://www.amazon.com/exec/obidos/ISBN=0134376331/drkara-20/"><i>The C++ Standard Template Library</i></a> by P. J. Plauger, Alexander A. Stepanov, Meng Lee and David R. Musser, Pub. Prentice Hall, ISBN 0-13-437633-1</li>
+</ul>
+<p><a href="#Top_Of_Page">Back to Top</a></p>
+<p>See also <a href="../c_course/index.html">Kara’s C Tutorial</a>, an introduction to <span class="c-code">C</span> for programmers who already know another language, particularly DEC <span class="fortran">FORTRAN</span>, with its own example programs and Visual Studio solution.</p>
+<hr>
+<h3 id="KLO_Software">More from KLO Software</h3>
+<p>If you have enjoyed this tutorial, please have a look at my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. They describe a family of free Windows programs, all available from the Microsoft Store and each with its own help page: <b>BeebRFSMaker</b>, <b>BeebRFSTool</b> and <b>BeebFileUtilities</b> for BBC Micro enthusiasts, which view disk images, decode tokenised BASIC and pack files into compressed sideways ROMs; <b>KOContour</b>, which turns elevation data into contour maps; <b>KOBrot</b>, a Mandelbrot and Julia set explorer that redraws the matching Julia set live as you move the pointer; and <b>SnapDragger</b>, which tidies a folder of photographs and video clips into dated, sorted folders with an HTML contact sheet. Suggestions, bug reports and ideas for new features are always welcome.</p><!-- Light/dark/automatic theme switch, shared with the KLO-Software pages.
+     KLO-Software and KLO-Tutorials are sibling folders, on disk and on Git. -->
+<script src="../../KLO-Software/KLODarkModeSwitch.js" defer></script>
+</body>
+</html>

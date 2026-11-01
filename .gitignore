@@ -8,5 +8,8 @@ obj/
 # Written by the fileio example program when it runs
 MYDATA.DAT
 
+# Written by the STL course's Example 6.1 when it runs
+vector.dat
+
 # Private notes on how the repository and its GitHub Pages site were set up
 TutorialWebPageCreationSteps.txt
