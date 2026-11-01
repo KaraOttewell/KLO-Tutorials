@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Resource Waits in the OpenVMS Operating System, or What to do when you R-WASTed by OpenVMS: David L. Cathey's DECUS presentation on processes stuck in RWAST.">
+<title>What to do when you R-WASTed by OpenVMS</title>
+<style>
+/* Colours are CSS variables: light values here, dark values below, the same
+   scheme as Kara's VMS Tutorial (index.html in this folder). The theme switch
+   (KLODarkModeSwitch.js from KLO-Software) puts theme-light or theme-dark on
+   the body element; with neither, the system preference decides. */
+body {
+    --page-background: #FFFFFF;
+    --text: #1E1E1E;
+    --link: #0000EE;
+    --link-visited: #551A8B;
+    --heading: #4E342E;
+    --heading-rule: #D7BE8A;
+    --dcl: #00747A;
+    --code-background: #F7F9FC;
+    --code-border: #E3E8EF;
+    --output-background: #F2F2F2;
+    --output-border: #DDDDDD;
+    --output-edge: #9E9E9E;
+    --output-text: #212121;
+    --table-header-background: #EFE6D8;
+    --table-border: #D7BE8A;
+    --warning-background: #FFF4E5;
+    --warning-edge: #C62828;
+    --note: #5F6B73;
+    --toggle-background: #F0F6F9;
+    --toggle-border: #0F4761;
+    --badge-background: #0F4761;
+}
+body.theme-dark {
+    color-scheme: dark;
+    --page-background: #0D1117;
+    --text: #E6EDF3;
+    --link: #79C0FF;
+    --link-visited: #C58CFF;
+    --heading: #E8C48C;
+    --heading-rule: #5C4A2E;
+    --dcl: #39C5CF;
+    --code-background: #161B22;
+    --code-border: #30363D;
+    --output-background: #1B1F24;
+    --output-border: #30363D;
+    --output-edge: #6E7681;
+    --output-text: #E6EDF3;
+    --table-header-background: #2A2418;
+    --table-border: #5C4A2E;
+    --warning-background: #2A1A14;
+    --warning-edge: #FF7B72;
+    --note: #9AA4AE;
+    --toggle-background: #161B22;
+    --toggle-border: #30363D;
+    --badge-background: #1F6FEB;
+}
+@media (prefers-color-scheme: dark) {
+    body:not(.theme-light) {
+        color-scheme: dark;
+        --page-background: #0D1117;
+        --text: #E6EDF3;
+        --link: #79C0FF;
+        --link-visited: #C58CFF;
+        --heading: #E8C48C;
+        --heading-rule: #5C4A2E;
+        --dcl: #39C5CF;
+        --code-background: #161B22;
+        --code-border: #30363D;
+        --output-background: #1B1F24;
+        --output-border: #30363D;
+        --output-edge: #6E7681;
+        --output-text: #E6EDF3;
+        --table-header-background: #2A2418;
+        --table-border: #5C4A2E;
+        --warning-background: #2A1A14;
+        --warning-edge: #FF7B72;
+        --note: #9AA4AE;
+        --toggle-background: #161B22;
+        --toggle-border: #30363D;
+        --badge-background: #1F6FEB;
+    }
+}
+
+body { font-family: Georgia, "Times New Roman", serif; max-width: 60em; margin: 1em auto; padding: 0 1em; line-height: 1.4;
+       background: var(--page-background); color: var(--text); }
+a { color: var(--link); }
+a:visited { color: var(--link-visited); }
+h1, h2, h3, h4 { color: var(--heading); }
+h2 { border-bottom: 2px solid var(--heading-rule); padding-bottom: 0.15em; margin-top: 1.8em; }
+hr { border: none; border-top: 2px solid var(--heading-rule); margin-top: 2em; }
+
+pre, code { font-family: Consolas, "Courier New", monospace; }
+pre { white-space: pre; overflow-x: auto; background: var(--code-background); border: 1px solid var(--code-border);
+      border-radius: 4px; padding: 0.5em 0.8em; }
+pre.output { background: var(--output-background); border: 1px solid var(--output-border);
+             border-left: 4px solid var(--output-edge); color: var(--output-text); }
+.dcl { color: var(--dcl); }
+.note { color: var(--note); font-style: italic; }
+
+/* The warning at the top, and the editor's note on what has changed since 1993 */
+div.warning { background: var(--warning-background); border-left: 4px solid var(--warning-edge);
+              padding: 0.4em 0.9em; margin: 1em 0; }
+
+/* Each section was one slide of the presentation; its number is shown at the end */
+p.slide-number { text-align: right; font-size: 0.8em; color: var(--note); margin-top: 0.3em; }
+
+/* The tables of reason codes and network links */
+table.slide-table { border-collapse: collapse; margin: 0.8em 0; display: block; max-width: 100%; overflow-x: auto; }
+table.slide-table th, table.slide-table td { border: 1px solid var(--table-border); padding: 0.3em 0.9em; text-align: left; }
+table.slide-table th { background: var(--table-header-background); color: var(--heading); }
+table.slide-table td.number { text-align: right; }
+
+/* The blue "chips" under the title, as on the KLO-Software pages */
+.badge { display: inline-block; background: var(--badge-background); color: #FFFFFF;
+         font-family: Segoe UI, Arial, sans-serif; font-size: 8pt; padding: 2px 8px; margin: 0 6px 4px 0; }
+
+/* The floating theme switch, as on the KLO-Software pages */
+#theme-toggle-icon { position: fixed; top: 12px; right: 12px; font-size: 22px; cursor: pointer;
+                     background: var(--toggle-background); border: 1px solid var(--toggle-border);
+                     border-radius: 6px; padding: 6px 8px; z-index: 9999; user-select: none; }
+</style>
+</head>
+<body>
+<div id="theme-toggle-icon" title="Change theme">&#128421;&#65039;</div>
+<h1 id="Top_Of_Page">Resource Waits in the OpenVMS Operating System</h1>
+<p><span class="badge">OpenVMS</span>
+<span class="badge">SDA</span>
+<span class="badge">MACRO-32</span>
+<span class="badge">Free</span></p>
+
+<p><i>or</i> <b>What to do when you R-WASTed by OpenVMS</b><br>
+<i>David L. Cathey, Montagar Software Concepts – DECUS Spring ’93 Atlanta Symposia, session VS060</i></p>
+
+<p>A process stuck in the RWAST state can’t be stopped with <code class="dcl">STOP/ID</code>, and seems to sit in <code class="dcl">SHOW SYSTEM</code> forever. Thanks to David L. Cathey of Montagar Software Concepts, I was able to add his DECUS presentation on how to get rid of one to my web pages, converted from PostScript to HTML. It contains numerous useful tips and information, and some example code in MACRO-32. Each section below was one slide of the presentation. This page goes with <a href="index.html">Kara’s VMS Tutorial</a>.</p>
+
+<div class="warning">
+<p>Any use of the information presented here is entirely at the reader’s own risk. Always back up your system before attempting any procedure which could cause your VMS system to hang or crash. Though VMS is very robust, some of the techniques presented here involve unusual kernel mode operations which are extremely risky on a production system.</p>
+</div>
+
+<div class="warning">
+<p><b>A note on its age.</b> The presentation dates from 1993, and describes VAX/VMS V5.5. The ideas – what a resource wait is, how to find out what a process is waiting for, and how to free the I/O it is stuck on – still apply, but the details have moved on: the data structures and system routines changed on Alpha, Integrity and x86-64, SDA’s output looks different, and NCP is the DECnet Phase IV network manager, which many systems no longer run. The kernel mode code is shown as it was written, for VAX, to explain the technique; don’t try it on a modern system without checking every structure and routine against the current documentation.</p>
+</div>
+
+<h2 id="Contents">Contents</h2>
+<ul>
+<li><a href="#Session_Outline">Session Outline</a></li>
+<li><a href="#What_is_a_Resource_Wait">What is a “Resource Wait”</a>
+<ul>
+<li><a href="#MUTEX_Examples">Resource Waits and MUTEXes (Examples)</a></li>
+<li><a href="#MUTEX_Data_Structures">Resource Waits and MUTEXes (Data Structures)</a></li>
+</ul></li>
+<li><a href="#Accessing_a_MUTEX">Example of Accessing a MUTEX</a>
+<ul>
+<li><a href="#MUTEX_Processes">Resource Waits and MUTEXes (Processes)</a></li>
+<li><a href="#MUTEX_Reason_Codes">Resource Waits and MUTEXes (Reason Codes)</a></li>
+<li><a href="#MUTEX_Executive">Resource Waits and MUTEXes (Executive)</a></li>
+</ul></li>
+<li><a href="#Putting_a_Process_in_a_Resource_Wait">Example of Putting a Process in a Resource Wait</a></li>
+<li><a href="#RWAST_Causes">RWAST Causes and Descriptions</a></li>
+<li><a href="#Using_SDA">Using SDA to Determine RWAST Cause</a>
+<ul>
+<li><a href="#SDA_Show_Process_Index">Sample SDA Output: SHOW PROCESS/INDEX</a></li>
+<li><a href="#SDA_Show_Process_Channel">Sample SDA Output: SHOW PROCESS/CHANNEL</a></li>
+</ul></li>
+<li><a href="#Breaking_Out">Breaking Processes Out of RWAST</a>
+<ul>
+<li><a href="#Network_Devices">Network Devices</a></li>
+<li><a href="#Mailbox_Devices">Mailbox Devices</a></li>
+<li><a href="#Tape_Devices">Tape Devices</a></li>
+<li><a href="#Disk_Devices">Disk Devices</a></li>
+<li><a href="#Line_Printer_Devices">Line Printer Devices (believe it or not!)</a></li>
+</ul></li>
+<li><a href="#Brute_Force">Brute Force Approaches to Getting out of RWAST</a></li>
+<li><a href="#Code_Example">For those that need the code example...</a></li>
+</ul>
+
+<h2 id="Session_Outline">Session Outline</h2>
+<ul>
+<li>What are “Resource Waits”</li>
+<li>Resource Waits and MUTEXes</li>
+<li>RWAST causes and descriptions</li>
+<li>Using SDA (System Dump Analyzer) to determine causes of RWAST</li>
+<li>Breaking processes out of RWAST</li>
+<li>Getting tough: Brute force approaches</li>
+</ul>
+<p class="slide-number">Slide 2</p>
+
+<h2 id="What_is_a_Resource_Wait">What is a “Resource Wait”</h2>
+<ul>
+<li>A Resource Wait is a type of MUTEX (MUTual EXclusion semaphore) within the OpenVMS Operating System.</li>
+<li>Resource Waits are a set of events that suspends a process until some process or operating system resource becomes available.</li>
+<li>Typically, the resource, or enough of a resource, becomes available and the process is resumed.</li>
+<li>MUTEXes and Resource Waits are not always “evil”. They are used to provide a form of flow control, or allow a process to maximize throughput by utilizing all available quota.</li>
+</ul>
+<p class="slide-number">Slide 3</p>
+
+<h3 id="MUTEX_Examples">Resource Waits and MUTEXes (Examples)</h3>
+<ul>
+<li>A MUTEX is a synchronization mechanism (similar to a Lock, i.e. $ENQ/$DEQ) that allows protecting an operating system resource without blocking all other activity by using elevated IPL.</li>
+<li>A MUTEX is implemented via a longword data cell in the OpenVMS executive. See “VMS Internals and Data Structures V5.2”, Chapter 8.5, page 196, or “Alpha Internals and Data Structures”, Chapter 9.7, page 9-50.</li>
+<li>Examples of MUTEXes used in OpenVMS V5.5 are:
+<ul>
+<li><code>LNM$AL_MUTEX</code> Logical Name Table MUTEX</li>
+<li><code>IOC$GL_MUTEX</code> I/O Database</li>
+<li><code>EXE$GL_CEBMTX</code> Common Event Block Queue</li>
+<li><code>SMP$GL_CPU_MUTEX</code> CPU Database Queue</li>
+<li><code>EXE$GL_PGDYNMTX</code> Paged Dynamic Memory</li>
+<li><code>EXE$GL_GSDMTX</code> Global Section Descriptor Queue</li>
+<li><code>CIA$GL_MUTEX</code> Cumulative Intrusion Analysis Queue</li>
+<li><code>EXE$GL_BASIMGMTX</code> Base OpenVMS Image (Loaded Images)</li>
+</ul></li>
+</ul>
+<p class="slide-number">Slide 4</p>
+
+<h3 id="MUTEX_Data_Structures">Resource Waits and MUTEXes (Data Structures)</h3>
+<ul>
+<li>The MUTEX longword is manipulated via the internal routines <code>SCH$LOCKR</code>, <code>SCH$LOCKW</code>, and <code>SCH$UNLOCK</code>.</li>
+<li>The MUTEX longword is divided up into two fields: Status and Owner Count.</li>
+</ul>
+<pre>   31                           16 15                           0
+  +----------------------------+--+------------------------------+
+  |              MBZ           | 1|          Owner Count         |
+  +----------------------------+--+------------------------------+
+                                Write-in-progress or
+                                Write-pending status bit</pre>
+<ul>
+<li>Other related structures:
+<ul>
+<li><code>PCB$W_MXTCNT</code> Count of MUTEXes owned by this process</li>
+<li><code>PCB$L_EFWM</code> Address (0x8nnnnnnn) of pending MUTEX</li>
+</ul></li>
+</ul>
+<p class="slide-number">Slide 5</p>
+
+<h2 id="Accessing_a_MUTEX">Example of Accessing a MUTEX</h2>
+<pre>; Note that this code must be in Kernel mode,
+; in order to access the MUTEX data cell for R/W access.
+;
+; Grab the Intrusion Queue mutex, so we can
+; scan it safely...
+
+        moval g^CIA$GL_MUTEX,r0
+        jsb g^SCH$LOCKW ; Lock MUTEX
+
+        movl    g^CIA$GQ_INTRUDER,r3    ; Get first intrusion blk
+        moval   g^CIA$GQ_INTRUDER,r4    ; Get listhead address
+1$:     cmpl    r3,r4                   ; If r3 is listhead, bail
+        beql    5$
+        ...                             ; Do lots of neat stuff
+        movl    CIA$L_FLINK(r3),r3      ; Get next intrusion blk
+        brw     1$
+5$:
+        moval   g^CIA$GL_MUTEX,r0       ; Unlock MUTEX
+        jsb     g^SCH$UNLOCK</pre>
+<p class="slide-number">Slide 6</p>
+
+<h3 id="MUTEX_Processes">Resource Waits and MUTEXes (Processes)</h3>
+<ul>
+<li>Resource Waits are seen when a process requests an operating system resource or a process resource (quota), and there is not enough. The process will be put into an MWAIT state, and the cause for the wait is placed in the Event Flag Wait Mask (IDSM, Chapter 12, page 283).</li>
+<li>A process can be set to disallow placement into a Resource Wait by setting the Resource Wait Mode using the <code>$SETRWM</code> system service. Note: This will not completely disable all Resource Waits. It will prevent most cases. More on this later!</li>
+<li>Processes in a resource wait are identified by <code class="dcl">SHOW SYSTEM</code> with a state starting with “RWxxx”.</li>
+</ul>
+<p class="slide-number">Slide 7</p>
+
+<h3 id="MUTEX_Reason_Codes">Resource Waits and MUTEXes (Reason Codes)</h3>
+<ul>
+<li>OpenVMS V5.x defines these and other Resource Waits (defined in <code>$RSNDEF</code> in the macro library <code>SYS$LIBRARY:LIB.MLB</code>):</li>
+</ul>
+<table class="slide-table">
+<tr><th>State</th><th>Reason Code</th><th>Value</th><th>Meaning</th></tr>
+<tr><td>RWAST</td><td><code>RSN$_ASTWAIT</code></td><td class="number">1</td><td>Wait for AST event</td></tr>
+<tr><td>RWMBX</td><td><code>RSN$_MAILBOX</code></td><td class="number">2</td><td>Mailbox I/O</td></tr>
+<tr><td>RWNPG</td><td><code>RSN$_NPDYNMEM</code></td><td class="number">3</td><td>Nonpaged Dynamic Memory</td></tr>
+<tr><td>RWPAG</td><td><code>RSN$_PGDYNMEM</code></td><td class="number">5</td><td>Paged Dynamic Memory</td></tr>
+<tr><td>RWMPE</td><td><code>RSN$_MPLEMPTY</code></td><td class="number">11</td><td>Waiting for Modified List to empty</td></tr>
+<tr><td>RWMPB</td><td><code>RSN$_MPWBUSY</code></td><td class="number">12</td><td>Modified Page Writer Busy<br>(ReallyWantedMyProcessBack – Pat O.)</td></tr>
+<tr><td>RWSCS</td><td><code>RSN$_SCS</code></td><td class="number">13</td><td>System Communications Services</td></tr>
+<tr><td>RWCAP</td><td><code>RSN$_CPUCAP</code></td><td class="number">15</td><td>CPU Capability (Vectors, etc)</td></tr>
+<tr><td>RWCSV</td><td><code>RSN$_CLUSRV</code></td><td class="number">16</td><td>Cluster Server Process Busy</td></tr>
+</table>
+<p class="slide-number">Slide 8</p>
+
+<h3 id="MUTEX_Executive">Resource Waits and MUTEXes (Executive)</h3>
+<ul>
+<li>A Resource Wait is entered by the OpenVMS Executive when an exhaustion of a resource is detected. The routine <code>SCH$RWAIT</code> is called with the <code>RSN$_nnnnnnn</code> symbol as input. The RSN$ code is placed in the <code>PCB$L_EFWM</code> and the process state is set to MWAIT.</li>
+<li>The bit corresponding to the RSN$ code is set in the system longword <code>SCH$GL_RESMASK</code>, i.e. <code>RSN$_MPWBUSY</code> = 12.</li>
+</ul>
+<pre>   31                                    12                     0
+  +-------------------------------------+--+---------------------+
+  |                                     | 1|                     |
+  +-------------------------------------+--+---------------------+</pre>
+<ul>
+<li>When the OpenVMS Executive determines that a resource has been freed, (via the RSE routine) it checks the <code>SCH$GL_RESMASK</code> to determine if any processes are waiting on the resource. If so, the MWAIT process queue is scanned to determine which processes should be rescheduled.</li>
+</ul>
+<p class="slide-number">Slide 9</p>
+
+<h2 id="Putting_a_Process_in_a_Resource_Wait">Example of Putting a Process in a Resource Wait</h2>
+<pre>;
+;       Put self in RWAST if there unable to allocate
+;       the required non-paged pool...
+;
+;       Assume R4 hold value of current PCB
+1$:
+        movl    #GOOF$C_LENGTH,r1
+
+        jsb     g^EXE$DEBIT_BYTCNT_ALO  ; Allocate 1000 bytes
+        blbs    r0,5$
+        movl    #RSN$_NPDYNMEM,r0       ; Can't do it, wait until
+        jsb     SCH$RWAIT               ; the system frees some and
+        brb     1$                      ; then try it again...
+5$:
+        movl    r1,GOOF$W_SIZE(r2)      ; Play with our new buffer
+        ...</pre>
+<p class="slide-number">Slide 10</p>
+
+<h2 id="RWAST_Causes">RWAST Causes and Descriptions</h2>
+<ul>
+<li>RWAST == Resource Wait for AST-related event</li>
+<li>RWAST generally occurs for the following reasons:
+<ul>
+<li>Process is waiting for the deletion of a subprocess.</li>
+<li>AST Limit has been exhausted (ASTLM)</li>
+<li>Direct I/O Limit has been exhausted (DIOLM)</li>
+<li>Buffered I/O Limit has been exhausted (BIOLM)</li>
+<li>Process is waiting for outstanding I/O to complete.</li>
+</ul></li>
+<li>Quota exhaustion typically is transient, as the process is allowed to continue executing once an I/O or other event has completed.</li>
+<li>Waiting for a process deletion is also transient, unless that process is not computable (i.e. it’s stuck in RWAST, too!).</li>
+</ul>
+<p class="slide-number">Slide 11</p>
+
+<h2 id="Using_SDA">Using SDA to Determine RWAST Cause</h2>
+<ul>
+<li>Process state will be MWAIT or RW???
+<ul>
+<li>If the state is “MWAIT”, the process is in a MUTEX state. Use <code>EVAL/ADDRESS</code> on the address specified in the Event Flag Wait Mask to determine which MUTEX is locked.</li>
+<li>If the state is “RW???”, then the process is in a resource wait. The Event Flag Wait Mask will be set to the reason code, which should match the state shown by SDA.</li>
+</ul></li>
+<li>Use <code>SHOW PROCESS</code> and <code>SHOW PROCESS/CHANNEL</code> to see what it is waiting on.
+<ul>
+<li>A “0” for a quota means exhausted quota (BYTLM/BYTCNT may just be a small value).</li>
+<li>A “busy” channel means outstanding I/O</li>
+<li>Otherwise, check subprocess count for active subprocesses. Analyze them for Resource Wait problems.</li>
+</ul></li>
+</ul>
+<p class="slide-number">Slide 12</p>
+
+<h3 id="SDA_Show_Process_Index">Sample SDA Output: SHOW PROCESS/INDEX</h3>
+<pre class="output">SDA&gt; SHOW PROCESS/INDEX=0CF
+
+Process index: 000F   Name: DAVIDC_1   Extended PID: 000000CF
+- - - - - - -------------------------------------------------------------
+Status : 02040001 res,phdres
+Status2: 00000001 quantum_resched
+PCB address              805659E0    JIB address              806D2F80
+PHD address              808F9000    Swapfile disk address    00000000
+Master internal PID      00020019    Subprocess count                1
+Internal PID             0003000F    Creator internal PID     00020019
+Extended PID             000000CF    Creator extended PID     00000099
+State                       RWAST    Termination mailbox          002F
+Current priority                6    AST's enabled                KESU
+Base priority                   4    AST's active                 NONE
+UIC                [00002,000001]    AST's remaining               148
+Mutex count                     0    Buffered I/O count/limit        0/40 &lt;---+
+Waiting EF cluster              0    Direct I/O count/limit         40/40     |
+Starting wait time       1B001B1B    BUFIO byte count/limit      30800/30800  |
+Event flag wait mask     00000001&lt;-+ # open files allowed left     147        |
+Local EF cluster 0       E0000000  | Timer entries allowed left     20        |
+Local EF cluster 1       00000000  | Active page table count         0        |
+Global cluster 2 pointer 00000000  | Process WS page count         161        |
+Global cluster 3 pointer 00000000  | Global WS page count           40        |
+                                   |                                          |
+                                   |                    Zero remaining quota--+
+                                   |
+                                Event Flag Mask == 1 == RSN$_ASTWAIT
+                                if 8nnnnnnn, then it would indicate which MUTEX</pre>
+<p class="slide-number">Slide 13</p>
+
+<h3 id="SDA_Show_Process_Channel">Sample SDA Output: SHOW PROCESS/CHANNEL</h3>
+<pre class="output">SDA&gt; SHOW PROCESS/INDEX=0CF/CHANNEL
+
+Process index: 000F   Name: DAVIDC_1   Extended PID: 000000CF
+- - - - - - -------------------------------------------------------------
+
+                            Process active channels
+                            -----------------------
+
+Channel  Window           Status        Device/file accessed
+- - - - - - -------  ------           ------        --------------------
+  0010  00000000                        DUA0:
+  0020  8071C470                        DUA0:[DAVIDC.RWAST]RWAST_BIO.EXE;4
+  0030  00000000            Busy        MBA50: &lt;-+
+  0040  00000000                        TWA3:    |
+  0050  00000000                        TWA3:    |
+                                                 |
+ Mailbox I/O incomplete, probably needs flushing-+</pre>
+<p class="slide-number">Slide 14</p>
+
+<h2 id="Breaking_Out">Breaking Processes Out of RWAST</h2>
+<ul>
+<li>Incomplete I/O makes up most of the “undeletable” processes.</li>
+<li>Different device types require different ways to break the I/O.</li>
+<li>Typical types of incomplete I/O cases that are seen:
+<ul>
+<li>Network devices (NETnn: and RTAn:)</li>
+<li>Mailboxes (MBAnnn:)</li>
+<li>Disks</li>
+<li>Tapes</li>
+<li>Printers (believe it or not...)</li>
+</ul></li>
+</ul>
+<p class="slide-number">Slide 15</p>
+
+<h3 id="Network_Devices">Network Devices</h3>
+<ul>
+<li>Network devices can generally be freed by telling NCP to disconnect the link between the processes:</li>
+</ul>
+<pre><span class="dcl">$ MCR NCP SHOW KNOWN LINKS
+$! kill the link that seems to be connected to the RWAST'd process
+$ MCR NCP DISCONNECT LINK</span></pre>
+<ul>
+<li>Example:</li>
+</ul>
+<pre class="output">$ MCR NCP SHOW KNOWN LINKS
+
+Known Link Volatile Summary as of 6-APR-1993 20:17:47
+
+ Link    Node            PID       Process   Remote link  Remote user
+ 8193    1.42 (AVATAR)   21600033  REMACP    8445         DAVIDC
+
+$ MCR NCP DISCONNECT LINK 8193</pre>
+<p class="slide-number">Slide 16</p>
+
+<h3 id="Mailbox_Devices">Mailbox Devices</h3>
+<ul>
+<li>Once the proper mailbox is discovered, use a utility such as COPY to dump data into, or out of, the mailbox.</li>
+<li>For example, if the mailbox name was MBA1284, one of the two following commands should clear the condition:</li>
+</ul>
+<pre><span class="dcl">$ COPY MBA1284: NLA0:</span></pre>
+<p>or</p>
+<pre><span class="dcl">$ COPY LOGIN.COM MBA1284:</span></pre>
+<p>It’s probably a better practice to copy from before copying to...</p>
+<p class="slide-number">Slide 17</p>
+
+<h3 id="Tape_Devices">Tape Devices</h3>
+<ul>
+<li>Tape devices occasionally fall off-line, and are not handled correctly. If this happens, it can usually be fixed by:
+<ul>
+<li>Reload the tape and place back on-line</li>
+<li><code class="dcl">DISMOUNT/ABORT [tape_drive]</code></li>
+<li>Force a “pack acknowledge”:</li>
+</ul></li>
+</ul>
+<pre>        devnam: .ascid  /MUA0:/
+        chan:   .word   0
+                .entry  packack,0
+                $ASSIGN_S       chan=chan,-
+                                devnam=devnam
+                $QIOW_S         chan=chan,-
+                                func=#IO$_PACKACK
+                ret
+                .end     packack</pre>
+<p class="slide-number">Slide 18</p>
+
+<h3 id="Disk_Devices">Disk Devices</h3>
+<ul>
+<li>Disk devices fall off-line as well. Follow the same guidelines used for tape devices:
+<ul>
+<li><code class="dcl">DISMOUNT/ABORT/OVERRIDE=CHECKS [disk_name]</code></li>
+<li>Toggle drive off/on-line</li>
+<li>Also, the “pack acknowledge” routine can sometimes be used to recover the disk drive.</li>
+</ul></li>
+</ul>
+<p class="slide-number">Slide 19</p>
+
+<h3 id="Line_Printer_Devices">Line Printer Devices (believe it or not!)</h3>
+<ul>
+<li>In really perverse cases, a line printer device (typically LP11s) may get a partial buffer out, but for some reason be unable to complete the current I/O. Of course, just simply:
+<ul>
+<li>Close printer doors</li>
+<li>Clear jams</li>
+<li>Add paper</li>
+<li>Other printer stuff...</li>
+</ul></li>
+<li>Case history:</li>
+</ul>
+<blockquote>
+<p>A printer got stuck at the same time the SYMBIONT had a lock on a RIGHTSLIST entry... and was stopped. The SYMBIONT was RWASTed, had a blocking lock on the RIGHTSLIST, that ended up locking up everyone on the system (600+ angry users) in LOGINOUT, DIR/OWNER, etc.</p>
+<p>The solution? Close the door to the 15-year-old-washing-machine-sized LP27 printer :-(</p>
+</blockquote>
+<p class="slide-number">Slide 20</p>
+
+<h2 id="Brute_Force">Brute Force Approaches to Getting out of RWAST</h2>
+<ul>
+<li>REBOOT THE SYSTEM!!!</li>
+<li>But really folks, “simply” disable the resource wait for the process and let it die off:
+<ul>
+<li>Get the Process Control Block (PCB) address of the target process.</li>
+<li>Set the <code>PCB$M_SSRWAIT</code> bit in <code>PCB$L_STS</code>.</li>
+<li>Clear the <code>PCB$M_DELPEN</code> bit in <code>PCB$L_STS</code>.</li>
+<li>Issue another <code>$DELPRC</code> to the process...</li>
+</ul></li>
+</ul>
+<p class="slide-number">Slide 21</p>
+
+<h2 id="Code_Example">For those that need the code example...</h2>
+<pre>          .title   DISABLE_RW
+;++
+;     DISABLE_RW -- Disable Resource Wait of another process
+;
+; Author:        David L. Cathey
+;                Montagar Software Concepts
+;
+          .link             "SYS$SYSTEM:SYS.STB"/SE
+          .library /SYS$LIBRARY:LIB/
+          $PCBDEF           ; Process Control Block definitions
+
+asc_pid: .ascid    "xxxxxxxx"                   ; Save space for PID
+bin_pid: .long     0
+prompt:  .ascid    "Process ID: "               ; Prompt string
+
+         .entry    Main,0
+
+         pushaw    asc_pid
+         pushaq    prompt
+         pushaq    asc_pid
+         calls     #3,g^LIB$GET_FOREIGN         ; Get PID from user
+         blbc      r0,999$
+
+         pushal    bin_pid
+         pushaq    asc_pid                      ; Convert ascii hex to binary
+         calls     #2,g^OTS$CVT_TZ_L
+         blbc      r0,999$
+
+         $CMKRNL_S routin=do_it                 ; Play with the process...
+999$:    ret
+
+
+         .entry    Do_It,^M&lt;&gt;
+
+         movl      bin_pid,r0
+         jsb       g^EXE$EPID_TO_PCB            ; Get PCB from EPID
+         tstl      r0                           ; Did we???
+         beql      99$                          ; Nope, bail out
+         bisl2     #PCB$M_SSRWAIT,PCB$L_STS(r0) ; Set SSRWAIT disable
+         bicl2     #PCB$M_DELPEN,PCB$L_STS(r0)  ; Clear delete pending
+         $DELPRC_S pidadr=bin_pid               ; And delete again.
+         ret                                    ; Bye...
+99$:     movl      #SS$_NONEXPR,r0              ; Non-existent process!
+         ret
+         .end      Main</pre>
+<p class="slide-number">Slides 22 and 23</p>
+
+<p><a href="#Top_Of_Page">Back to Top</a></p>
+<p>Back to <a href="index.html">Kara’s VMS Tutorial</a>.</p>
+<hr>
+<h3 id="KLO_Software">More from KLO Software</h3>
+<p>If you have found this useful, please have a look at my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. They describe a family of free Windows programs, all available from the Microsoft Store and each with its own help page, for BBC Micro enthusiasts, contour maps, the Mandelbrot set and tidying up photographs.</p><!-- Light/dark/automatic theme switch, shared with the KLO-Software pages.
+     KLO-Software and KLO-Tutorials are sibling folders, on disk and on Git. -->
+<script src="../../KLO-Software/KLODarkModeSwitch.js" defer></script>
+</body>
+</html>

@@ -5,6 +5,12 @@ obj/
 .vs/
 *.user
 
+# Intel Fortran (the VMS course's examples solution): build output in each
+# project's x64 or Win32 folder, and the binary per-user project settings
+vms_course/examples/*/x64/
+vms_course/examples/*/Win32/
+*.u2d
+
 # Written by the fileio example program when it runs
 MYDATA.DAT
 
@@ -13,3 +19,6 @@ vector.dat
 
 # Private notes on how the repository and its GitHub Pages site were set up
 TutorialWebPageCreationSteps.txt
+
+# Flag to stop reposbackup.ps1 copying this folder
+.reposbackupignorethisfolder

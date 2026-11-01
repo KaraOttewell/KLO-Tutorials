@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Kara Ottewell's OpenVMS tutorial: a beginner's guide to VMS and DCL, with example files for the exercises.">
+<title>Kara's VMS Tutorial</title>
+<style>
+/* Colours are CSS variables: light values here, dark values below. The theme
+   switch (KLODarkModeSwitch.js from KLO-Software) puts theme-light or
+   theme-dark on the body element; with neither, the system preference
+   decides. The scheme matches Kara's C and STL Tutorials in ../c_course and
+   ../cpp_stl_course, plus colours for the keyboard keys. */
+body {
+    --page-background: #FFFFFF;
+    --text: #1E1E1E;
+    --link: #0000EE;
+    --link-visited: #551A8B;
+    --heading: #4E342E;
+    --heading-rule: #D7BE8A;
+    --c-code: #0000FF;
+    --fortran: #008000;
+    --cplusplus: #00008B;
+    --highlight: #C62828;
+    --dcl: #00747A;
+    --code-background: #F7F9FC;
+    --code-border: #E3E8EF;
+    --output-background: #F2F2F2;
+    --output-border: #DDDDDD;
+    --output-edge: #9E9E9E;
+    --output-text: #212121;
+    --table-header-background: #EFE6D8;
+    --table-border: #D7BE8A;
+    --key-background: #F3F3F3;
+    --key-border: #9E9E9E;
+    --note: #5F6B73;
+    --toggle-background: #F0F6F9;
+    --toggle-border: #0F4761;
+    --badge-background: #0F4761;
+}
+body.theme-dark {
+    color-scheme: dark;
+    --page-background: #0D1117;
+    --text: #E6EDF3;
+    --link: #79C0FF;
+    --link-visited: #C58CFF;
+    --heading: #E8C48C;
+    --heading-rule: #5C4A2E;
+    --c-code: #79C0FF;
+    --fortran: #7EE787;
+    --cplusplus: #B4A7FF;
+    --highlight: #FF7B72;
+    --dcl: #39C5CF;
+    --code-background: #161B22;
+    --code-border: #30363D;
+    --output-background: #1B1F24;
+    --output-border: #30363D;
+    --output-edge: #6E7681;
+    --output-text: #E6EDF3;
+    --table-header-background: #2A2418;
+    --table-border: #5C4A2E;
+    --key-background: #21262D;
+    --key-border: #6E7681;
+    --note: #9AA4AE;
+    --toggle-background: #161B22;
+    --toggle-border: #30363D;
+    --badge-background: #1F6FEB;
+}
+@media (prefers-color-scheme: dark) {
+    body:not(.theme-light) {
+        color-scheme: dark;
+        --page-background: #0D1117;
+        --text: #E6EDF3;
+        --link: #79C0FF;
+        --link-visited: #C58CFF;
+        --heading: #E8C48C;
+        --heading-rule: #5C4A2E;
+        --c-code: #79C0FF;
+        --fortran: #7EE787;
+        --cplusplus: #B4A7FF;
+        --highlight: #FF7B72;
+        --dcl: #39C5CF;
+        --code-background: #161B22;
+        --code-border: #30363D;
+        --output-background: #1B1F24;
+        --output-border: #30363D;
+        --output-edge: #6E7681;
+        --output-text: #E6EDF3;
+        --table-header-background: #2A2418;
+        --table-border: #5C4A2E;
+        --key-background: #21262D;
+        --key-border: #6E7681;
+        --note: #9AA4AE;
+        --toggle-background: #161B22;
+        --toggle-border: #30363D;
+        --badge-background: #1F6FEB;
+    }
+}
+
+body { font-family: Georgia, "Times New Roman", serif; max-width: 60em; margin: 1em auto; padding: 0 1em; line-height: 1.4;
+       background: var(--page-background); color: var(--text); }
+a { color: var(--link); }
+a:visited { color: var(--link-visited); }
+h1, h2, h3, h4 { color: var(--heading); }
+h2 { border-bottom: 2px solid var(--heading-rule); padding-bottom: 0.15em; margin-top: 1.8em; }
+/* The divider above the KLO Software section at the end */
+hr { border: none; border-top: 2px solid var(--heading-rule); margin-top: 2em; }
+
+pre, code { font-family: Consolas, "Courier New", monospace; }
+pre { white-space: pre; overflow-x: auto; background: var(--code-background); border: 1px solid var(--code-border);
+      border-radius: 4px; padding: 0.5em 0.8em; }
+pre.output { background: var(--output-background); border: 1px solid var(--output-border);
+             border-left: 4px solid var(--output-edge); color: var(--output-text); }
+p.listing-title { margin-bottom: 0.2em; }
+
+/* What you type in the terminal sessions is bold, after the system's prompt */
+pre b { font-weight: bold; }
+
+/* Keys on the keyboard, such as Ctrl+Y, drawn as keycaps */
+kbd { font-family: "Segoe UI", Arial, sans-serif; font-size: 0.85em; white-space: nowrap; color: var(--text);
+      background: var(--key-background); border: 1px solid var(--key-border); border-bottom-width: 2px;
+      border-radius: 4px; padding: 0 0.4em; }
+
+/* The table of common file types */
+table.filetypes { border-collapse: collapse; margin: 0.8em 0; display: block; max-width: 100%; overflow-x: auto; }
+table.filetypes th, table.filetypes td { border: 1px solid var(--table-border); padding: 0.3em 0.9em; text-align: left; }
+table.filetypes th { background: var(--table-header-background); color: var(--heading); }
+table.filetypes caption { caption-side: bottom; font-weight: bold; padding-top: 0.4em; }
+
+/* The workstation login box screenshot, which has a white background of its own */
+figure.screenshot { margin: 0.8em 0; }
+figure.screenshot img { max-width: 100%; height: auto; border: 1px solid var(--code-border); }
+figure.screenshot figcaption { font-style: italic; color: var(--note); }
+
+/* What each colour means in the listings and the text */
+.c-code { color: var(--c-code); }
+.fortran { color: var(--fortran); }
+.cplusplus { color: var(--cplusplus); }
+.highlight { color: var(--highlight); }
+.dcl { color: var(--dcl); }
+.note { color: var(--note); font-style: italic; }
+
+/* The blue "chips" under the title, as on the KLO-Software pages */
+.badge { display: inline-block; background: var(--badge-background); color: #FFFFFF;
+         font-family: Segoe UI, Arial, sans-serif; font-size: 8pt; padding: 2px 8px; margin: 0 6px 4px 0; }
+
+/* The floating theme switch, as on the KLO-Software pages */
+#theme-toggle-icon { position: fixed; top: 12px; right: 12px; font-size: 22px; cursor: pointer;
+                     background: var(--toggle-background); border: 1px solid var(--toggle-border);
+                     border-radius: 6px; padding: 6px 8px; z-index: 9999; user-select: none; }
+</style>
+</head>
+<body>
+<div id="theme-toggle-icon" title="Change theme">&#128421;&#65039;</div>
+<h1 id="Top_Of_Page">Kara’s VMS Tutorial</h1>
+<p><span class="badge">OpenVMS</span>
+<span class="badge">DCL</span>
+<span class="badge">Fortran</span>
+<span class="badge">Free</span></p>
+
+<p><i>A beginner’s guide to the OpenVMS operating system and its command language, DCL</i><br>
+<i>Version 2.0 © Kara Ottewell 1996-2026</i></p>
+
+<h2 id="Contents">Table of Contents</h2>
+<ol>
+<li><a href="#Introduction">Introduction</a>
+<ul>
+<li><a href="#Since_Written">What Has Changed Since This Was Written</a></li>
+<li><a href="#Getting_A_System">Getting a VMS System to Practise On</a></li>
+<li><a href="#Conventions">Conventions Used in This Tutorial</a></li>
+</ul></li>
+<li><a href="#Hardware_and_Software">Hardware and Software</a></li>
+<li><a href="#Logging_In">How to Log In</a></li>
+<li><a href="#Operating_System">The VMS Operating System</a></li>
+<li><a href="#Terminal_IO">Terminal Input and Output, DCL Commands</a></li>
+<li><a href="#Security">Security</a></li>
+<li><a href="#VMS_Files">VMS Files and File Management</a></li>
+<li><a href="#Editing">Editing</a></li>
+<li><a href="#More_File_Handling">More File Manipulation</a></li>
+<li><a href="#Debugger">The VMS Debugger</a></li>
+<li><a href="#Command_Files">Command Files</a></li>
+<li><a href="#Object_Libraries">Object Libraries</a></li>
+<li><a href="#Batch_Jobs">Running Batch Jobs</a></li>
+<li><a href="#Communicating">Communicating With Other Users</a></li>
+<li><a href="#Miscellaneous">Miscellaneous</a></li>
+<li><a href="#Final_Remarks">Final Remarks</a></li>
+<li><a href="#Solutions">Solutions to Exercises</a></li>
+<li><a href="#History">A Brief History of VMS</a></li>
+<li><a href="#VMS_Web_Links">VMS Related Web Pages</a></li>
+<li><a href="#Bibliography">Bibliography</a></li>
+</ol>
+
+<h2 id="Introduction">1. Introduction</h2>
+<p>This tutorial is aimed at users who are completely new to VMS, and haven’t encountered multi-user computer systems before. It is based on a document I wrote to help new users when I worked at Manchester University, which I later adapted for my colleagues at Yezerski Roper Ltd., and whilst I have tried to weed out site-specific references, some may have slipped through the net. It was converted from a TeX document, so if you spot any <code>\commands</code> you can reminisce back to the old days of WYSINWYG. You may notice a few age-related creaks, like the emphasis on <span class="fortran">Fortran</span>, but VMS is famously good at running programs written decades ago, and the commands described here still work on the newest systems.</p>
+<p>Just to answer a few FAQs (Frequently Asked Questions) right up front:</p>
+<ul>
+<li>VMS stands for <b>V</b>irtual <b>M</b>emory <b>S</b>ystem.</li>
+<li>OpenVMS is <em>absolutely no different</em> to VMS. The name was changed in 1992, to show that VMS supported open standards such as POSIX, and to drop the VAX connection as VMS moved to the Alpha. Hence I will sometimes say VMS, and sometimes say OpenVMS.</li>
+<li>VAX stands for <b>V</b>irtual <b>A</b>ddress e<b>X</b>tension.</li>
+<li>In <i>Alpha AXP</i> the AXP does not stand for anything. The story goes that you can’t trademark a Greek letter, so DEC added AXP.</li>
+</ul>
+<p>Having followed the examples in this guide you should be able to start using VMS productively, and know enough to decide which FM to R (as in RTFM, or Read The Flipping Manual). However, it is <strong>essential</strong> to actually try the examples, and attempt the exercises (<a href="#Solutions">solutions at the end</a>) in order to get a firm grasp of the basics.</p>
+<p>The exercises use a few small example files: <span class="fortran">Fortran</span> programs, a command file and an editor startup file. On the system I wrote this for they lived in <code>SYS$EXAMPLES:</code>, but you won’t find them on yours, so you can download them all as <a href="KarasVMSTutorial.zip">KarasVMSTutorial.zip</a>. A detached <a href="KarasVMSTutorial.zip.asc">PGP signature file</a> (you do not need to download the latter unless you know what it’s for) is provided so you can be sure the archive has not been altered. Copy the zip file to your VMS account (with <code>sftp</code>, described in <a href="#SFTP">§9.3</a>), then unpack it with <code class="dcl">unzip -a KarasVMSTutorial.zip</code> so that the text files get the correct file attributes. The files are short, so you could equally well create each one with an editor and paste in its listing from this page.</p>
+<p>You can also try the <span class="fortran">Fortran</span> programs on a Windows PC. The <a href="https://www.intel.com/content/www/us/en/developer/tools/oneapi/fortran-compiler-download.html" target="_blank" rel="noopener">Intel Fortran Compiler</a>, which works with Microsoft Visual Studio 2022 and 2026, can be downloaded and used free of charge for non-commercial use. The zip includes a Visual Studio solution, <code>KarasVMSTutorial.slnx</code>, with a console application project for each program: <code>tut</code>, <code>sdeb</code>, and <code>libtest1</code>, which builds <code>LIBTEST1.FOR</code> and <code>LIBTEST2.FOR</code> together, rather than through an object library as in <a href="#Object_Libraries">§12</a>. Open the solution in Visual Studio 2026 (or a recent update of 2022) and build it, then to run a program, right-click its project, choose “Set as Startup Project”, and press <kbd>Ctrl</kbd>+<kbd>F5</kbd>, so that the console window stays open when the program reaches <code>STOP</code>. In <code>sdeb</code>, dividing by zero gives the answer Infinity, as it does on Integrity and x86-64 VMS, unless you set the project’s Fortran, Floating Point, “Floating Point Exception Handling” property to <code>/fpe:0</code>. DCL, EVE, EDT and the VMS debugger still need a VMS system, of course. (On VMS, <code>unzip -a</code> unpacks the solution and project files too, but VMS simply ignores them.)</p>
+<p>This document describes VMS V6.2 onwards, on VAX, Alpha, Integrity (Itanium) and x86-64 systems, making the few differences in behaviour clear as it goes along. I have described logging in to “dumb terminals” and to workstations, though the workstation is assumed to be using the “DECwindows Session” style screen rather than the “New Desktop” CDE interface.</p>
+<p>Yezerski Roper Ltd. employed a whole bunch of clever, talented people who could do just about anything with VMS and Windows. Sadly they are no more, and like Merlin, have disappeared into the Pennine Hills until such time as the land is in time of peril, and needs their magic again.</p>
+
+<h3 id="Since_Written">1.1 What Has Changed Since This Was Written</h3>
+<p>Most of this tutorial was written in the 1990s, when a VMS system meant a room full of VAXes and Alphas, with terminals on every desk. VMS itself has changed remarkably little since then, which is rather the point of it, but the world around it has. The main changes are listed here so that the older parts of the text make sense, and I have corrected the places where they mattered.</p>
+<ul>
+<li><b>Who makes it.</b> Digital Equipment Corporation (DEC) was bought by Compaq in 1998, and Compaq merged with Hewlett-Packard in 2002. Since 2014 OpenVMS has been developed by VMS Software Inc. (<a href="https://vmssoftware.com/" target="_blank" rel="noopener">VSI</a>), so what used to be DEC Fortran and DEC C are now VSI Fortran and VSI C.</li>
+<li><b>What it runs on.</b> VMS started on the VAX, moved to the Alpha in 1992, to Intel’s Itanium (HP Integrity servers) in 2005, and to x86-64 with VSI OpenVMS V9.2 in 2022. Today most VMS systems run on x86-64, and many of them in a virtual machine rather than on a box of their own. The newest release as I write is V9.2-3.</li>
+<li><b>How you connect.</b> Terminal servers and real VT terminals have all but gone. You log in over the network with SSH, from a terminal emulator on your PC (<a href="#SSH_Login">§3.1</a>). Telnet and FTP send your password across the network as plain text, so use SSH and SFTP instead wherever you can.</li>
+<li><b>Networking.</b> Systems now talk to each other with TCP/IP, the same networking as the rest of the world. DECnet, which features in some of the examples, is still available, but many systems no longer run it.</li>
+<li><b>Graphical workstations</b> are museum pieces. OpenVMS on x86-64 has no graphics console of its own, though DECwindows Motif programs can still run on VMS and display on an X server on another machine. The workstation sections are kept for anyone lucky enough to own a VAXstation or AlphaStation.</li>
+<li><b>The default editor.</b> The <code class="dcl">EDIT</code> command on its own runs EVE, the OpenVMS default editor, rather than the older EDT. The original text assumed EDT, so <a href="#Editing">§8</a> now describes both.</li>
+<li><b>File names.</b> Disks formatted with the ODS-5 file structure, introduced in OpenVMS V7.2, allow long, mixed-case file names, up to 236 characters for the name and type together, as well as the classic ODS-2 rules described in <a href="#File_Specification">§7.1</a>.</li>
+<li><b>Passwords.</b> The advice on choosing passwords has changed too: length beats cleverness, so <a href="#Passwords">§3.5</a> now recommends a long passphrase.</li>
+<li><b>The DCL command recall buffer</b> holds 254 commands, rather than the 20 of older versions.</li>
+</ul>
+
+<h3 id="Getting_A_System">1.2 Getting a VMS System to Practise On</h3>
+<p>The best way to learn VMS is to use it. If you don’t have an account on a VMS system at work, VSI’s <a href="https://vmssoftware.com/community/community-license/" target="_blank" rel="noopener">Community License</a> lets you run OpenVMS free of charge for learning, open source development and sharing knowledge of the system. It replaced the old HP hobbyist programme, which ended in 2020. Today the easiest route is to run the x86-64 version in a virtual machine on your PC, under VirtualBox, VMware or KVM, so you no longer need to hunt for a second-hand VAX or Alpha, though some people still do, for the fun of it. Emulators such as <a href="https://opensimh.org/" target="_blank" rel="noopener">SIMH</a> will even pretend to be a VAX for you.</p>
+
+<h3 id="Conventions">1.3 Conventions Used in This Tutorial</h3>
+<p>I shall use <kbd>Ctrl</kbd> for the CONTROL (or similar) key on the keyboard. It must be held down together with the additional character specified, so <kbd>Ctrl</kbd>+<kbd>A</kbd> means: hold down <kbd>Ctrl</kbd> and keep it held down whilst you press and release the letter <kbd>A</kbd>. For carriage return I shall use <kbd>Return</kbd>, though on a PC keyboard the key is called <kbd>Enter</kbd>, and in the terminal sessions below it isn’t shown at all: every line you type ends with <kbd>Return</kbd>. <code>[...]</code> means that the part in brackets is optional, and may be missed off. Things typed in by the user in response to system prompts are shown in bold letters <b>LIKE THIS</b> after the <code>$</code> system prompt (which the computer sends to the screen). For example,</p>
+<pre>$ <b>DIR</b></pre>
+<p>means that after the <code>$</code> prompt appears on the terminal, the user enters the letters <b>D</b>, <b>I</b> and <b>R</b> then presses the <kbd>Return</kbd> key.</p>
+
+<h2 id="Hardware_and_Software">2. Hardware and Software</h2>
+<p>Since this tutorial is aimed at newbies, I’m going to talk about hardware and software. More experienced users should nip off for a coffee break and come back in a few minutes. The <em>hardware</em> is the actual electronics and physical devices like printers, disk drives, memory and so forth which make up the computer system you are using. The <em>software</em> is the set of programs, or instructions, which are executed or <em>run</em> by the computer hardware.</p>
+<p>A typical VMS cluster system will consist of several VMS computers which communicate with each other over a network to form a VMScluster. Whichever machine you log in to within the VMScluster, you will be left in your own personal file directory (directory in VMS-speak == folder in PC speak), and the <em>software environment</em> will be almost identical. In other words, on the whole, your files, commands and devices will <em>look the same</em> whichever member of the cluster you log in to. A list of the VMScluster machines can be obtained by entering the <b>SHOW CLUSTER</b> command.</p>
+<p>In a development environment, system software would be likely to include:</p>
+<ul>
+<li>The VMS operating system, which looks after the machine’s hardware, checks whether you are authorized to perform certain actions like accessing files and devices, and allows you to run programs, submit batch jobs and manage your files.</li>
+<li>TCP/IP networking, usually VSI’s TCP/IP Services for OpenVMS, or a third-party product like MultiNet, and perhaps DECnet as well.</li>
+<li>Compilers, such as <span class="fortran">Fortran</span>, <span class="c-code">C</span> and <span class="cplusplus">C++</span>, and perhaps COBOL, Pascal or BASIC.</li>
+<li>X11 and Motif for graphical (GUI) applications.</li>
+<li>A choice of text editors, like the built-in EVE, EDT and TECO, or ports of editors like vi and Emacs.</li>
+</ul>
+
+<h2 id="Logging_In">3. How to Log In</h2>
+<p>This is important :-) You won’t get far at all until you log in, which makes you known to the system as an authorized user. I’m assuming here that you have seen your system manager, that he or she has issued you with a valid username and password combination, and warned you not to reveal this information to anyone. Guard it like you would your credit card and PIN number !</p>
+
+<h3 id="SSH_Login">3.1 Logging in with SSH</h3>
+<p>These days you will almost always log in over the network, using SSH (Secure Shell), which encrypts everything you type, your password included. Windows has an SSH client built in, which you can use from a Command Prompt, PowerShell or <a href="https://learn.microsoft.com/en-us/windows/terminal/" target="_blank" rel="noopener">Windows Terminal</a> window, giving your VMS username and the name of the VMS system, like this:</p>
+<pre>C:\Users\Fred&gt; <b>ssh fred@bigvax.example.com</b>
+fred@bigvax.example.com's password:</pre>
+<p>Another good choice is the free <a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/" target="_blank" rel="noopener">PuTTY</a> terminal emulator, which emulates a VT terminal well, including the keypad that the VMS editors use. Type the system’s name in the <i>Host Name</i> box, choose SSH, and click <i>Open</i>. Either way, you will be asked for your password, and once you are in, everything else in this tutorial works exactly as if you were sitting at a terminal in the computer room. The first time you connect to a system, SSH asks you to confirm that its “host key” is the one you expect; ask your system manager if you are not sure.</p>
+
+<h3>3.2 Logging in via a Terminal Server</h3>
+<p>In the days of “dumb terminals” like the VT420, a terminal would typically be connected to a <i>terminal server</i>. This is a box which allows your terminal to connect to any of the local computers, rather like a local telephone switchboard. Ideally, you should use a DEC VT type terminal, eg. a VT220, VT420, VT520 or compatible, which will make it much easier to use certain facilities on VMS.</p>
+<p>First get the attention of the terminal server by pressing the <kbd>Break</kbd> key followed by a number of <kbd>Return</kbd>s until you get the prompt <code>Local&gt;</code>, to which you should reply <em>CONNECT name_of_machine</em>.</p>
+<pre><kbd>Break</kbd>  (<b>hold</b> for about a second)
+<kbd>Return</kbd>
+<kbd>Return</kbd>
+Local&gt; <b>CONNECT YR1</b></pre>
+<p>If you do not get the <code>Local&gt;</code> prompt after pressing <kbd>Return</kbd> a few times, hold the <kbd>Break</kbd> key for another second and press <kbd>Return</kbd> a few more times until you are successful.</p>
+<p>At this point, a welcome message of some sort should appear and you can proceed as if your terminal was directly connected, as described below, except that you should miss out the <kbd>Break</kbd> <kbd>Return</kbd> step, because the <code>Username:</code> prompt will already be there for you.</p>
+
+<h3>3.3 Logging in from a Directly Connected Terminal</h3>
+<p>If the terminal you are using is directly connected to the VMS machine, rather than to a terminal server, then you will get a brief site-specific welcome message (probably accompanied by dire threats about unauthorized access) followed by the <code>Username:</code> prompt after your first <kbd>Break</kbd> <kbd>Return</kbd>.</p>
+<pre>         *** BigCorp VMS Cluster ***
+
+Node TINY, a VAXstation 4000-VLC on VMS V7.2 - No Unauthorized Access
+
+Username: <b>FRED</b>
+Password:        <span class="note">(enter your password here - you won’t be able to see it)</span></pre>
+<p>If you enter a valid username and password, you will be allowed in, and probably get further welcome messages before seeing the “command prompt”, which is usually a <code>$</code> sign, but can be customized. If you enter a bad username or password, you won’t be told which one is wrong (for security reasons) but you will see a message similar to this.</p>
+<pre>User authorization failure</pre>
+<p>Just try again if you see that, but be aware that if you have more than three or four failures in a row you may need to see the system manager, because VMS might suspect that you are an intruder!</p>
+
+<h3>3.4 Logging in to a VMS Graphics Workstation</h3>
+<p>If you are using a VMS workstation you should see a login box, similar to the one below, inviting you to enter your username and password. If you can’t see such a box, check that the workstation base unit and the monitor are switched on (being careful not to switch them off in the process of looking), and try moving the mouse to wake up the screensaver, which may have cut in to blank the screen during idle periods. If you still can’t see the login box, get help before proceeding any further. Once you have the login box, enter your username and password as described below.</p>
+<figure class="screenshot">
+<img src="vms_workstation_login.gif" width="401" height="259" alt="The DECwindows Start Session box, with Username and Password fields and OK and Clear buttons">
+<figcaption>The DECwindows login box on my VAXstation, KARAVMS</figcaption>
+</figure>
+<p>Type in your username in the <code>Username:</code> box (workstation) or after the <code>Username:</code> prompt (terminal). Press the <kbd>Return</kbd> key after entering your username. The terminal should then prompt for your password, and the workstation will move the flashing input cursor down to the password box. Type in your password. You will notice that your password is <em>not displayed on the screen</em>, even though the computer is receiving the letters that you are typing. This is a security feature to prevent other people obtaining your password by looking over your shoulder. I will say more about choosing passwords later.</p>
+<pre>Username <b>SHADRACK</b>
+Password <i>BILLYLIAR</i>   <span class="note">(not echoed)</span></pre>
+<p>Alpha machines may use the CDE, or Common Desktop Environment, rather than the older style DECwindows one, so the login screen will look slightly different, but the username and password are entered in much the same way. The CDE environment is fairly different though, so have a look at its user’s guide in the documentation. Once you have a DECterm up though, the commands in this tutorial all work exactly the same as they do in the older environment.</p>
+<p>The session proper will then start. If you have correctly entered everything, you will receive certain messages about the system as <i>logging in</i> proceeds, and the system manager will most likely have provided you with a personal login file, called <code>LOGIN.COM</code>. Your <code>LOGIN.COM</code> file is executed automatically by the system whenever you log in. The computer will most likely give you a welcome message identifying itself (take note of these details in case you have to ask for help), and possibly tell you who else is currently logged in to the same computer. When login is complete, a text terminal will display a “command prompt” something like this</p>
+<pre>$</pre>
+<p>If the system manager has set the prompt to be the machine name you might see something like</p>
+<pre>BIGVAX&gt;</pre>
+<p>or</p>
+<pre>ALPHA1$</pre>
+<p>Ask your system manager what the DCL prompt should be for your system.</p>
+<p>If you are using a workstation, then you will need to bring up a DECterm (a program on the workstation that emulates, or looks a bit like, a terminal). If you don’t see one, then bring up the “Session Manager” box by double-clicking on the Session Manager icon, which has a Yale-type key on it. When you’ve got the Session Manager, click on the “Applications” menu to bring that up, then click on “DECterm”. After a few seconds, this will bring up a DECterm “terminal” and if you click on the face of it, you will be able to enter commands just like you would on a physical terminal.</p>
+<p>When you see the correct prompt, it means that DCL, <b>D</b>igital <b>C</b>ommand <b>L</b>anguage, the VMS command line interpreter, is ready to accept commands from you. As I’ve said already, the <em>DCL prompt</em> will generally be the <code>$</code> dollar sign, or the <i>node name</i> (the name by which the computer is known to the network) followed by a dollar or <code>&gt;</code> sign.</p>
+<p><b>Important:</b> You may log in more than once under the same username. On a busy shared system you wouldn’t normally do this for long, since every extra session uses up resources, but it is useful if, for example, you want to STOP a program that is stuck in an infinite loop. Over SSH you simply open another terminal window. On a workstation you would generally create several DECterms from the Session Manager’s Applications menu, and switch between them by either clicking on the DECterm you want, or using <kbd>Alt</kbd>+<kbd>Tab</kbd> (that is, pressing and releasing the <kbd>Tab</kbd> key whilst holding down the “Alt Function” key next to the space bar) to cycle round the windows on your “desktop”. The term “desktop” here refers to your computer monitor’s screen, not your actual desktop :-)</p>
+
+<h3 id="Passwords">3.5 Logging Out, and Changing Your Password</h3>
+<p>Now you’ve logged in, you’re probably exhausted with excitement, and want to log out again and have a lie down before continuing. How do you log out ? To log out on a text terminal, or to end an SSH session, enter</p>
+<pre>$ <b>LOGOUT</b></pre>
+<p>or simply</p>
+<pre>$ <b>LO</b></pre>
+<p>(<code class="dcl">LOGOFF</code> does the same thing.) If you are on a workstation and you type this command into one of your DECterms, then that particular DECterm will disappear, but you will still be “logged in to the desktop” as it were. To completely log out of the workstation, bring up the Session Manager (remember, double-click on the key icon if you can’t see it), then choose the “Session” menu. Click on “End Session”. A box will pop up to confirm that you really do want to end the session (because you might lose work if you ended it accidentally), so click on the “Yes” button to completely log out of the workstation. On the CDE desktop, the little “Exit” button on the icon bar does the same thing.</p>
+<p><b>Security warning: never leave your terminal unattended whilst you are logged in, even if it is only for five minutes. Always log out if you are not actually using the computer.</b></p>
+<p><b>The first time you ever log in you will be forced to change your password, and your system manager may make you change it again every so often.</b> Choose a password that would not be easy for someone else to guess. Length matters more than cleverness, so a passphrase of several unrelated words is both stronger and easier to remember than a short word with a digit stuck on the end. Do NOT use your own or your girl/boyfriend/wife/husband/dog’s name, or anything to do with your home address, or any of these reversed, and don’t use the same password on any other computer or web site. To change your password whenever you like, enter</p>
+<pre>$ <b>SET PASSWORD</b></pre>
+<p>and follow the prompts. Type <code class="dcl">HELP SET PASSWORD</code> before you try the command, and this will explain exactly what to do.</p>
+
+<h2 id="Operating_System">4. The VMS Operating System</h2>
+<p>VAX, Alpha, Integrity and x86-64 machines can all run an <i>operating system</i> called VMS. Other operating systems that you may have heard of include Windows and Linux. The operating system can be thought of as a special collection of programs which run on the machines all the time, providing a more user-friendly way to communicate with the computer. For example, if you want to save your program as a file on the computer’s disks, you just specify the file name – you let the operating system worry about where, physically, to put the data on the disk. Similarly, when you retrieve a file, VMS knows where to find it given only the file specification.</p>
+<p>Another job done “behind the scenes” by VMS is switching between different “tasks” or “processes”. Each Central Processing Unit (CPU – the chip that carries out the instructions in a program) can actually only do one task at a time. So how come that several people can be “logged in”, things can be printing out and several programs can all apparently be running simultaneously, even on a machine with only one CPU ? The answer is that the VMS operating system is running the tasks in sequence, spending a short period of time on each one, then moving on to the next, and so on through all the tasks that are “runnable”, then back round to the original task, and so on. It does this so fast that each task gives the illusion of continuously running. It’s a bit like a plate spinner running from plate to plate, giving each stick a shake to keep the plate going, continuously checking all the plates to see which ones need a spin next. The difference is that VMS processes, although they do occasionally fall over, rarely fall out of the machine and make a mess on the floor ;-|</p>
+<p>The amount of time each process gets relative to the others depends, among other things, on the <i>priority</i> of the process. You can see what your priority is by entering</p>
+<pre>$ <b>SHOW PROCESS/ALL</b></pre>
+<p>which gives information about your process (you may have to use <kbd>Ctrl</kbd>+<kbd>S</kbd> and <kbd>Ctrl</kbd>+<kbd>Q</kbd>, described in <a href="#Line_Editing">§5.1</a>, to stop the information scrolling off the screen). The normal priority for interactive users is 4, certain system tasks have higher priority, and batch jobs usually run at a lower priority so that they use up spare CPU time with very little inconvenience to interactive users. You can lower the priority of your own process, and put it back up again, but not above the base priority your account was given, unless you have a special privilege. VMS also manages the batch job queues, allows the different machines in the cluster to talk to each other, and many other tasks of this nature. How do you talk to VMS ?</p>
+<p>We tell VMS what to do using an English-like command language, called DCL. Normally you enter VMS commands (in the DCL language) at your terminal and wait for each one to finish, but you can also put commands in a file and submit it as a batch job (<a href="#Batch_Jobs">§13</a>). If you start a program, or a system task, you have to wait for its execution to finish. However, it is possible to interrupt a running program, execute something else, and then continue the previous one (see the SPAWN command under <a href="#Miscellaneous">Miscellaneous</a>). The output will normally appear at the terminal. A list of all DCL commands can be found in the <i>DCL Dictionary</i> (<a href="https://docs.vmssoftware.com/vsi-openvms-dcl-dictionary-a-m/" target="_blank" rel="noopener">A–M</a> and <a href="https://docs.vmssoftware.com/vsi-openvms-dcl-dictionary-n-z/" target="_blank" rel="noopener">N–Z</a>).</p>
+<p>The system prompts with a <code>$</code> or a “node_name&gt;” (eg. <code>YRL&gt;</code>) sign when it is ready for the next command. You can type ahead, but the text will not appear at the terminal before VMS catches up.</p>
+<p>One of the nice features of VMS is the <b>HELP</b> facility, which in many cases saves you having to consult the manual. In DCL, and most of the utility programs (see later), you can type HELP and will be presented with a list of further topics, like DCL commands. You can specify the command you want to know more about at the command line, thus:</p>
+<pre>$ <b>HELP DIRECTORY</b></pre>
+<p><b>HELP HINTS</b> is probably a good start for the beginner, because it categorizes commands and features, e.g. Contacting_people. In VMS, go for the most obvious command when looking up help. For example, if you want to know how to delete a file, <b>HELP DELETE</b> is the thing to type. VMS doesn’t go for obscure names, like some Unix systems do. You are encouraged to make heavy use of the HELP facility.</p>
+<p class="note">Help tip: when inside HELP, it will ask you for <i>Topic?</i>, <i>Subtopic?</i> or the like. To get out again, press <kbd>Return</kbd> for each level, or <kbd>Ctrl</kbd>+<kbd>Z</kbd> to leave HELP altogether. Feel free to experiment and explore the system using the HELP command.</p>
+
+<h2 id="Terminal_IO">5. Terminal Input and Output, DCL Commands</h2>
+<h3 id="Line_Editing">5.1 Line Editing</h3>
+<p>On a real VT terminal, the key which deletes the character immediately to the left of the cursor (flashing block or line) is the one marked <kbd>&lt;X]</kbd>, the Delete key, not <kbd>Backspace</kbd> or <kbd>←</kbd>. Terminal emulators such as PuTTY send the same code when you press <kbd>Backspace</kbd>, so on a PC <kbd>Backspace</kbd> works as you would expect. To delete a complete line before you have pressed <kbd>Return</kbd>, use <kbd>Ctrl</kbd>+<kbd>U</kbd>, which deletes ALL the characters on the line to the left of the cursor position. <kbd>Ctrl</kbd>+<kbd>H</kbd> moves the cursor to the start of the line, and <kbd>Ctrl</kbd>+<kbd>E</kbd> to the end.</p>
+<p>Another useful line editing feature is <kbd>Ctrl</kbd>+<kbd>A</kbd>, which toggles the line between <i>overstrike</i> mode and <i>insert</i> mode. Overstrike is the default, but if you prefer to start in insert mode, put <code class="dcl">SET TERMINAL/INSERT</code> in your <code>LOGIN.COM</code>. For example, you are trying to type in</p>
+<pre>$ <b>SET DEF SYS$LOGIN</b></pre>
+<p>but instead you type</p>
+<pre>$ <b>SET DF SYS$LOGIN</b></pre>
+<p>so to correct the line, BEFORE you press <kbd>Return</kbd> press the <kbd>←</kbd> key until the cursor is over the “F” in “DF”, press <kbd>Ctrl</kbd>+<kbd>A</kbd> and then the letter “E” – the letters to the right of the cursor all move one space to the right to fit the “E” in. You can then press <kbd>Return</kbd> and your default directory will be set to your login directory.</p>
+<p>To skip through output to your screen (while the program continues running !), type <kbd>Ctrl</kbd>+<kbd>O</kbd>. To see the output again do another <kbd>Ctrl</kbd>+<kbd>O</kbd> (but you will lose the output that has been produced in the meantime).</p>
+<p>If you want to stop the output scrolling past, in order to read it at leisure, type <kbd>Ctrl</kbd>+<kbd>S</kbd>, which will suspend the program output until you type <kbd>Ctrl</kbd>+<kbd>Q</kbd> to continue. Attention: after <kbd>Ctrl</kbd>+<kbd>S</kbd>, nothing you type will appear on the screen until you press <kbd>Ctrl</kbd>+<kbd>Q</kbd>! On terminals where the <kbd>Hold Screen</kbd> key exists, it can be used to toggle between the two, in the same way as <kbd>Ctrl</kbd>+<kbd>S</kbd> and <kbd>Ctrl</kbd>+<kbd>Q</kbd>.</p>
+<p>To stop a program, use <kbd>Ctrl</kbd>+<kbd>C</kbd> or <kbd>Ctrl</kbd>+<kbd>Y</kbd>. <kbd>Ctrl</kbd>+<kbd>C</kbd> is the gentler of the two: programs and utilities that know about it, such as MAIL, stop what they are doing and tidy up, and in a program that doesn’t, it has the same effect as <kbd>Ctrl</kbd>+<kbd>Y</kbd>. <kbd>Ctrl</kbd>+<kbd>Y</kbd> interrupts the current program at once and returns you to the DCL prompt, but the program is only <em>suspended</em>: when you type <code class="dcl">CONTINUE</code> directly afterwards, it carries on where it left off. Running another program, or typing <code class="dcl">EXIT</code>, then ends the interrupted one (see, however, SPAWN in <a href="#Miscellaneous">§15</a>).</p>
+
+<h3>5.2 DCL Commands</h3>
+<p>DCL commands are the main way you will communicate with the VMS operating system. You must be “at the DCL command prompt”, normally the <code>$</code> sign, to enter a DCL command. Here are a few commonly used commands.</p>
+<pre>$ <b>SHOW TIME</b>
+$ <b>SET DEFAULT SYS$LOGIN:</b>
+$ <b>SHOW DEFAULT</b>
+$ <b>DIRECTORY</b>
+$ <b>HELP SHOW</b>
+$ <b>HELP SET</b></pre>
+<p>The <code class="dcl">SET</code> and <code class="dcl">SHOW</code> commands have many options and are widely used. As their names suggest, <code class="dcl">SHOW</code> is a “read only” type of command that displays something, whereas <code class="dcl">SET</code> is used to change something, provided you have the privilege to do so, e.g. only privileged users can change the system time. As stated earlier, HELP will have information on all the built-in VMS commands, and you should get used to consulting the HELP system to find your way around.</p>
+<p>DCL commands need not normally be spelled out entirely, any unambiguous abbreviation is allowed, so FOR will suffice for FORTRAN, R instead of RUN, and so on. However, if you type L hoping to LINK, you’ll see the message</p>
+<pre class="output">%DCL-W-ABVERB, ambiguous command verb - supply more characters
+ \L\</pre>
+<p>When writing <a href="#Command_Files">command files</a>, however, it is good practice to <b>always use the full form of the commands</b>. This will save many problems later on !</p>
+
+<h2 id="Security">6. Security</h2>
+<p>Some people regard it as an intellectual challenge to log in to a computer system which they are not authorized to use. These hackers can do a lot of damage to the system software, and may delete or corrupt all the users’ files. If this happens it can take the system manager a long time to restore the system and the user files, and even then some work may be lost, so it is very important to heed some basic principles of system security.</p>
+<p>Choose your password carefully, taking note of the guidelines given earlier. When you log in, messages report the time of your last interactive login, when your last batch job logged in, and whether there have been any unsuccessful attempts to log in to your account. If any of these look odd, like logins when you were definitely not there, or several unsuccessful login attempts which weren’t due to you mistyping your password, then change your password and contact the system manager immediately, in person if possible. Similarly if you suspect some of your files have been changed or deleted without your knowledge, or if you see a strange batch job or unfamiliar username logged in, inform the system manager as soon as possible.</p>
+<p>It might be that there are perfectly innocent explanations – don’t worry if this turns out to be the case – the system manager will not mind so long as you had genuine concern for security.</p>
+<p>Another important thing to remember is <b>NEVER put your password in a file on the VMS system</b>, no matter how well you think it is protected, eg. never mention it in a MAIL message or a command file. This applies to passwords for other machines too. If you must write down your password on paper, do not write it in a form that is recognisable as a VMS password. Finally, under no circumstances should you reveal your password to anyone, and that includes the system support people, who never need it: the system manager can always set you a new one. Remember that hackers often pose as system support people or field engineers, so make sure that you know who you are really speaking to.</p>
+<p>Finally, <b>do not allow anyone else to use your account</b>. The account has been created for your use and your use only. Anyone requiring the use of the VMScluster should come and see the system manager, who will decide if they have a reasonable case. Unauthorized use of your account could deprive legitimate users of resources and slow them down, and your password could end up known to anyone, creating a potentially disastrous security breach for which you could be responsible. Anyone allowing such use of their account, or attempting unauthorized actions on files belonging to the system or other users, may have their account removed.</p>
+<p>Following these guidelines will safeguard legitimate users, and benefit all of us in the long run.</p>
+
+<h2 id="VMS_Files">7. VMS Files and File Management</h2>
+<h3 id="File_Specification">7.1 VMS File Specification</h3>
+<p>A VMS file specification consists of three parts:</p>
+<ol>
+<li>physical or logical device name, like <code>PDS$DISK:</code></li>
+<li>directory or sub-directory, like <code>[USER]</code>, or <code>[USER.TEX]</code></li>
+<li>the file name itself, which has the form: <code>name.type;version</code></li>
+</ol>
+<p>where, on a classic ODS-2 disk, <i>name</i> is a string of up to 39 letters, digits, underscores, hyphens and dollar signs, <i>type</i> is the file type (up to 39 characters, counting the dot), and <i>version</i> is the version number between 1 and 32767, e.g.</p>
+<pre>PROG.EXE;17, or TEST.TXT.1</pre>
+<p>(a dot works as well as a semicolon in front of the version number). On ODS-5 disks the rules are much more relaxed, as described in <a href="#Since_Written">§1.1</a>. The device and directory part are known as the <i>pathname</i>, and may be prefixed by <i>nodename::</i> if they are on a <a href="#File_Transfer">different computer</a>. It is very important to understand this scheme correctly, so read the following carefully.</p>
+<p>Each user has defaults for the device name, and the directory. You may find out your current defaults by typing</p>
+<pre>$ <b>SHOW DEFAULT</b></pre>
+<p>This shows you the device and directory which VMS will assume if you specify a file name only. You may change the default, separately for the device name and the directory, using</p>
+<pre>$ <b>SET DEFAULT new_default</b></pre>
+<p>If you enter a file name in any command without items 1 and 2, e.g. simply <code>TEST.TXT</code>, the system will precede the name by the default internally, and take the highest version number of the file.</p>
+
+<h3>7.2 Logical and Physical Devices</h3>
+<p>The physical devices are disks (or other devices, like tapes, not treated here), where the different files reside. The user need not normally know the names of these devices. Instead, he or she should <b>always use logical names</b>, like <code>SYS$LOGIN</code>, <code>SYS$SCRATCH</code>, or <code>DEV$DISK</code> (which is the sort of name a system manager might define for a user disk), and which are accepted equally well in all file name specifications. The system may, however, prompt with the physical name. The advantage of using the logical names for devices is that if the device should be changed for any reason, the system manager will alter the logical name and the change will not affect those users sensible enough to use that logical name.</p>
+<p>Any logical names which you DEFINE (or ASSIGN) are placed in a separate name table for your process only. These will disappear once you log out, so frequently used logical names should be defined in your <code>LOGIN.COM</code> command file, adding a line of the form</p>
+<pre>$ <b>DEFINE/NOLOG MONTE_DIR DEV$DISK:[HORACE.MCARLO]</b></pre>
+<p>for example. Files in the <code>DEV$DISK:[HORACE.MCARLO]</code> directory could then be referred to as <code>MONTE_DIR:filename.type;version</code>. This is shorter, and has the advantage that if you move your files for any reason, you need only change one logical name and everything will work in the new directory. Note that <code class="dcl">DEFINE</code> takes the logical name first, whereas the older <code class="dcl">ASSIGN</code> command takes them the other way round, so <code class="dcl">ASSIGN DEV$DISK:[HORACE.MCARLO] MONTE_DIR</code> does the same thing. Also note the underscore: names containing a dollar sign are reserved for the operating system and VSI’s products, so make up your own names without one.</p>
+<p>The system logical names, for disks etc., are placed in the system logical name table which is created when the system is booted. These remain defined permanently.</p>
+<p>To see what logical names are defined for you enter</p>
+<pre>$ <b>SHOW LOGICAL</b></pre>
+<p>(no surprises there !) or</p>
+<pre>$ <b>SHOW LOGICAL SY*</b></pre>
+<p>to see only the logical names beginning with the letters “SY”, for example.</p>
+
+<h3>7.3 File Types</h3>
+<p>The system supports certain default file types – the complete list can be found in the <a href="https://docs.vmssoftware.com/vsi-openvms-user-s-manual/" target="_blank" rel="noopener">OpenVMS User’s Manual</a>. Below is a list of common file types you should know:</p>
+<table class="filetypes">
+<caption>Common VMS File Types</caption>
+<tr><th>Type</th><th>Default for</th><th>Contents</th></tr>
+<tr><td><b>COM</b></td><td>DCL</td><td>DCL command file (like a Unix shell script, or a Windows .cmd file)</td></tr>
+<tr><td><b>EXE</b></td><td>VMS</td><td>Executable program image</td></tr>
+<tr><td><b>C</b></td><td>C compiler</td><td><span class="c-code">C</span> source</td></tr>
+<tr><td><b>CXX</b></td><td>C++ compiler</td><td><span class="cplusplus">C++</span> source</td></tr>
+<tr><td><b>FOR</b></td><td>Fortran compiler</td><td><span class="fortran">Fortran</span> source</td></tr>
+<tr><td><b>MAR</b></td><td>MACRO-32</td><td>VAX MACRO assembler source</td></tr>
+<tr><td><b>DAT</b></td><td>Many things</td><td>Data file, e.g. program input/output</td></tr>
+<tr><td><b>LIS</b></td><td>Compilers etc.</td><td>Informational listing (e.g. compiler output)</td></tr>
+<tr><td><b>LOG</b></td><td>VMS batch jobs</td><td>Batch job output log file</td></tr>
+<tr><td><b>MAP</b></td><td>LINKer</td><td>Map created by the linker</td></tr>
+<tr><td><b>OBJ</b></td><td>LINKer</td><td>Object file (= relocatable binary)</td></tr>
+<tr><td><b>OLB</b></td><td>LIBRARY Librarian</td><td>Object library</td></tr>
+<tr><td><b>TXT</b></td><td>Many things</td><td>Plain text, such as a mail message</td></tr>
+<tr><td><b>PS</b></td><td>TeX, DECwrite etc.</td><td>PostScript laser printer commands</td></tr>
+<tr><td><b>TEX</b></td><td>TeX</td><td>Text to be processed by TeX</td></tr>
+<tr><td><b>DVI</b></td><td>TeX</td><td>Device-independent output from TeX</td></tr>
+</table>
+<p>It is highly recommended that you use these defaults to avoid confusion.</p>
+
+<h3 id="Default_File_Types">7.4 Why Use the Default File Types ?</h3>
+<p>The system expects certain default file types as input and output files for system tasks and user programs. These types are automatically appended to the file name if not specified. Therefore the answer is: standardization, and less typing.</p>
+<h4>Example:</h4>
+<p>The <span class="fortran">Fortran</span> compiler expects file type FOR on input, and puts its output in a file of type LIS (listing), and a file of type OBJ (object module). Suppose your source is in the file <code>TUT.FOR;1</code> (being the highest version number of that file). Then the command</p>
+<pre>$ <b>FORTRAN/LIST TUT</b></pre>
+<p>which is equivalent to</p>
+<pre>$ <b>FORTRAN/LIST=TUT.LIS/OBJECT=TUT.OBJ TUT.FOR</b></pre>
+<p>will compile file <code>TUT.FOR</code>, create a listing in file <code>TUT.LIS</code>, and the compiled output in file <code>TUT.OBJ</code>. Similarly, the linker will use a file of type OBJ as input, and produce an output file of type EXE, whereas the command RUN will expect a file type EXE as input.</p>
+<p>Therefore, to compile and execute the above program, you type</p>
+<pre>$ <b>FORTRAN TUT</b>
+$ <b>LINK TUT</b>
+$ <b>RUN TUT</b></pre>
+<p>and off you go. If you do not happen to have a <span class="fortran">Fortran</span> program of that name, use <code>TUT.FOR</code> from the <a href="#Introduction">examples zip</a>, which looks like this:</p>
+<!-- listing tut.for -->
+<pre><span class="fortran">C---- TUT.FOR - a first program to compile, link and run ----
+      PROGRAM TUT
+C     Print a short table of numbers, their squares and square roots
+      INTEGER I
+      REAL ROOT
+      WRITE(6,1000)
+      DO 10 I = 1, 5
+          ROOT = SQRT(REAL(I))
+          WRITE(6,1001) I, I*I, ROOT
+   10 CONTINUE
+      STOP
+ 1000 FORMAT(' Number  Square  Square root')
+ 1001 FORMAT(1X,I6,I8,F13.4)
+      END</span></pre>
+<p>and prints</p>
+<pre class="output"> Number  Square  Square root
+      1       1       1.0000
+      2       4       1.4142
+      3       9       1.7321
+      4      16       2.0000
+      5      25       2.2361</pre>
+<p>In order to assign a file name to a <b><span class="fortran">Fortran</span> logical unit</b>, use</p>
+<pre>$ <b>DEFINE logical_unit filename</b></pre>
+<p>as in the following example</p>
+<pre>$ <b>DEFINE FOR015 DEV$DISK:[BOB]POSFILE.DAT</b></pre>
+<p>where <i>FORnnn</i> is the “external” logical unit name for a program using unit <i>nnn</i>. To check which <span class="fortran">Fortran</span> units have been assigned you can enter</p>
+<pre>$ <b>SHOW LOGICAL FOR*</b></pre>
+<p>A program can of course name its files itself, with the <span class="fortran">Fortran</span> <code>OPEN</code> statement, but defining the logical units in a command file which runs the program makes it easy to run the same program on different files without changing it.</p>
+<p>If you omit a specific assignment, the running <span class="fortran">Fortran</span> program will get default file names assigned, which are <code>FORnnn.DAT</code> for each unit <i>nnn</i>. At Manchester we had a local convention of using odd unit numbers for input and even ones for output, and it is a good idea to send error messages to a unit of their own, assigned to an error log file, for example</p>
+<pre>$ <b>DEFINE FOR003 INDATA.DAT</b>
+$ <b>DEFINE FOR006 RESULTS.LIS</b>
+$ <b>DEFINE FOR008 ERRORS.LIS</b></pre>
+<p>then your <span class="fortran">Fortran</span> program might be of the form</p>
+<pre><span class="fortran">        .
+      READ(3,'(6F10.4)',END=999) (ARRAY(I),I=1,6)
+        .
+        .
+  999 WRITE(8,1001) IERR
+ 1001 FORMAT(1X,'End of file detected on unit 3, Error Number:',I4)</span></pre>
+<p>which would separate error messages from your program output.</p>
+
+<h3>7.5 Manipulating Files, and Wildcards</h3>
+<p>In general, it is useful to look at all your files now and then, using the command</p>
+<pre>$ <b>DIR</b></pre>
+<p>You can delete a file by typing (after having run the above example)</p>
+<pre>$ <b>DELETE TUT.EXE;1</b></pre>
+<p>The <code>;</code> is always necessary, but the version number may be left off if you mean the highest version number, so <code class="dcl">DELETE TUT.EXE;</code> deletes the newest one. Add the <code class="dcl">/LOG</code> qualifier and DELETE will tell you which files it deleted, or <code class="dcl">/CONFIRM</code> and it will ask about each one first. Many people define a DELETE symbol in their <code>LOGIN.COM</code> to do one or both by default (symbols are described in <a href="#Symbols">§11.2</a>).</p>
+<p>A useful command is PURGE, e.g.</p>
+<pre>$ <b>PURGE TUT.OBJ</b></pre>
+<p>(without a version number or <code>;</code>) which will delete all versions of <code>TUT.OBJ</code> except the highest. A qualifier allows you to specify how many versions to keep, counting from the top, e.g.</p>
+<pre>$ <b>PURGE/KEEP=3 name.type</b></pre>
+<p>will keep the three highest version numbers of the file specified. The system manager may occasionally purge everyone’s files after a suitable warning, so early versions of files which you actually want to keep should be renamed with a different name and/or file type, eg.</p>
+<pre>$ <b>RENAME VITALFILE.FOR;2 VITALFILE.BAK</b></pre>
+<p>Another nice concept is that of asterisks “*” and percent signs “%” in file names, where an asterisk stands for “any string of characters, including none” and a “%” for “any single character”. These are called <i>wildcards</i>.</p>
+<h4>Examples:</h4>
+<pre>$ <b>PURGE *.*</b></pre>
+<p>or just</p>
+<pre>$ <b>PURGE</b></pre>
+<p>will delete all but the highest version number of all your files in the current directory (it is good practice to do this from time to time).</p>
+<p>The command</p>
+<pre>$ <b>DIR *.COM</b></pre>
+<p>will list all your files of file type COM, and</p>
+<pre>$ <b>DIR MY*.%%A</b></pre>
+<p>will list all your files starting with “MY” and having a file type of three characters, the last one being “A”.</p>
+<p>The asterisk does not match the dots between directory names, so to check all of your sub-directories (enter <code class="dcl">HELP CREATE/DIRECTORY</code> to find out how to create sub-directories) you type</p>
+<pre>$ <b>DIR [...]</b></pre>
+<p>which lists all of the files in your current directory and ALL the subdirectories below it (<em>the number of full stops, three, is significant</em>).</p>
+<p>As you may have guessed by now, VMS doesn’t overwrite a file when you change it, but creates a higher version instead. This makes the PURGE command so necessary if you are to avoid using up all of your disk space allocation, or “disk quota”.</p>
+
+<h2 id="Editing">8. Editing</h2>
+<p>VMS comes with two full-screen editors, EVE and EDT. Both work best on a VT-compatible terminal or emulator with a numeric keypad, since many of their functions are on the keypad keys. If you are using PuTTY on a laptop with no keypad, both editors also accept typed commands, as described below.</p>
+<h3>8.1 EVE</h3>
+<p>EVE, the Extensible Versatile Editor, is the OpenVMS default editor, so to edit a file just type</p>
+<pre>$ <b>EDIT filespec</b></pre>
+<p>EVE is written in TPU, the DEC Text Processing Utility, which is actually a language for writing text processing applications, so you will also see it started with <code class="dcl">EDIT/TPU</code>, which does the same thing. You can type straight into the file, and move around with the arrow keys. To give EVE a command, press the <kbd>Do</kbd> key of a VT keyboard (a terminal emulator’s documentation will tell you which PC key sends it), then type a command such as <code>HELP</code>, <code>FIND</code>, <code>REPLACE</code> or <code>EXIT</code> at the <code>Command:</code> prompt. <kbd>Ctrl</kbd>+<kbd>Z</kbd> saves the file and leaves EVE, and the <code>QUIT</code> command leaves without saving.</p>
+<p>If you are used to EDT, the EVE command <code>SET KEYPAD EDT</code> makes EVE emulate EDT’s keypad in many respects, while still allowing you to define and compile additional procedures using TPU. The important differences between “real” EDT and the TPU EDT keypad emulator are</p>
+<ol>
+<li>TPU procedures.</li>
+<li>TPU may be run from batch jobs.</li>
+<li><kbd>Ctrl</kbd>+<kbd>C</kbd> may invalidate the journal file in TPU.</li>
+<li>Different key definition syntax in TPU.</li>
+<li>Only a subset of EDT line editing commands in TPU.</li>
+</ol>
+
+<h3>8.2 EDT</h3>
+<p>The older EDT editor is still supplied with VMS, and many old hands, myself included, still have its keypad layout wired into their fingers. To enter EDT, type</p>
+<pre>$ <b>EDIT/EDT filespec</b></pre>
+<p>If you only get a <code>*</code> prompt (the command mode), type <b>CHANGE</b> to get the first page of text on the screen. To finish your edit type <kbd>Ctrl</kbd>+<kbd>Z</kbd>, which will get you back to the <code>*</code> prompt. Type <code>EXIT</code> to save the file, or <code>QUIT</code> to leave EDT without saving the file.</p>
+<p>EDT is most useful if your terminal has a keypad, which gives you dozens of functions like “delete word”, “cut” and “paste”. Single corrections are particularly easy in full-screen mode, but for global changes it is more convenient to issue line-mode commands at the <code>*</code> prompt. Type <code>HELP</code> in EDT for more details, or press <kbd>PF2</kbd> in full-screen mode to see a diagram of the keypad.</p>
+<p>It is possible to have certain line-mode commands executed automatically every time you enter the EDT editor. <code>EDTINI.EDT</code> in the <a href="#Introduction">examples zip</a> is a one-line file of “editor startup” commands, containing the EDT command <code>SET MODE CHANGE</code>, which puts you straight into full-screen mode. Copy it to your login directory, then in the interactive part of your <code>LOGIN.COM</code> put the line</p>
+<pre><span class="dcl">$ ED*T :== EDIT/EDT/COMMAND=SYS$LOGIN:EDTINI.EDT</span></pre>
+<p>then re-execute your login file by entering</p>
+<pre>$ <b>SET DEFAULT SYS$LOGIN:</b>
+$ <b>@LOGIN</b></pre>
+<p>If you now enter the editor with <b>EDT filename</b> (or <b>ED filename</b>) it will automatically put you into full-screen mode. The asterisk in the symbol name means that any abbreviation from ED up to EDT will do, as explained in <a href="#Symbols">§11.2</a>.</p>
+<h4 id="Exercise_1">Exercise 1:</h4>
+<p>Enter a small <span class="fortran">Fortran</span> program with EVE or EDT, save it with the correct default file type, compile it with a listing, link and run it. The program should print some output, which will appear on the screen.</p>
+
+<h2 id="More_File_Handling">9. More File Manipulation</h2>
+<h3>9.1 Printing Files</h3>
+<p>To print a file on the default printer enter</p>
+<pre>$ <b>PRINT filename</b></pre>
+<p>from VMS. The command</p>
+<pre>$ <b>TYPE filename</b></pre>
+<p>will actually output the file to the screen, it being a hangover from the days of teletype terminals, which really did type it out on paper !</p>
+<p>Most sites have more than one printer, each with its own print queue. To print on a particular one, name its queue:</p>
+<pre>$ <b>PRINT/QUEUE=LASER filespec</b></pre>
+<p>Ask your system manager what the queues are called on your system, or see them all with <code class="dcl">SHOW QUEUE</code>. You can check on the status of your print jobs using the command</p>
+<pre>$ <b>SHOW QUEUE/ALL queue_name</b></pre>
+<p>where <i>queue_name</i> is the name of the print queue, such as <code>SYS$PRINT</code> for the default printer. Do not attempt to change the paper on the printers unless you know what you are doing, and <b>always leave other people’s output in a tidy state in the printer basket</b> after collecting your own.</p>
+
+<h3 id="File_Transfer">9.2 File Transfer Between VMS Machines</h3>
+<p>When VMS machines are clustered, transfer is trivial. Certain disks on the different machines are available to all members of the cluster, and they have names of the form <code>node_name$disk</code>, eg. <code>YR9$DKA300</code>, <code>YRL$DKA100</code>, <code>YRE$DKA400</code>. You can see which disks are available using the <code class="dcl">SHOW DEVICE D</code> command. To copy a file from user MORRISSEY’s directory on <code>DEV$DISK</code> to user MARR’s directory on <code>PDS$DISK</code> without changing the filename you would enter</p>
+<h4>Example:</h4>
+<pre>$ <b>COPY DEV$DISK:[MORRISSEY]TCM.TEX PDS$DISK:[MARR]</b></pre>
+<p>There is usually no need for this sort of transfer, since you can access all the main disks from every cluster member anyway, though you might want your own copy of a file to modify.</p>
+<p>When VMS machines are not clustered, but are linked by DECnet, file transfer over DECnet is achieved by a simple copy command, which looks like this:</p>
+<pre>$ <b>COPY node_name1::from_file node_name2::to_file</b></pre>
+<p>Note that the remote file specification must contain the DECnet node name in addition to the disk and directory name. The node name is followed by <b>::</b>.</p>
+<h4>Example:</h4>
+<p>To copy a file called <code>COMMAND.COM</code> from directory <code>DISK$USERS:[TEST]</code> on a VMS machine called VMS1, to your current default directory you would enter</p>
+<pre>$ <b>COPY VMS1::DISK$USERS:[TEST]COMMAND.COM []</b></pre>
+<p>Usually the system managers of the machines you use will have set up what is known as a <em>DECnet proxy</em> to allow you to copy easily, as in the above example. If this isn’t the case, then you may have to specify your remote username and password when you do the copy. Imagine you were copying a local file called <code>REPORT.TXT</code> to a remote machine, <code>DAKOTA</code>, on which you had an account with username <code>FARGO</code> and password <code>UBETCHAYAH</code>. You place the username and password in quotes, between the node name and the <b>::</b>.</p>
+<pre>$ <b>COPY REPORT.TXT DAKOTA"FARGO UBETCHAYAH"::USER$DISK:[REPORTS]</b></pre>
+<p>If you were to miss out the <code>USER$DISK:[REPORTS]</code> part of the destination specification, then the file would end up in <code>FARGO</code>’s default login directory. It’s quite easy to lose track of where files are going during a <code class="dcl">COPY</code>, so it’s a good idea to add the <b>/LOG</b> qualifier to the copy command so that you are told exactly where the file ended up ! You can probably see that typing your password on the command line isn’t exactly the most secure way of doing things, since it is there for anyone looking over your shoulder or at your screen (and in your command recall buffer), so in general talk to your system manager about setting up a proxy if you need to do this sort of thing often.</p>
+
+<h3 id="SFTP">9.3 File Transfer Using SFTP and FTP</h3>
+<p>VMS systems run TCP/IP, usually VSI’s TCP/IP Services for OpenVMS, or a third-party product like MultiNet. As well as SSH, these provide <code>sftp</code>, the secure file transfer program that goes with SSH, and the older <code>ftp</code>. The easiest way to copy files between your PC and a VMS system is to run <code>sftp</code> on the PC (Windows has it built in, alongside <code>ssh</code>), for example to copy the tutorial’s examples zip to your VMS login directory:</p>
+<pre>C:\Users\Fred\Downloads&gt; <b>sftp fred@bigvax.example.com</b>
+sftp&gt; <b>put KarasVMSTutorial.zip</b>
+sftp&gt; <b>quit</b></pre>
+<p>The commands work in the usual way, and the VMS versions often take VMS-like command qualifiers too, e.g.</p>
+<pre>$ <b>FTP ftp.bigcorp.com/USER="anonymous"/PASSWORD="me@my.mail.address"</b></pre>
+<p>but remember that FTP sends your username and password across the network unencrypted, so only use it for anonymous downloads. Consult the documentation for the TCP/IP software used on your system for the details.</p>
+
+<h2 id="Debugger">10. The VMS Debugger</h2>
+<p>The VMS debugger supports all the VMS compilers and many third-party languages too. It allows breakpoints, watchpoints and interactive run-time program debugging, either at the command line as described below, or with the graphical version of the debugger on a workstation.</p>
+<p>In order to be able to use the debugger when running a program, you must compile and link with the <b>/DEBUG</b> qualifier, which you can abbreviate to <b>/DEB</b>, like this:</p>
+<pre>$ <b>FORTRAN/NOOPT/DEB filename</b></pre>
+<p>and</p>
+<pre>$ <b>LINK/DEB filename</b></pre>
+<p>The <i>/NOOPTIMIZE</i> qualifier is recommended, since it makes the compiled code follow your source code line by line, and ensures that all your variables really exist. Otherwise some of them (typically loop indices) will be “optimized away”.</p>
+<p>When you run the program, VMS will automatically enter the debugger. To run without the debugger even when you linked with <b>/DEBUG</b>, use</p>
+<pre>$ <b>RUN/NODEBUG filename</b></pre>
+<p>The debugger will stop at the start of the main program, and will ask for instructions, prompting you with <code>DBG&gt;</code>. There are many possible commands – see the <a href="https://docs.vmssoftware.com/vsi-openvms-debugger-manual/" target="_blank" rel="noopener">OpenVMS Debugger Manual</a>, or try <code>HELP</code> within the debugger. Some of the most commonly used commands are:</p>
+<ul>
+<li><b>SET MODE SCREEN</b> switches to full-screen display mode</li>
+<li><b>SET MODULE routine_name[,routine_name]</b> makes the routines’ symbols (variable names, line numbers, etc.) available to the debugger</li>
+<li><b>SET SCOPE routine_name</b> means that references (variable names, TYPE commands etc.) are assumed to refer to the routine specified</li>
+<li><b>SET BREAK routine_name</b> stops at the top of the routine whenever it is called</li>
+<li><b>SET WATCH variable_name</b> stops every time the variable is modified, displaying its old and new values</li>
+<li><b>EXAMINE variable_name</b> prints the value of this variable</li>
+<li><b>EX variable_name1:variable_name2</b> prints the current values of all variables stored between variable_name1 and variable_name2</li>
+<li><b>SEARCH/STRING/ALL 1:100 name</b> displays, for the routine currently in scope, all lines between lines 1 and 100 containing the string “name” (if the source file is accessible)</li>
+<li><b>CANCEL BREAK name</b> cancels the breakpoint at routine name</li>
+<li><b>CANCEL WATCH name</b> cancels the watchpoint on variable name</li>
+<li><b>CANCEL BREAK/ALL</b> cancels all breakpoints</li>
+<li><b>CANCEL WATCH/ALL</b> cancels all watchpoints</li>
+<li><b>SHOW CALLS</b> shows the routine names in the calling tree, and the line number reached in each routine</li>
+<li><b>DEPOSIT name = expression</b> puts a new value in a variable</li>
+<li><b>CALL routine_name</b> calls and executes a routine, then returns here</li>
+<li><b>TYPE n1:n2</b> types (on the screen) lines n1 to n2 of your source file (the line numbers as displayed by SHOW CALLS). Note: this requires the source file to be available in the <em>same directory</em> it was in when it was compiled. There is a way around this – try <code>HELP SET SOURCE</code> within the debugger.</li>
+<li><b>STEP</b> advances to the next executable statement. If the corresponding source file is still available, the next line to be executed is displayed.</li>
+<li><b>GO</b> continues execution</li>
+</ul>
+<p>In the above, “variable_name” may be just the name, like N, ABC etc., in which case the existing SCOPE is used to localize it, or may specify directly where to find it, e.g. <code>MAIN\ABC</code> (backslash !), meaning “variable ABC in routine MAIN”.</p>
+<p>You can inspect watchpoints, breakpoints etc. with the SHOW command, e.g. <code>SHOW WATCH</code> will show all the watchpoints set.</p>
+<p>You can interrupt the debugger, like any other program, by typing <kbd>Ctrl</kbd>+<kbd>Y</kbd>. If you then type <code class="dcl">DEBUG</code> immediately afterwards, it will re-enter your program where you interrupted it, stop there waiting for instructions, and continue to execute correctly if you type <code>GO</code>.</p>
+<p>Breakpoints can be set at source line numbers, at statement labels, or at routines. See the <i>Debugger Manual</i> for more details.</p>
+<p>When your program finishes, the debugger will stop and tell you so. Type</p>
+<pre>DBG&gt; <b>EXIT</b></pre>
+<p>to leave the debugger.</p>
+<p>The above list is far from complete; the HELP facility, which you can invoke from inside the debugger, will give more details.</p>
+<h4>Problems:</h4>
+<p>The most common one is probably a message saying that the symbol you asked for is not in the symbol table, or is undefined, in which case there are three explanations possible:</p>
+<ol>
+<li>You mistyped the name,</li>
+<li>The variable was “optimized away”,</li>
+<li>You haven’t SET MODULE or SET SCOPE to the routine where the variable lives.</li>
+</ol>
+<p>Another frequent error is that a name is “not unique”. This generally means that there is a variable with the same name in another routine. This can be cured by a SET SCOPE to the routine containing the instance of the variable which you want to see, or by giving the routine name as well, like <code>MAIN\ABC</code>.</p>
+<p>Finally, a message that a symbol is “not active or not in active scope” simply means that it belongs to a routine which isn’t running yet, typically a routine argument which you try to inspect before you have entered the routine. Normally VMS sets the scope dynamically when you break in a routine.</p>
+<h4 id="Exercise_2">Exercise 2:</h4>
+<p>Get the file <code>SDEB.FOR</code> from the <a href="#Introduction">examples zip</a> and look at it (very tricky program, contains one obvious bug), list it if you like, then compile, link and execute it with the debug option.</p>
+<!-- listing sdeb.for -->
+<pre><span class="fortran">C---- SDEB.FOR - a program with one obvious bug, for the debugger ----
+      PROGRAM SHOW_DEBUG
+C     Fill an array and a table, then print a scaled average
+      INTEGER N(3,3)
+      REAL A, B, C, SS
+      COMMON /RESULTS/ N, A, B, C, SS
+      REAL Q(10)
+      INTEGER I, J
+      DO 10 I = 1, 10
+          Q(I) = REAL(I) * 1.5
+   10 CONTINUE
+      DO 30 J = 1, 3
+          DO 20 I = 1, 3
+              N(I,J) = I * J
+   20     CONTINUE
+   30 CONTINUE
+      A = Q(1)
+      B = Q(5)
+      C = Q(10)
+      CALL AVERAGE(Q, 10)
+      STOP
+      END
+
+      SUBROUTINE AVERAGE(VALUES, COUNT)
+C     Print the average of VALUES, scaled by SS from the common block
+      INTEGER COUNT
+      REAL VALUES(COUNT)
+      INTEGER N(3,3)
+      REAL A, B, C, SS
+      COMMON /RESULTS/ N, A, B, C, SS
+      REAL TOTAL
+      INTEGER I
+      TOTAL = 0.0
+      DO 40 I = 1, COUNT
+          TOTAL = TOTAL + VALUES(I)
+   40 CONTINUE
+C     SS is meant to be the scale factor, but nothing ever sets it
+      WRITE(6,1000) TOTAL / (COUNT * SS)
+      RETURN
+ 1000 FORMAT(' Scaled average:',F10.4)
+      END</span></pre>
+<p>On Integrity and x86-64 systems, add <code class="dcl">/IEEE_MODE=FAST</code> to the <code class="dcl">FORTRAN</code> command. Without it, dividing by zero quietly gives the answer Infinity, rather than stopping the program; Alphas stop by default, and VAXes always do.</p>
+<p>When the debugger asks you for instructions, you are at the top of the main program, named SHOW_DEBUG, with the SCOPE set to this routine as default.</p>
+<p>Now enter</p>
+<pre>DBG&gt; <b>SET MODE SCREEN</b>
+DBG&gt; <b>SET WATCH Q(10)</b>
+DBG&gt; <b>GO</b></pre>
+<p>and the debugger will stop inside the DO loop labelled 10, when it sets <code>Q(10)</code>.</p>
+<p>Try the following command, which displays the whole array <code>Q</code>, now filled in:</p>
+<pre>DBG&gt; <b>EXAMINE Q</b></pre>
+<p>Now let the program run on, and stop it just as it calls the routine <code>AVERAGE</code>:</p>
+<pre>DBG&gt; <b>SET BREAK AVERAGE</b>
+DBG&gt; <b>GO</b>
+DBG&gt; <b>EXAMINE A,B,C</b>
+DBG&gt; <b>EXAMINE N(1,1):SS</b>
+DBG&gt; <b>GO</b></pre>
+<p>(Displaying a range over different variables as above is only possible when they are stored next to each other, as they are here, in the same common block, of course.)</p>
+<p>The program will stop with an arithmetic error (not surprising, since we divide by zero. Note here: all variables in common blocks start off as zero, unfortunately).</p>
+<p>To find out where you are, type</p>
+<pre>DBG&gt; <b>SHOW CALLS</b></pre>
+<p>and then</p>
+<pre>DBG&gt; <b>EXAMINE SS</b></pre>
+<p>and there you are. Now let us assume you expected <code>SS</code> = 1.0 here. The program can’t simply carry on from the error, because the division has already happened, so leave the debugger and run the program again, this time putting the right value in <code>SS</code> before it is used:</p>
+<pre>DBG&gt; <b>EXIT</b>
+$ <b>RUN SDEB</b>
+DBG&gt; <b>SET BREAK AVERAGE</b>
+DBG&gt; <b>GO</b>
+DBG&gt; <b>DEPOSIT SS = 1.0</b>
+DBG&gt; <b>GO</b></pre>
+<p>(not always that simple !) and the program will print its answer and finish correctly, therefore enter</p>
+<pre>DBG&gt; <b>EXIT</b></pre>
+<p>The VMS debugger supports all the languages available on VMS, so you can debug <span class="cplusplus">C++</span> or <span class="c-code">C</span> programs using very similar techniques to those just described. For case-sensitive languages like <span class="c-code">C</span> and <span class="cplusplus">C++</span>, the case of the variables does matter. The debugger provides online help for all of this, but it is well worth studying the documentation too.</p>
+
+<h2 id="Command_Files">11. Command Files</h2>
+<h3>11.1 General Information</h3>
+<p>These are files containing a series of DCL commands, just as you would enter them at a terminal. They can either be executed interactively, or submitted for batch execution – see the later section on <a href="#Batch_Jobs">batch jobs</a>. A command file which you have executed already, perhaps without realising it, is your <code>LOGIN.COM</code>. This is executed automatically every time you log in, although you can stop it from being executed (if you have made some sort of mistake in it that causes a loop, say) by adding <code>/NOCOMMAND</code> after your username when you log in at a terminal.</p>
+<p>The default file type for command files is .COM, so if you just type <code class="dcl">@MYCOMMANDS</code> then VMS will assume that you mean <code>MYCOMMANDS.COM</code>.</p>
+<p>Each command must be preceded by a <code>$</code> sign; lines without this are treated as input to the program that the command file is running, and are otherwise skipped, with an error message. Continuation lines are indicated by a “-” (hyphen = minus sign) at the end of the line, and simply continue on the next line, e.g.</p>
+<pre><span class="dcl">$ SHOW -
+    SYSTEM  ! This would be a silly place to split a line, but you get the idea</span></pre>
+<h4>Example:</h4>
+<p>Try this !</p>
+<p>Create the file <code>TESTCOM.COM</code> and try to predict its action. The exclamation mark is a comment character in DCL, like <code>C</code> or <code>!</code> in <span class="fortran">Fortran</span> and <code>//</code> in <span class="cplusplus">C++</span>.</p>
+<pre>$ <b>CREATE TESTCOM.COM</b>           <span class="note">(whatever you type now goes into the file TESTCOM.COM)</span>
+<b>$ WRITE SYS$OUTPUT "Hello World" ! Ever original</b>
+<b>$ EXIT</b>
+<kbd>Ctrl</kbd>+<kbd>Z</kbd></pre>
+<p>The <kbd>Ctrl</kbd>+<kbd>Z</kbd> ends the input to the <code class="dcl">CREATE</code> command. If you</p>
+<pre>$ <b>TYPE TESTCOM.COM</b></pre>
+<p>it should look like this:</p>
+<pre><span class="dcl">$ WRITE SYS$OUTPUT "Hello World" ! Ever original
+$ EXIT</span></pre>
+<p>To execute the file, you enter</p>
+<pre>$ <b>@TESTCOM</b></pre>
+<p>I don’t think the output will come as a great shock to anyone. You can do quite a lot of interesting stuff from DCL. A lot of information about the system and your processes can be obtained using the DCL <em>lexical</em> functions. Use <code class="dcl">HELP LEXICALS</code> to get up-to-date information. See the <a href="https://docs.vmssoftware.com/vsi-openvms-user-s-manual/" target="_blank" rel="noopener">OpenVMS User’s Manual</a> for further information on writing and using command procedures, and have a look at your <code>LOGIN.COM</code> to get some ideas.</p>
+
+<h3 id="Symbols">11.2 DCL Symbols</h3>
+<p>Symbols are useful for defining shorthand for frequently used commands, and for use as “variables” in DCL command procedures. Using the single “=” sign you can define symbols which are local to a command file, ie. they disappear at exit from it, or you can define global symbols which remain valid until you log out, using “==”.</p>
+<h4>Examples:</h4>
+<pre><span class="dcl">$ three = 3
+$ file := SYS$LOGIN:TUT.FOR</span></pre>
+<p>can be used inside the command file, e.g. setting up the files for a batch job. Please note that “=” assigns a value, and “:=” assigns a string to a symbol, converted to uppercase. Placing the string in double quotes, as in <code>file = "SYS$LOGIN:TUT.FOR"</code>, is also acceptable, and keeps its case as it is.</p>
+<pre><span class="dcl">$ three == 3
+$ file :== SYS$LOGIN:TUT.FOR
+$ string1 :== The whole of this line will end up in STRING1
+$ string2 == "This is a string too"</span></pre>
+<p>All these symbols will remain valid even after the command file has finished, because the “==” was used.</p>
+<p>DCL is case-insensitive for the most part, so it doesn’t matter whether your symbols are uppercase or lowercase. Having said that, I tend to use lowercase for my own symbols, and uppercase for built-in DCL commands, just to make it easier to read and tell them apart. To use a symbol’s value in a command, put it between single quotes, e.g. <code>'file'</code>, as in</p>
+<pre><span class="dcl">$ file := MYDATA.DAT  ! Local symbol
+$ COPY 'file' FARVAX::SCRATCH_DISK:</span></pre>
+<p>Note that it is the plain single quote (apostrophe) <code>'</code> both before and after the symbol. If you use the symbol within a quoted string, you need two quotes before it and one after, like this:</p>
+<pre><span class="dcl">$ file :== TESTCOM.COM ! Global symbol
+$ WRITE SYS$OUTPUT "Copying ''file' to the remote system." ! Two '
+$ COPY 'file' FARVAX::SCRATCH_DISK:                        ! One '</span></pre>
+<p>Since symbols can be defined directly, without command files, try the above definition of <code>file</code> followed by the command</p>
+<pre>$ <b>TYPE 'file'</b></pre>
+<p>and you will understand.</p>
+<p>Symbols are often used to provide a shorthand way of specifying a frequently used command with several qualifiers. For example, instead of having to type</p>
+<pre>$ <b>DIRECTORY/SINCE=TODAY/SIZE=ALL</b> ! Get all files created today, show their size</pre>
+<p>you could define a symbol in your <code>LOGIN.COM</code> like this:</p>
+<pre><span class="dcl">$! Get all files created today, show their size
+$ SDIR :== DIRECTORY/SINCE=TODAY/SIZE=ALL</span></pre>
+<p>then you need only type</p>
+<pre>$ <b>SDIR</b></pre>
+<p>to get the same information. An asterisk in a symbol’s name, as in <code class="dcl">ED*T :== EDIT/EDT</code> in <a href="#Editing">§8.2</a>, marks where you may abbreviate it, so that ED, EDT and anything in between all work.</p>
+<p>It is considered bad practice to define symbols that clash with built-in DCL commands, because it can lead to all sorts of confusion regarding the expected behaviour of commands. To see what symbols you already have defined you can type</p>
+<pre>$ <b>SHOW SYMBOL *</b></pre>
+<p>This assumes that someone hasn’t defined a symbol called <code>SHOW</code> to do something else ! If you suspect that they have, you can get rid of symbols by typing</p>
+<pre>$ <b>DELETE/SYMBOL/GLOBAL symbol_name</b></pre>
+<p>You could guarantee that <code class="dcl">DELETE</code> would give you the plain DCL DELETE command in a command file by doing</p>
+<pre><span class="dcl">$ DELETE = "DELETE"</span></pre>
+<p>and indeed you will occasionally see this done in command files, to insulate them from the effects of any users who have been foolish enough to define symbols that clash with DCL commands. It works because a local symbol hides a global one of the same name.</p>
+<h4>Example</h4>
+<p>An example command file called <code>FORTCLG.COM</code>, which compiles, links and runs the program <code>TUT.FOR</code> (which it expects to find in your current default directory), is in the <a href="#Introduction">examples zip</a>. It can easily be adapted to run one of your own programs by changing the part indicated. You might not understand what everything does at first, but you should be able to work it out using the HELP facility. (Hint: any DCL function beginning with F$ can be found under <code class="dcl">HELP LEXICALS</code>.) Have a go at EDITing it to work with another <span class="fortran">Fortran</span> file in your own directory.</p>
+<!-- listing fortclg.com -->
+<pre><span class="dcl">$! ---- FORTCLG.COM - compile, link and run a Fortran program ----
+$!
+$! Usage:   @FORTCLG [program]
+$!
+$! The program is looked for in your current default directory, with
+$! file type .FOR. With no program named, it uses TUT. To make it use
+$! a program of your own, change the line marked "&lt;&lt;&lt; change".
+$!
+$ program = P1
+$ IF program .EQS. "" THEN program = "TUT"               ! &lt;&lt;&lt; change
+$!
+$! F$PARSE fills in the device, directory and the default file type,
+$! and F$SEARCH returns an empty string if there is no such file
+$ source = F$PARSE(program, ".FOR")
+$ IF F$SEARCH(source) .EQS. ""
+$ THEN
+$     WRITE SYS$OUTPUT "FORTCLG: cannot find ", program, ".FOR"
+$     EXIT
+$ ENDIF
+$ name = F$PARSE(source, , , "NAME")
+$!
+$! If any step fails, DCL stops the command procedure there, because
+$! the default error action in a command procedure is ON ERROR THEN EXIT
+$ WRITE SYS$OUTPUT "Compiling ", name, ".FOR"
+$ FORTRAN/NOLIST 'source'
+$ WRITE SYS$OUTPUT "Linking ", name, ".OBJ"
+$ LINK 'name'
+$ WRITE SYS$OUTPUT "Running ", name, ".EXE"
+$ RUN 'name'
+$ EXIT</span></pre>
+
+<h2 id="Object_Libraries">12. Object Libraries</h2>
+<p>The output from the <span class="fortran">Fortran</span> (or any other) compiler is kept in files of default type .OBJ (these contain machine instructions for the VAX, Alpha, Itanium or x86-64). The LINK command accepts more than one of these files, creating an <i>executable image</i> (a self-contained program which the machine can RUN) containing all of the routines in all the specified files, e.g.</p>
+<pre>$ <b>LINK filename1,filename2,filename3</b></pre>
+<p>will create a file <code>filename1.EXE</code> combining all the code from <code>filename1.OBJ</code>, <code>filename2.OBJ</code> and <code>filename3.OBJ</code>.</p>
+<p>The linker scans the modules (eg. subroutines) in the .OBJ files to see which routines are called from within them. It then fixes these up so that they know where to find the called routines, and places the resulting code in the .EXE file, adding some “header” information which VMS needs to run the code.</p>
+<p>Even the simplest piece of code must be “linked” before it can be run, since it will have “hidden” calls; printing things to the screen or calling trigonometrical functions like SIN or COS, for example, all require calls to routines in the VMS system libraries.</p>
+<p>Having written several useful <span class="fortran">Fortran</span> subroutines or functions, you might well want to use them in your new programs. This can be done without having to literally include the <span class="fortran">Fortran</span>, and without having to recompile them or link to the .OBJ files every time. It is easiest if you collect the routines together as one large .FOR file, and compile it to obtain a .OBJ file (though you might want to compile the routines separately and get several .OBJ files).</p>
+<p>If you want to load ONLY the routines referenced in (called from) a new program, you can create an “object library”. This is done by typing</p>
+<pre>$ <b>LIBRARY/CREATE library_name object_file_1[,object_file_2,...]</b></pre>
+<p>which expects input files with default type OBJ and produces a file of type OLB. To update an already existing library with modified or new routines, type</p>
+<pre>$ <b>LIBRARY/REPLACE library_name new_object_file</b></pre>
+<p>To link from libraries only those routines which are called, you simply type e.g.</p>
+<pre>$ <b>LINK file1,file2/LIBRARY</b></pre>
+<p>where <code>file1</code> should be compiler output of default type OBJ (from the compilation of your new program), and <code>file2</code> should be a library of default type OLB. As usual, you can force the linker to take modules from a library even when nothing calls them, like a main program or a BLOCK DATA routine, with the /INCLUDE qualifier, e.g.</p>
+<pre>$ <b>LINK file1/INCLUDE=(MAIN,OTHER)/LIBRARY</b></pre>
+<p>which will force the modules MAIN and OTHER to be loaded from the library <code>file1.OLB</code>, and then satisfy their references from the same library.</p>
+<h4 id="Exercise_3">Exercise 3:</h4>
+<p>Copy the files <code>LIBTEST1.FOR</code> and <code>LIBTEST2.FOR</code> from the <a href="#Introduction">examples zip</a> to one of your own directories and call them <code>VMSLIB1.FOR</code> and <code>VMSLIB2.FOR</code> respectively.</p>
+<!-- listing libtest1.for -->
+<pre><span class="fortran">C---- LIBTEST1.FOR - calls the functions in LIBTEST2 ----
+      PROGRAM LIBTEST
+C     Print a temperature conversion table, converting each value
+C     there and back again as a check
+      REAL CELSIUS, FAHRENHEIT, TEMPERATURE
+      INTEGER I
+      WRITE(6,1000)
+      DO 10 I = 0, 100, 25
+          TEMPERATURE = REAL(I)
+          WRITE(6,1001) TEMPERATURE, FAHRENHEIT(TEMPERATURE),
+     1                  CELSIUS(FAHRENHEIT(TEMPERATURE))
+   10 CONTINUE
+      STOP
+ 1000 FORMAT(' Celsius  Fahrenheit  And back')
+ 1001 FORMAT(1X,F7.1,F12.1,F10.1)
+      END</span></pre>
+<!-- listing libtest2.for -->
+<pre><span class="fortran">C---- LIBTEST2.FOR - functions to put in an object library ----
+      REAL FUNCTION FAHRENHEIT(CELSIUS)
+C     Convert a temperature from Celsius to Fahrenheit
+      REAL CELSIUS
+      FAHRENHEIT = CELSIUS * 9.0 / 5.0 + 32.0
+      RETURN
+      END
+
+      REAL FUNCTION CELSIUS(FAHRENHEIT)
+C     Convert a temperature from Fahrenheit to Celsius
+      REAL FAHRENHEIT
+      CELSIUS = (FAHRENHEIT - 32.0) * 5.0 / 9.0
+      RETURN
+      END</span></pre>
+<p>Compile both files, put VMSLIB2 into a library called MYLIB, inspect the library contents with <code class="dcl">LIBRARY/LIST/FULL MYLIB</code>, link VMSLIB1 with this library and RUN the resulting EXE file, which should print</p>
+<pre class="output"> Celsius  Fahrenheit  And back
+     0.0        32.0       0.0
+    25.0        77.0      25.0
+    50.0       122.0      50.0
+    75.0       167.0      75.0
+   100.0       212.0     100.0</pre>
+
+<h2 id="Batch_Jobs">13. Running Batch Jobs</h2>
+<h3>13.1 What is a Batch Job ?</h3>
+<p>Before reading this section, you should have read and understood <a href="#Command_Files">§11</a> on command files. Using a batch job is a way of running a command file to do some job for you whilst you are not logged in to the computer interactively. You collect the commands together into a command file, then “SUBMIT” the command file to one of the batch job queues on the system, where they will usually run at slightly lower priority than interactive users. Hence quite complicated tasks can run in the “background”, only using the CPU when it is not required by people logged in interactively. Having submitted the batch job, you can get on with something else, or log out and go home with a warm, fuzzy glow since your batch job will still be working hard :-)</p>
+<p>The queue manager allows a certain number of jobs on each queue to run at any one time; other jobs in the same queue have to wait their turn. On the YRL cluster we had batch queues called <code>SYS$BATCH</code>, <code>SYS$MEDIUM</code> and <code>SYS$LONG</code>, for jobs of different lengths.</p>
+<p>These were <i>generic</i> queues, so if a job was submitted to one of them, it automatically went to the first machine which became free to run the job, so you got your output back quicker. Jobs could also be submitted to the queue on a specific machine, by giving a queue name like <code>YRL_SYSBAT</code>, where YRL is the node name of the particular machine you want to run the job on. Obviously the system managers will have set up different queue names on the systems you use. To find out the names of all available queues, and their time limits, enter</p>
+<pre>$ <b>SHOW QUEUE/BATCH/FULL</b></pre>
+
+<h3>13.2 How do you Submit a Batch Job ?</h3>
+<p>This is simple – just enter</p>
+<pre>$ <b>SUBMIT [/QUEUE=queue_name] [/NOTIFY] command_file</b></pre>
+<p>where the /QUEUE qualifier may be omitted for the moment, so that the job goes to <code>SYS$BATCH</code>. The output log file will be named</p>
+<pre>[your_default_login_directory]command_file_name.LOG</pre>
+<p>The /NOTIFY qualifier will send a message to your terminal when the job has finished. By default the log file is printed on <code>SYS$PRINT</code> and then deleted when the job finishes; <code class="dcl">/NOPRINTER</code> stops this, and keeps the log file in your login directory instead. If you want the job to wait until a certain time (say after 6pm when most users have gone home, to be sociable !) then use the /AFTER qualifier, eg. <code class="dcl">/AFTER=18:00</code>.</p>
+<p>Warning: whereas /NOLIST is the default for the <code class="dcl">FORTRAN</code> command when running interactively, /LIST is the default when running in batch mode. This admittedly user-friendly feature can fill up your disk space very quickly. To avoid it you should specify <code class="dcl">FORTRAN/NOLIST</code> in your command file, or delete the .LIS and .OBJ files once the linker has successfully created the .EXE file with no errors.</p>
+<p>In order to find the queue position of your job, type</p>
+<pre>$ <b>SHOW QUEUE/ALL queue_name</b></pre>
+<p>where <i>queue_name</i> is again one of the above names, or simply <code class="dcl">SHOW ENTRY</code> to see all your own jobs.</p>
+<p>Occasionally it is necessary for the machines to be shut down to allow maintenance or software upgrades. When this happens all executing batch jobs are stopped, so a job that runs for hours should save its progress as it goes, so that it can carry on from where it got to.</p>
+
+<h2 id="Communicating">14. Communicating With Other Users</h2>
+<h3>14.1 Find Out Who Else is Logged In</h3>
+<p>To find out who is logged in to the machine enter</p>
+<pre>$ <b>SHOW USERS</b></pre>
+<p>or</p>
+<pre>$ <b>SHOW USERS/FULL</b></pre>
+<p>To look at all <i>processes</i> on your machine</p>
+<pre>$ <b>SHOW SYSTEM</b></pre>
+<p>The official way to talk to other users is to use the PHONE facility.</p>
+<pre>$ <b>PHONE username</b></pre>
+<p>or</p>
+<pre>$ <b>PHONE node_name::username</b></pre>
+<p>which works over DECnet to any properly configured VMS machine on your local network. These days you are more likely to use email or a chat program on your PC, but PHONE is fun to try.</p>
+<p>Always bear in mind that a message like a PHONE call or a MAIL notification will appear in the middle of the other person’s screen, which may be scrolling rapidly or in the middle of an edit, and that there will be no permanent record. If it happens to you, <kbd>Ctrl</kbd>+<kbd>W</kbd> redraws the screen in the editors and most other full-screen programs, and <kbd>Ctrl</kbd>+<kbd>R</kbd> at the DCL prompt redisplays the line you were typing.</p>
+
+<h3>14.2 MAIL</h3>
+<p>The MAIL utility has many facilities for sending and receiving messages, such as forwarding, sorting into folders, distribution lists, keypad commands, and more. To use it just type</p>
+<pre>$ <b>MAIL</b></pre>
+<p>and then</p>
+<pre>MAIL&gt; <b>HELP</b></pre>
+<p>to find out what you can do, or</p>
+<pre>MAIL&gt; <b>DIR/NEW</b></pre>
+<p>to see what new mail you have received. To read your new mail, enter</p>
+<pre>MAIL&gt; <b>READ/NEW</b></pre>
+<p>and press <kbd>Return</kbd> to move through the message(s). To delete the message you are currently reading, enter</p>
+<pre>MAIL&gt; <b>DELETE</b></pre>
+<p>This does not actually delete the message until you EXIT from MAIL. It puts it in a special folder (try <code>HELP DIR/FOLDER</code>) called WASTEBASKET. You can find out what is in the WASTEBASKET by typing</p>
+<pre>MAIL&gt; <b>SELECT WASTEBASKET</b>
+MAIL&gt; <b>DIR</b></pre>
+<p>Enter the number of the message you are interested in, and if you realise that you did not want to delete it, you can put it back in your MAIL folder (or any other folder) by entering</p>
+<pre>MAIL&gt; <b>FILE MAIL</b></pre>
+<p>or</p>
+<pre>MAIL&gt; <b>FILE foldername</b></pre>
+<p>where <i>foldername</i> is whatever you want to call the folder. To send a message, just type</p>
+<pre>MAIL&gt; <b>SEND</b></pre>
+<p>and follow the prompts. If you want to send a message without typing errors in it, use an editor to create a file, called say <code>MESSAGE.TXT</code>, correct the spelling and grammar, then</p>
+<pre>MAIL&gt; <b>SEND MESSAGE.TXT</b></pre>
+<p>and follow the prompts. Normally the mail system puts some of your mail files in your top-level directory, which can lead to files with names of the form <code>MAIL$burble.MAI</code> cluttering up your directory. It is much neater to ask the system to put them all in a MAIL sub-directory, and move all your current mail files into the same sub-directory. To do this just enter</p>
+<pre>MAIL&gt; <b>SET MAIL_DIRECTORY [.MAIL]</b></pre>
+<p>Another thing you might like to do is to set a “personal name” which will go in the header of all your mails to other users. An example of this is</p>
+<pre>MAIL&gt; <b>SET PERSONAL_NAME "James Bond (Tel. 007)"</b></pre>
+<p>To check on all the things you have set up type</p>
+<pre>MAIL&gt; <b>SHOW ALL</b></pre>
+<p>These settings are remembered even after you log out, and normally only need to be set once.</p>
+<p>To exit from MAIL enter</p>
+<pre>MAIL&gt; <b>EXIT</b>
+$ ! Back at DCL</pre>
+<p>You may want to write your mail with a full-screen editor from within MAIL, in which case use <code class="dcl">SEND/EDIT</code>, or make it the default by defining the symbol MAIL to be MAIL/EDIT in your <code>LOGIN.COM</code> file, by adding a line like</p>
+<pre><span class="dcl">$ MAIL :== MAIL/EDIT</span></pre>
+<p>MAIL’s <code>SET EDITOR</code> command chooses which editor you get, for example <code>SET EDITOR TPU</code> for EVE. When you re-execute your login file with <code class="dcl">@LOGIN</code>, and re-enter MAIL, it will start the editor automatically when you SEND a mail. Try to give a meaningful <i>Subject:</i> when sending a mail, since this will help the recipient when scanning through their mail.</p>
+
+<h2 id="Miscellaneous">15. Miscellaneous</h2>
+<p>As mentioned before, <kbd>Ctrl</kbd>+<kbd>Y</kbd> only suspends the execution of the running program. After having interrupted it in this way, when you then enter the command <code class="dcl">SPAWN</code>, you will create a new “subprocess” inside which you can now work as if you had logged in on a different terminal. You may SPAWN again in this subprocess, etc. When you enter <code class="dcl">LOGOUT</code>, you will return to the next higher process, which will be in the state after the <kbd>Ctrl</kbd>+<kbd>Y</kbd>, i.e. when entering <code class="dcl">CONTINUE</code> the program interrupted initially will continue. Try not to leave lots of subprocesses lying about, since each one uses up system resources, and counts against your quotas.</p>
+<p>There are several useful DCL commands which display the user and system status. To find out which users are logged in, type</p>
+<pre>$ <b>SHOW USERS</b></pre>
+<p>To display your process logical names</p>
+<pre>$ <b>SHOW LOGICAL/PROCESS</b></pre>
+<p>and for your disk space</p>
+<pre>$ <b>SHOW QUOTA</b></pre>
+<p>A useful command to look for a particular word or sentence in a file is</p>
+<pre>$ <b>SEARCH *.FOR string</b></pre>
+<p>which (in the above case) will copy all lines containing “string” from all files of type .FOR to the screen, or into an output file if you specify the <code class="dcl">/OUTPUT=filename</code> qualifier after SEARCH.</p>
+<p><code class="dcl">RECALL/ALL</code> will show you the last 254 commands which you have typed to the DCL command interpreter. On terminals with arrow keys <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> to move the cursor, as on any PC, pressing the up arrow will go backwards through your commands, and you may edit them with the arrows and the delete key before submitting them again with <kbd>Return</kbd>.</p>
+<p>There are a number of options, called <i>qualifiers</i>, for most system commands, which are specified after “/” as you may have noticed. To find out about them, the HELP facility or the manual should be consulted.</p>
+
+<h2 id="Final_Remarks">16. Final Remarks</h2>
+<p>Since this tutorial is meant to encourage and help users to make good use of their VMS system, comments, corrections, and proposals for improvements are highly welcome. Please <a href="https://github.com/KaraOttewell/KLO-Tutorials/issues" target="_blank" rel="noopener">open an issue</a> on the tutorials’ GitHub repository, with “VMS Tutorial” in the title.</p>
+<p>Familiarizing yourself with DCL and the resources of your VMS system, and writing clear, well commented code in <b>standard</b> <span class="fortran">Fortran</span>, <span class="c-code">C</span> or <span class="cplusplus">C++</span>, will not only speed up your own jobs, but will improve the computer’s response for everyone.</p>
+
+<h2 id="Solutions">17. Solutions to Exercises</h2>
+<h3>Exercise 1</h3>
+<p>Create your example program by entering, after the prompt</p>
+<pre>$ <b>EDIT EXAMP1.FOR</b></pre>
+<p>then enter the following lines, starting each line except the comment in column 7:</p>
+<pre><span class="fortran">      PROGRAM TEST
+C     Very very simple test program
+      WRITE(6,2001)
+ 2001 FORMAT(//' TEST OUTPUT'/)
+      STOP
+      END</span></pre>
+<p>then press <kbd>Ctrl</kbd>+<kbd>Z</kbd>, which in EVE saves the file and finishes the edit. In EDT, <kbd>Ctrl</kbd>+<kbd>Z</kbd> takes you to the <code>*</code> prompt, where you type <code>EXIT</code>. Either way, you are back in DCL. Now</p>
+<pre>$ <b>FORTRAN/LIST EXAMP1</b>
+$ <b>LINK EXAMP1</b>
+$ <b>RUN EXAMP1</b></pre>
+<p>and after admiring the output, and the listing in <code>EXAMP1.LIS</code>, tidy up with</p>
+<pre>$ <b>DELETE EXAMP1.*;*</b></pre>
+
+<h3>Exercise 2</h3>
+<pre>$ <b>TYPE SDEB.FOR</b>
+$ <b>FORTRAN/NOOPT/DEBUG SDEB</b>       <span class="note">(add /IEEE_MODE=FAST on Integrity and x86-64)</span>
+$ <b>LINK/DEBUG SDEB</b>
+$ <b>RUN SDEB</b></pre>
+<p>then follow the debugger commands given in the exercise. To fix the bug for good, set <code>SS</code> in the main program, before calling <code>AVERAGE</code>.</p>
+
+<h3>Exercise 3</h3>
+<pre>$ <b>COPY LIBTEST1.FOR VMSLIB1.FOR</b>
+$ <b>COPY LIBTEST2.FOR VMSLIB2.FOR</b>
+$ <b>FORTRAN VMSLIB1</b>
+$ <b>FORTRAN VMSLIB2</b>
+$ <b>LIBRARY/CREATE MYLIB VMSLIB2</b>
+$ <b>LIBRARY/LIST/FULL MYLIB</b>
+$ <b>LINK VMSLIB1,MYLIB/LIBRARY</b>
+$ <b>RUN VMSLIB1</b></pre>
+
+<h2 id="History">18. A Brief History of VMS</h2>
+<p>The VAX-11/780 was the first computer to run the VMS operating system. It was announced in October 1977, and cost about $200,000, which was a lot of money in those days. Version 1.0 of VMS shipped to customers in 1978. The DEC code name for the 780 was <b>Star</b>, and the code name for VMS was <b>Starlet</b>, which is why the system library searched for unresolved symbols at LINK time is called <code>SYS$LIBRARY:STARLET.OLB</code>. The venerable 11/780 was followed by the 11/750 in 1980, and the rather underpowered, but lowest cost to that date, VAX-11/730 in 1982. Clustering was unveiled in 1983, and is supported up to 96 nodes. The first VAX workstation, the appropriately named VAXstation I, was introduced in 1984, and I remember using one of the first of these at <a href="https://home.cern/" target="_blank" rel="noopener">CERN</a> shortly after that date.</p>
+<p>The Alpha AXP chip was DEC’s 64-bit RISC microprocessor, designed for the next millennium (so DEC said) ! Because of its cunning PALcode, Alphas could run VMS, Digital Unix (later Tru64 Unix), Linux, or Windows NT. The RISC (Reduced Instruction Set Computer) CPU has 32 integer and 32 floating point registers, all 64 bits wide, on-chip instruction and data caches, and multiple issue pipelining. To take advantage of these features the compiler has to be particularly clever in scheduling the instruction stream, which leads to the criticism from some people that RISC really stands for “Relegate the Important Stuff to the Compiler” ! The Alpha is at its most efficient with <em>naturally aligned</em> data, so it is a good idea, when declaring structures or common blocks, to make quadwords (8 bytes) start at quadword offsets, longwords (4 bytes) start at longword offsets, and words (you guessed it – 2 bytes) start at word offsets. This can usually be arranged without padding by declaring members in decreasing order of size, and it is still good advice on every other processor too. Compaq, and then HP, ended Alpha development after the EV7, and ported VMS to Intel’s Itanium, and VSI has since ported it to x86-64, so the same VMS now runs on a fourth processor architecture.</p>
+<p><b>Porting VMS applications to OpenVMS:</b></p>
+<ol>
+<li>Wave arms about.</li>
+<li>Say “Izzy Wizzy let’s get busy” !</li>
+<li>That’s it.</li>
+</ol>
+<p>OpenVMS <em>is</em> VMS, it’s just those marketing boys trying to confuse us. Seriously though, [Open]VMS <em>does</em> conform to more of the POSIX standard than you might think.</p>
+<p><b>Windows NT.</b> NT allegedly stands for <i>New Technology</i>, but it’s a bit suspicious that the leader of Microsoft’s Windows NT team was Dave Cutler, who contributed large parts of VMS when he worked for Digital, and if you add one to each letter of VMS, you get WNT ! Windows NT, and the Windows versions descended from it right up to today’s, have many of the features that VMS programmers know and love, like kernel threads, mutexes, semaphores, critical sections and numerous system service calls to play with.</p>
+
+<h2 id="VMS_Web_Links">19. VMS Related Web Pages</h2>
+<p>Here are a few of my favourite web pages related to VMS. Most of the ones in earlier versions of this page have long since disappeared, along with DEC.</p>
+<ul>
+<li><a href="https://vmssoftware.com/" target="_blank" rel="noopener">VMS Software Inc. (VSI)</a>, who develop and support OpenVMS today.</li>
+<li><a href="https://docs.vmssoftware.com/" target="_blank" rel="noopener">The VSI OpenVMS documentation</a>, including the <a href="https://docs.vmssoftware.com/vsi-openvms-user-s-manual/" target="_blank" rel="noopener">OpenVMS User’s Manual</a>, the <a href="https://docs.vmssoftware.com/vsi-openvms-dcl-dictionary-a-m/" target="_blank" rel="noopener">DCL Dictionary</a>, the <a href="https://docs.vmssoftware.com/vsi-openvms-debugger-manual/" target="_blank" rel="noopener">Debugger Manual</a> and the <a href="https://docs.vmssoftware.com/vsi-fortran-for-openvms-user-manual/" target="_blank" rel="noopener">VSI Fortran User Manual</a>.</li>
+<li>VSI’s <a href="https://vmssoftware.com/community/community-license/" target="_blank" rel="noopener">Community License</a>, to run OpenVMS free of charge for learning, open source development and sharing knowledge of the system.</li>
+<li>The <a href="https://forum.vmssoftware.com/" target="_blank" rel="noopener">VSI OpenVMS forum</a>, where VMS people gather to ask and answer questions.</li>
+<li><a href="https://www.openvmshobbyist.com/news.php" target="_blank" rel="noopener">OpenVMS Hobbyist</a>, which still carries community news.</li>
+<li><a href="https://neilrieck.net/links/openvms_resources.html" target="_blank" rel="noopener">Neil Rieck’s OpenVMS Resources</a>, a big collection of links and notes.</li>
+<li><a href="https://www.goatley.com/" target="_blank" rel="noopener">Hunter Goatley</a>, formerly of MadGoat Software, with lots of VMS utilities and the MX mail server.</li>
+<li><a href="https://www.process.com/" target="_blank" rel="noopener">Process Software</a>, makers of the MultiNet TCP/IP stack for VMS.</li>
+<li><a href="https://opensimh.org/" target="_blank" rel="noopener">Open SIMH</a>, the emulator for the VAX and many other historic computers.</li>
+<li><a href="http://decwarch.free.fr/" target="_blank" rel="noopener">The DECW and VMS CENA archive</a> of Motif/X Windows software for VMS.</li>
+<li><a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/" target="_blank" rel="noopener">PuTTY</a>, the free SSH client and VT terminal emulator for Windows.</li>
+</ul>
+<p>Thanks to David L. Cathey of Montagar Software Concepts, I have also been able to add his DECUS presentation on how to delete a process stuck in RWAST, which I converted from PostScript to HTML. It contains numerous useful tips and information, and some example code in MACRO-32. Read David’s <i>Resource Waits in the OpenVMS Operating System</i>, also known as <a href="rwast.html">What to do when you R-WASTed by OpenVMS</a>.</p>
+
+<h2 id="Bibliography">20. Bibliography</h2>
+<p>This bibliography is based on postings to the Info-VAX mailing list by Professor David D. Miller, Arne Vajhøj and others, with additions, corrections, and formatting by Richard B. Gilbert. Some books may appear in more than one category, and many are now out of print, though most turn up second-hand. The VSI documentation above is the place for anything that has changed since they were written. This is an <b>approved Amazon.com Associates site</b>, and if you click on the linked titles below it will take you straight to the Amazon page for that book.</p>
+<h3>Introduction to VMS – for New Users</h3>
+<ul>
+<li>Hughes, Roland. <i>The Minimum You Need to Know to Be an OpenVMS Application Developer</i>. Logikal Solutions, ISBN 0-9770866-0-7</li>
+<li>Bynon, David W. and Shannon, Terry C. <a href="http://www.amazon.com/exec/obidos/ISBN=096147291X/drkara-20/" target="_blank" rel="noopener"><i>Introduction to VAX/VMS</i></a>. Cardinal Business Media</li>
+<li>Peters, James F. III and Holmay, Patrick J. <a href="http://www.amazon.com/exec/obidos/ISBN=1555582036/drkara-20/" target="_blank" rel="noopener"><i>The VMS User’s Guide</i></a>. Digital Press – a good book to get beginners going</li>
+<li>Sawey, Ronald M. and Stokes, Troy T. <a href="http://www.amazon.com/exec/obidos/ISBN=1555580661/drkara-20/" target="_blank" rel="noopener"><i>A Beginner’s Guide to VAX/VMS Utilities &amp; Applications</i></a>. Digital Press, 1992 (very elementary; may be suitable for readers with little or no computer experience)</li>
+<li>Sharick, Paula. <a href="http://www.amazon.com/exec/obidos/ISBN=0442002661/drkara-20/" target="_blank" rel="noopener"><i>The Essential Guide to VMS Utilities and Commands</i></a>. Van Nostrand Reinhold, ISBN 0-442-00266-1</li>
+<li>Wright, Michael. <a href="http://www.amazon.com/exec/obidos/ISBN=0898921058/drkara-20/" target="_blank" rel="noopener"><i>VAX-VMS Primer</i></a>. Contemporary Publishing Co.</li>
+</ul>
+<h3>Advanced VMS Users</h3>
+<ul>
+<li>Bynon, David W. <a href="http://www.amazon.com/exec/obidos/ISBN=0961472979/drkara-20/" target="_blank" rel="noopener"><i>Mastering VMS</i></a>. Cardinal Business Media, 1990</li>
+</ul>
+<h3>VMS System Management</h3>
+<ul>
+<li>Bates, Ken. <a href="http://www.amazon.com/exec/obidos/ISBN=1878956027/drkara-20/" target="_blank" rel="noopener"><i>VAX I/O Subsystems: Optimizing Performance</i></a>. Cardinal Business Media (formerly Professional Press)</li>
+<li>Coburn, James W. <a href="http://www.amazon.com/exec/obidos/ISBN=1555581269/drkara-20/" target="_blank" rel="noopener"><i>OpenVMS Performance Management: Tuning Techniques for OpenVMS/VAX and OpenVMS/AXP</i></a>. 2nd Edition, CBM Books</li>
+<li>Stith, Joseph. <a href="http://www.amazon.com/exec/obidos/ISBN=0442004036/drkara-20/" target="_blank" rel="noopener"><i>Introductory Guide to VMS System Management</i></a>. Van Nostrand Reinhold, 1992, ISBN 0-442-00403-6</li>
+<li>Baldwin, Lawrence. <i>OpenVMS System Management Guide</i>. Digital Press, 1995, ISBN 1-55558-143-9</li>
+<li>Ellis, Bruce. <a href="http://www.amazon.com/exec/obidos/ISBN=1878956116/drkara-20/" target="_blank" rel="noopener"><i>The Hitchhiker’s Guide to VMS Performance</i></a>. Cardinal Business Media</li>
+</ul>
+<h3>Introduction to VMS Internals</h3>
+<ul>
+<li>Ellis, Bruce. <a href="http://www.amazon.com/exec/obidos/ISBN=1878956000/drkara-20/" target="_blank" rel="noopener"><i>The Hitchhiker’s Guide to VMS</i></a>. Cardinal Business Media</li>
+<li>Levy, Henry M. and Eckhouse, Richard H. Jr. <i>Computer Programming and Architecture – The VAX</i>. Digital Press, 1989</li>
+<li>Miller, David Donald. <a href="http://www.amazon.com/exec/obidos/ISBN=1555581579/drkara-20/" target="_blank" rel="noopener"><i>VAX/VMS Operating System Concepts</i></a>. Digital Press, 1990</li>
+<li>Sewell, Wayne. <a href="http://www.amazon.com/exec/obidos/ISBN=0442004745/drkara-20/" target="_blank" rel="noopener"><i>Inside VMS: The System Manager’s and System Programmer’s Guide to VMS Internals</i></a>. Van Nostrand Reinhold, 1992, ISBN 0-442-00474-5</li>
+</ul>
+<h3>Advanced VMS Internals</h3>
+<ul>
+<li>Goldenberg, Ruth E. and Kenah, Lawrence J. <a href="http://www.amazon.com/exec/obidos/ISBN=1555580599/drkara-20/" target="_blank" rel="noopener"><i>VAX/VMS Internals and Data Structures</i></a>. Digital Press, 1991</li>
+<li>Goldenberg, Ruth E. and Saravanan, Saro. <a href="http://www.amazon.com/exec/obidos/ISBN=155558120X/drkara-20/" target="_blank" rel="noopener"><i>OpenVMS AXP Internals and Data Structures</i></a>. Digital Press, 1994</li>
+<li>Hanrahan, Jamie E. and Leahy, Lee. <a href="http://www.amazon.com/exec/obidos/ISBN=0961472952/drkara-20/" target="_blank" rel="noopener"><i>VMS Advanced Device Driver Techniques</i></a>. Professional Press Books (now Cardinal Business Media), 1988</li>
+<li>Sherlock, Margie and Szubowicz, Lenny. <a href="http://www.amazon.com/exec/obidos/ISBN=1555581331/drkara-20/" target="_blank" rel="noopener"><i>Writing OpenVMS Alpha Device Drivers in C</i></a>. Digital Press, ISBN 1-55558-133-1</li>
+<li>McCoy, Kirby. <a href="http://www.amazon.com/exec/obidos/ISBN=1555580564/drkara-20/" target="_blank" rel="noopener"><i>VMS File System Internals</i></a>. Digital Press, 1990</li>
+</ul>
+<h3>DCL Books</h3>
+<ul>
+<li>Anagnostopoulos, Paul C. <i>Writing Real Programs in DCL</i>. Digital Press, 1989</li>
+<li>Leisner, K. M. and Cook, David B. <i>VAX DCL Programmer’s Reference, VMS 5</i>. Van Nostrand Reinhold, 1990</li>
+<li>Shah, Jay. <i>VAX/VMS Concepts and Facilities</i>. McGraw-Hill, 1991</li>
+</ul>
+<h3>VAX Architecture and Assembler Language</h3>
+<ul>
+<li>Brunner, Richard A. <i>VAX Architecture Reference Manual</i>. Second edition, Digital Press, 1991</li>
+<li>Frank, T. S. <i>Introduction to VAX-11 Architecture and Assembly Language</i>. Prentice-Hall, 1987</li>
+<li>Kapps, Charles and Stafford, Robert L. <i>VAX Assembly Language and Architecture</i>. Prindle, Weber &amp; Schmidt (PWS Publishers), 1985</li>
+<li>Sebesta, Robert W. <i>VAX Structured Assembly Language Programming</i>. Benjamin/Cummings</li>
+<li>Baase, Sara. <i>VAX-11 Assembly Language Programming</i>. Prentice-Hall, 1983</li>
+<li>Federighi, Francis D. and Reilly, Edwin D. <i>VAX Assembly Language</i>. Macmillan, 1991</li>
+</ul>
+<h3>Other VMS Books</h3>
+<ul>
+<li>De Klerk, Theo. <i>Writing VAX/VMS Applications Using Pascal</i>. Digital Press, 1991</li>
+<li>Davis, Roy G. <i>VAXcluster Principles</i>. Digital Press, 1993</li>
+<li>Merusi, Donald E. <i>Software Implementation Techniques – VMS, UNIX, OS/2 &amp; MS-DOS</i>. Digital Press, 1992. The book runs examples in parallel for all four systems – sort of a Rosetta Stone.</li>
+<li>Sethi, Joginder. <i>OpenVMS Performance Management</i>. Digital Press, 1995</li>
+<li>Shah, Jay. <i>VAX C Programming Guide</i>. McGraw-Hill, 1992</li>
+<li>Shah, Jay. <i>VAXclusters: Architecture, Programming and Management</i>. McGraw-Hill</li>
+<li>Sites, Richard L. <i>Alpha Architecture Reference Manual</i>. Digital Press, 1992, ISBN 1-55558-098-X</li>
+<li>Spencer. <i>The Complete Guide to Pathworks</i>. Cardinal Business Media (formerly Professional Press), 1993</li>
+</ul>
+<h3>Programming Languages</h3>
+<ul>
+<li>Metcalf, Michael, Reid, John and Cohen, Malcolm. <i>Modern Fortran Explained</i>. Oxford University Press – the successor to <i>Fortran 90/95 Explained</i></li>
+<li>Kernighan, Brian W. and Ritchie, Dennis M. <a href="http://www.amazon.com/exec/obidos/ISBN=0131103628/drkara-20/" target="_blank" rel="noopener"><i>The C Programming Language (ANSI C edition)</i></a>. Prentice Hall</li>
+<li>Weinman, David G. <i>VAX Fortran, Second Edition</i>. PWS-KENT Publishing Company</li>
+</ul>
+<h3>Motif and X Window Books</h3>
+<ul>
+<li>Brain, Marshall. <i>Motif Programming: The Essentials... and More</i>. Digital Press</li>
+<li>Scheifler, Robert W. and Gettys, James. <i>X Window System: The Complete Reference to Xlib, X Protocol, ICCCM, XLFD – X Version 11, Release 5</i>. Digital Press</li>
+<li>Asente, Paul J. and Swick, Ralph R. <i>X Window System Toolkit: The Complete Programmer’s Guide and Specification</i>. Digital Press</li>
+<li>Rost, Randi J. <i>X and Motif Quick Reference Guide</i>. Digital Press, 1993</li>
+<li>Heller, Dan. <i>Motif Programming Manual for OSF/Motif Version 1.1</i>. O’Reilly &amp; Associates</li>
+</ul>
+<h3>Miscellaneous Books</h3>
+<ul>
+<li>Sandler, Corey and Benedict, Tom. <i>VAX to VAX</i>. John Wiley &amp; Sons, 1990</li>
+<li>Simon, Alan R. <i>Application Migration: IBM to VAX</i>. Van Nostrand Reinhold, 1992, ISBN 0-442-00146-0</li>
+<li>Pendharkar, Sumant S. and Biegel, Richard A. <i>dBASE IV for VMS and UNIX: Technical Support Approach</i>. Van Nostrand Reinhold, ISBN 0-442-00908-9</li>
+<li>Malamud, Carl. <i>Analyzing DECnet/OSI Phase V</i>. Van Nostrand Reinhold, ISBN 0-442-00375-7</li>
+</ul>
+<p><a href="#Top_Of_Page">Back to Top</a></p>
+<p>See also <a href="../c_course/index.html">Kara’s C Tutorial</a>, an introduction to <span class="c-code">C</span> for programmers who already know another language, particularly DEC <span class="fortran">FORTRAN</span>, and <a href="../cpp_stl_course/index.html">Kara’s STL Tutorial</a>, a Monty Python-themed tutorial on the <span class="cplusplus">C++</span> Standard Template Library. Both have their own example programs and Visual Studio solutions, and both work on VMS too.</p>
+<hr>
+<h3 id="KLO_Software">More from KLO Software</h3>
+<p>If you have enjoyed this tutorial, please have a look at my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. They describe a family of free Windows programs, all available from the Microsoft Store and each with its own help page: <b>BeebRFSMaker</b>, <b>BeebRFSTool</b> and <b>BeebFileUtilities</b> for BBC Micro enthusiasts, which view disk images, decode tokenised BASIC and pack files into compressed sideways ROMs; <b>KOContour</b>, which turns elevation data into contour maps; <b>KOBrot</b>, a Mandelbrot and Julia set explorer that redraws the matching Julia set live as you move the pointer; and <b>SnapDragger</b>, which tidies a folder of photographs and video clips into dated, sorted folders with an HTML contact sheet. Suggestions, bug reports and ideas for new features are always welcome.</p><!-- Light/dark/automatic theme switch, shared with the KLO-Software pages.
+     KLO-Software and KLO-Tutorials are sibling folders, on disk and on Git. -->
+<script src="../../KLO-Software/KLODarkModeSwitch.js" defer></script>
+</body>
+</html>

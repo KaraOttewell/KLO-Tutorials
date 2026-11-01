@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="libtest1\libtest1.vfproj" Type="6989167d-11e4-40fe-8c1a-2192a86a7e90" Id="ad6483c7-6daa-5c1c-6d25-ba99e472bc4f">
+    <Platform Solution="*|x86" Project="Win32" />
+  </Project>
+  <Project Path="sdeb/sdeb.vfproj" Type="6989167d-11e4-40fe-8c1a-2192a86a7e90">
+    <Platform Solution="*|x86" Project="Win32" />
+  </Project>
+  <Project Path="tut/tut.vfproj" Type="6989167d-11e4-40fe-8c1a-2192a86a7e90">
+    <Platform Solution="*|x86" Project="Win32" />
+  </Project>
+</Solution>
