@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Kara Ottewell's OpenVMS Page: a brief history of VMS on the VAX and Alpha, with links to OpenVMS sites, freeware and books.">
+<title>Kara's OpenVMS Page</title>
+<style>
+/* Colours are CSS variables: light values here, dark values below, the same
+   scheme as Kara's VMS Tutorial (index.html in this folder). The theme switch
+   (KLODarkModeSwitch.js from KLO-Software) puts theme-light or theme-dark on
+   the body element; with neither, the system preference decides. */
+body {
+    --page-background: #FFFFFF;
+    --text: #1E1E1E;
+    --link: #0000EE;
+    --link-visited: #551A8B;
+    --heading: #4E342E;
+    --heading-rule: #D7BE8A;
+    --c-code: #0000FF;
+    --fortran: #008000;
+    --cplusplus: #00008B;
+    --dcl: #00747A;
+    --code-background: #F7F9FC;
+    --code-border: #E3E8EF;
+    --note: #5F6B73;
+    --toggle-background: #F0F6F9;
+    --toggle-border: #0F4761;
+    --badge-background: #0F4761;
+    --showcase-background: #FBF5E8;
+    --showcase-edge: #B08A3E;
+}
+body.theme-dark {
+    color-scheme: dark;
+    --page-background: #0D1117;
+    --text: #E6EDF3;
+    --link: #79C0FF;
+    --link-visited: #C58CFF;
+    --heading: #E8C48C;
+    --heading-rule: #5C4A2E;
+    --c-code: #79C0FF;
+    --fortran: #7EE787;
+    --cplusplus: #B4A7FF;
+    --dcl: #39C5CF;
+    --code-background: #161B22;
+    --code-border: #30363D;
+    --note: #9AA4AE;
+    --toggle-background: #161B22;
+    --toggle-border: #30363D;
+    --badge-background: #1F6FEB;
+    --showcase-background: #1C1912;
+    --showcase-edge: #E8C48C;
+}
+@media (prefers-color-scheme: dark) {
+    body:not(.theme-light) {
+        color-scheme: dark;
+        --page-background: #0D1117;
+        --text: #E6EDF3;
+        --link: #79C0FF;
+        --link-visited: #C58CFF;
+        --heading: #E8C48C;
+        --heading-rule: #5C4A2E;
+        --c-code: #79C0FF;
+        --fortran: #7EE787;
+        --cplusplus: #B4A7FF;
+        --dcl: #39C5CF;
+        --code-background: #161B22;
+        --code-border: #30363D;
+        --note: #9AA4AE;
+        --toggle-background: #161B22;
+        --toggle-border: #30363D;
+        --badge-background: #1F6FEB;
+        --showcase-background: #1C1912;
+        --showcase-edge: #E8C48C;
+    }
+}
+
+body { font-family: Georgia, "Times New Roman", serif; max-width: 60em; margin: 1em auto; padding: 0 1em; line-height: 1.4;
+       background: var(--page-background); color: var(--text); }
+a { color: var(--link); }
+a:visited { color: var(--link-visited); }
+h1, h2, h3, h4 { color: var(--heading); }
+h2 { border-bottom: 2px solid var(--heading-rule); padding-bottom: 0.15em; margin-top: 1.8em; }
+/* The divider above the KLO Software section at the end */
+hr { border: none; border-top: 2px solid var(--heading-rule); margin-top: 2em; }
+
+pre, code { font-family: Consolas, "Courier New", monospace; }
+
+/* The Digital logo, which sits in the line of text like a word. It has a
+   white background of its own, so it shows as a small white box in dark mode,
+   much as it looked on Digital's own printed matter. */
+img.digital-logo { vertical-align: middle; }
+
+/* The Snapper screenshot, floated beside the BBC Micro section's text */
+figure.screenshot { float: left; margin: 0.3em 1.2em 0.6em 0; }
+figure.screenshot img { display: block; max-width: 100%; height: auto; border: 1px solid var(--code-border); }
+figure.screenshot figcaption { font-style: italic; color: var(--note); font-size: 0.85em; max-width: 160px; }
+/* Ends the float, so the next section's heading starts below the screenshot */
+.clear { clear: both; }
+
+/* What each colour means in the text, as in the tutorials */
+.c-code { color: var(--c-code); }
+.fortran { color: var(--fortran); }
+.cplusplus { color: var(--cplusplus); }
+.dcl { color: var(--dcl); }
+.note { color: var(--note); font-style: italic; }
+
+/* The box near the top advertising the VMS Free Software page, which still
+   lives on the pottsoft WordPress site */
+div.showcase { background: var(--showcase-background); border: 1px solid var(--showcase-edge);
+               border-left: 6px solid var(--showcase-edge); border-radius: 6px; padding: 0.6em 1.1em 0.9em; margin: 1.2em 0; }
+div.showcase h2 { border-bottom: none; margin-top: 0.3em; padding-bottom: 0; }
+div.showcase ul { margin: 0.5em 0; }
+/* The "browse" link, drawn as a button in the badge colour */
+a.showcase-button, a.showcase-button:visited { display: inline-block; background: var(--badge-background); color: #FFFFFF;
+                   font-family: "Segoe UI", Arial, sans-serif; font-weight: bold; text-decoration: none;
+                   border-radius: 4px; padding: 0.4em 1em; margin-top: 0.3em; }
+a.showcase-button:hover { text-decoration: underline; }
+
+/* The blue "chips" under the title, as on the KLO-Software pages */
+.badge { display: inline-block; background: var(--badge-background); color: #FFFFFF;
+         font-family: Segoe UI, Arial, sans-serif; font-size: 8pt; padding: 2px 8px; margin: 0 6px 4px 0; }
+
+/* The floating theme switch, as on the KLO-Software pages */
+#theme-toggle-icon { position: fixed; top: 12px; right: 12px; font-size: 22px; cursor: pointer;
+                     background: var(--toggle-background); border: 1px solid var(--toggle-border);
+                     border-radius: 6px; padding: 6px 8px; z-index: 9999; user-select: none; }
+</style>
+</head>
+<body>
+<div id="theme-toggle-icon" title="Change theme">&#128421;&#65039;</div>
+<h1 id="Top_Of_Page">Kara’s OpenVMS Page</h1>
+<p><span class="badge">OpenVMS</span>
+<span class="badge">VAX</span>
+<span class="badge">Alpha</span>
+<span class="badge">History</span>
+<span class="badge">Free</span></p>
+
+<p><i>The OpenVMS<sup>®</sup> operating system: a brief history, with links to VMS sites, freeware and books</i><br>
+<i>© Kara Ottewell 1996-2026</i></p>
+<p>Companion page: <a href="index.html">Kara’s VMS Tutorial</a>, a beginner’s guide to OpenVMS and DCL, with example files to download.</p>
+
+<div class="showcase" id="Free_Software">
+<h2>Free Software for OpenVMS – Rare Finds for VAX and Alpha</h2>
+<p>Software for VMS is hard to come by these days, so dust off that VAXstation, fire up the Alpha, or boot SIMH, and help yourself. My <b>VMS Free Software</b> page is a treasure chest of Motif, X11 and command line programs that I wrote for, or ported to, OpenVMS on the VAX and Alpha, nearly all with full source code, and every zip file carries a PGP signature so you know it is just as I left it:</p>
+<ul>
+<li><b>VMS Performance Meter V2.5</b> – a Motif CPU, disk and memory monitor, with a live bar graph in its icon and a “tomato of memory”. I once watched 27 machines at once from a single workstation with it.</li>
+<li><b>XBeeb</b> – a BBC Micro emulator running on VMS. Yes, really.</li>
+<li><b>LinkSys Router Logger</b> – a Motif window onto everything knocking at your firewall.</li>
+<li><b>WHOIS</b> – one command that works the same on VMS and Windows.</li>
+<li><b>Web Count 2.4</b> – the classic “car odometer” web page hit counter.</li>
+<li>…and <b>LiteClue</b> help bubbles for Motif, <b>GIFMerge</b>, <b>TGD and GD</b>, <b>Mandelsteg</b>, <b>MBOX</b>, <b>GIFShuf and SNOW</b>, and how to use <b>PGP from TPU</b>.</li>
+</ul>
+<p class="note">Please note: the VMS Free Software page still lives on my old WordPress site. It is in the process of being migrated to GitHub, and parts of it need updating. For example, get my PGP public key from the <a href="../../KLO-Software/index.htm#contact_info">PGP Key and Contact Information</a> section of my KLO Software page, rather than from the link on the WordPress page.</p>
+<p><a class="showcase-button" href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">Browse the VMS Free Software &#8594;</a></p>
+</div>
+
+<h2 id="Contents">Table of Contents</h2>
+<ol>
+<li><a href="#Introduction">Introduction</a>
+<ul>
+<li><a href="#Running_VMS">Running VMS Yourself</a></li>
+<li><a href="#Connecting">Connecting to Your VMS System</a></li>
+</ul></li>
+<li><a href="#VAX_Systems">VAX VMS Systems</a></li>
+<li><a href="#Alpha_Systems">Alpha VMS Systems</a></li>
+<li><a href="#BBC_Micro">BBC Micro VMS Systems</a></li>
+<li><a href="#VMS_Tutorial">VMS Tutorial</a></li>
+<li><a href="#Porting">Porting VMS Applications to OpenVMS</a></li>
+<li><a href="#Windows_NT">Windows NT and VMS</a></li>
+<li><a href="#Consoles">Switching Between the ARC and SRM Consoles</a></li>
+<li><a href="#Unix">Unix</a></li>
+<li><a href="#Yezerski_Roper">Yezerski Roper</a></li>
+<li><a href="#VMS_Web_Links">VMS Web Links</a></li>
+<li><a href="#Bibliography">Bibliography</a></li>
+</ol>
+
+<h2 id="Introduction">1. Introduction</h2>
+<p>OpenVMS, or VMS as it is still affectionately known to us VMS stalwarts, is a high reliability, high security operating system, produced, if not always very well marketed, by Digital Equipment Corporation (DEC), then by Compaq and Hewlett-Packard, and since 2014 by <a href="https://vmssoftware.com/" target="_blank" rel="noopener">VMS Software Inc.</a> (VSI). Digital’s slogan for OpenVMS was “24×365”, which whilst not very catchy, is pretty accurate in what you can expect from a well configured VMS system.</p>
+<p>It is quite common for VMS sites to go a couple of <em>years</em> between reboots, power supply allowing. Due to the gradations of privilege that can be granted to users or particular images, it is fairly straightforward to create a secure, robust environment to keep your business going “24×365”. Or “5×24×52” if you’re closed at weekends.</p>
+<p>Have a look at my <a href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">VMS Free Software Page</a>, described <a href="#Free_Software">at the top of this page</a>, for various bits of software I have written for, or ported to, VMS. A list of VMS related web links, including more freeware, is <a href="#VMS_Web_Links">at the bottom of this page</a>. To see the latest information on OpenVMS, and where it is going next, look at the <a href="https://vmssoftware.com/about/roadmap/" target="_blank" rel="noopener">VSI roadmap</a>.</p>
+
+<h3 id="Running_VMS">1.1 Running VMS Yourself</h3>
+<p>If you want to run your own VMS system, VSI’s <a href="https://vmssoftware.com/community/community-license/" target="_blank" rel="noopener">Community License</a> lets you run OpenVMS, with its compilers and layered products, free of charge for learning, open source development and sharing knowledge of the system. It replaced the old hobbyist programme, under which a CD with VMS, compilers for C++, C, Pascal, BASIC, Fortran and COBOL, and licences for lots of layered products, including clustering and TCP/IP, used to cost about $30 from <a href="https://www.montagar.com/" target="_blank" rel="noopener">Montagar Software</a>. HP ended that programme in 2020. The easiest route today is to run the x86-64 version of OpenVMS in a virtual machine on your PC, though it is still great fun to run VMS on a real VAX or Alpha, and second-hand ones turn up on <a href="https://www.ebay.com/" target="_blank" rel="noopener">eBay</a>. <a href="https://www.islandco.com/" target="_blank" rel="noopener">Island Computers</a>, who once sold brand new Alphas to hobbyists for $499, still sell and support Alpha and Integrity systems.</p>
+<p><a href="https://www.nemonix.com/" target="_blank" rel="noopener">Nemonix Engineering</a> also specialize in hardware, software and repair of VMS systems, maintenance, and hardware upgrades, and used to welcome business from hobbyist VMS systems too.</p>
+<p>If you want to write a CD or DVD from a VMS system, OpenVMS V8.3 onwards can do it itself with the <code class="dcl">COPY/RECORDABLE_MEDIA</code> command. Before that there was an excellent commercial program, DVDwrite, from Dr. Eberhard Heuser-Hofmann, which supported VAX, Alpha and Integrity (Itanium) systems and a good number of DVD drives, and which Eberhard kindly made available <b>free</b> for VMS hobbyists, though its web site has since disappeared. <a href="http://www.acard.com/index.files/Page385.htm" target="_blank" rel="noopener">ACARD’s SCSI-to-IDE and SATA bridges</a> let an older SCSI-only VAX or Alpha use a modern drive.</p>
+
+<h3 id="Connecting">1.2 Connecting to Your VMS System</h3>
+<p>For some good advice on connecting your VMS system to the internet, email me. You can find my address from my PGP public key, as described in the <a href="../../KLO-Software/index.htm#contact_info">PGP Key and Contact Information</a> section of my KLO Software page. I started off using a 3Com Courier modem, running SLIP on a VAXstation 4000 VLC to connect to Demon Internet in the UK (who gave you a static IP address), but now have rather faster (!) cable internet, and my VMScluster lives behind a firewall, with port forwarding to map services to the appropriate places.</p>
+<p>To log in to a VMS system from a PC, use SSH, which encrypts everything you type, your password included, rather than Telnet, which sends it across the network as plain text. Windows has an SSH client built in, and the free <a href="https://www.chiark.greenend.org.uk/~sgtatham/putty/" target="_blank" rel="noopener">PuTTY</a> SSH and Telnet client is a good VT terminal emulator, including the keypad that the VMS editors use. On the VMS side, the SSH server comes with VSI’s TCP/IP Services and with VSI OpenSSH. My <a href="index.html#SSH_Login">VMS Tutorial</a> shows how to log in both ways.</p>
+
+<h2 id="VAX_Systems">2. VAX VMS Systems</h2>
+<p>The VAX-11/780 was the first computer to run the VMS operating system. It was announced in October 1977, and cost about $200,000, which was a lot of money in those days. Version 1.0 of VMS shipped to customers in 1978.</p>
+<p>The <img class="digital-logo" src="digital_logo.gif" width="88" height="20" alt="Digital"> internal code name for this machine was <b>Star</b>, and the code name for VMS was <b>Starlet</b>, which is why the system library searched for unresolved symbols at LINK time is called <code>SYS$LIBRARY:STARLET.OLB</code>. The venerable 11/780 was followed by the 11/750 in 1980, and the rather underpowered, but lowest cost to that date, VAX-11/730 in 1982. Clustering was unveiled in 1983, and is supported up to 96 nodes, though in fact some places succeeded in clustering over 200 machines. The first VAX workstation, the appropriately named VAXstation I, was introduced in 1984, and I remember using one of the first of these at <a href="https://home.cern/" target="_blank" rel="noopener">CERN</a> shortly after that date. There is a great <a href="https://www.hpe.com/psnow/doc/c04623368" target="_blank" rel="noopener">VAX timeline</a>, made for the 20th anniversary of VAX and VMS in 1997, showing the rest of the VAX evolution.</p>
+<p>If you want a VAX system of your own, I would suggest one of the VAXstation 4000 series of workstations, such as the VLC, the model 60 or the model 90. I find that Seagate SCSI disks work very well with these models. These workstations are small, self-contained and don’t use much power. They have a Motif/X Window user interface, are very nicely built, and fun to run. You will probably want to find a compatible CD-ROM drive from which to install VMS: it needs to support 512 byte blocks as well as 2048 to boot VAX VMS from CD, whereas Alphas can use either. I use a Matsushita CR-506 CD-ROM drive, and a Seagate ST32550N system disk. If you don’t have the space for a real VAX, the <a href="https://opensimh.org/" target="_blank" rel="noopener">Open SIMH</a> emulator will pretend to be one for you.</p>
+
+<h2 id="Alpha_Systems">3. Alpha VMS Systems</h2>
+<p>What is an Alpha ? The Alpha AXP chip was DEC’s 64-bit RISC microprocessor, designed for the next millennium (so DEC said) ! Because of its cunning PALcode, Alphas could run VMS, <img class="digital-logo" src="digital_logo.gif" width="88" height="20" alt="Digital"> Unix, Linux or Windows NT. The SRM console firmware is used if the Alpha is to boot VMS or Digital Unix, and the ARC console firmware is needed for Windows NT – assuming that you have the licences to run the software.</p>
+<p>The RISC (Reduced Instruction Set Computer) CPU has 32 integer and 32 floating point registers, all 64 bits wide, on-chip instruction and data caches, and multiple issue pipelining. To take advantage of these features the compiler has to be particularly clever in scheduling the instruction stream, which leads to the criticism from some people that RISC really stands for “Relegate the Important Stuff to the Compiler” !</p>
+<p>The Alpha chip is designed to give the most efficient memory access for <em>naturally aligned</em> data. Hence it is a good idea, when declaring structures or common blocks, to make quadwords (8 bytes) start at quadword offsets, longwords (4 bytes) start at longword offsets, and words (you guessed it – 2 bytes) start at word offsets. Occasionally this means adding padding bytes, though this can usually be avoided by declaring members in decreasing order of size. Instructions to load and store single bytes and words were added with the 21164A chip, and are supported on that and later Alpha chips.</p>
+<p>Due to economic considerations, Alpha development ended with the EV7, and Compaq, and then HP, ported VMS to Intel’s 64-bit Itanium, which HP sold as its Integrity servers. VSI has since ported VMS to x86-64, so the same VMS now runs on a fourth processor architecture.</p>
+<p>If you want an Alpha of your own, I would recommend one of the Alpha workstations, such as the Personal Workstation 433au, 500au or 600au, or the AlphaServer DS10, the DS20 or the AlphaStation XP1000 if you are feeling a bit richer. See <a href="https://www.islandco.com/" target="_blank" rel="noopener">Island Computers</a> for some great deals, and for spares and upgrades. I should perhaps add that I am not in any way affiliated to Island Computers, other than as a satisfied customer.</p>
+
+<h2 id="BBC_Micro">4. BBC Micro VMS Systems</h2>
+<figure class="screenshot">
+<img src="snapper.gif" width="160" height="131" alt="Snapper, a Pac-Man style game for the BBC Micro">
+<figcaption>Acornsoft’s Snapper, a BBC Micro game</figcaption>
+</figure>
+<p>Unfortunately, these don’t exist. A BBC Micro emulator that runs on VMS systems does, however (almost as good) ! I ported <a href="https://www.cloud9.co.uk/james/" target="_blank" rel="noopener">James Fidell’s</a> XBeeb emulator to VAX and Alpha. This can be found on my <a href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">Free Software</a> page.</p>
+<div class="clear"></div>
+
+<h2 id="VMS_Tutorial">5. VMS Tutorial</h2>
+<p>If you have never used a VMS system before, a good place to start is my <a href="index.html">VMS Tutorial</a>. It was brought up to date in 2026, and covers logging in with SSH, DCL, files, the EVE and EDT editors, the debugger, command files, object libraries and batch jobs, with example files to download. David L. Cathey’s DECUS presentation on processes stuck in RWAST is <a href="rwast.html">here too</a>, for the more adventurous.</p>
+
+<h2 id="Porting">6. Porting VMS Applications to OpenVMS</h2>
+<ol>
+<li>Wave arms about.</li>
+<li>Say “Izzy Wizzy let’s get busy” !</li>
+<li>That’s it.</li>
+</ol>
+<p>OpenVMS <em>is</em> VMS, it’s just those marketing boys trying to confuse us. Seriously though, [Open]VMS <em>does</em> conform to more of the POSIX standard than you might think.</p>
+
+<h2 id="Windows_NT">7. Windows NT and VMS</h2>
+<p>Windows NT was available for the EISA and PCI bus based Alphas. NT allegedly stands for <i>New Technology</i>, but it’s a bit suspicious that the leader of Microsoft’s Windows NT team was Dave Cutler, who contributed large parts of VMS when he worked for Digital, and if you add one to each letter of VMS, you get WNT ! Windows NT, and the versions of Windows descended from it right up to today’s, have many of the features that VMS programmers know and love, like kernel threads, mutexes, semaphores, critical sections and numerous system service calls to play with.</p>
+<p>You’ll find some Windows freeware on my <a href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">Free Software Page</a>, and more recent programs on my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. Windows NT 4.0 was the last version of Windows for the Alpha, as Compaq stopped supporting Windows on the Alpha in 1999, so a dual boot Alpha could run Windows NT 4.0 and VMS, but nothing newer. Itanium came closest to bringing the two together again: HP Integrity servers could run either OpenVMS or Windows Server, until Microsoft dropped Itanium after Windows Server 2008 R2.</p>
+
+<h2 id="Consoles">8. Switching Between the ARC and SRM Consoles</h2>
+<p>If you have an Alpha machine that you wish to swap between Windows NT and VMS, you will need to change the console to the ARC (Windows NT) or the SRM (OpenVMS) console. Island Computers used to publish excellent instructions for doing this, and sold the hardware for upgrading Personal Workstation 433a, 500a and 600a machines, which can run Windows NT or Linux, to 433au, 500au and 600au machines, which can run Windows NT, Linux, Tru64 Unix and OpenVMS. For some models of Alpha, such as the AlphaStation 255, only one console at a time can be held in flash ROM, so switching also involves reloading the firmware. Newer models like the 600au can have both resident at the same time. The OpenVMS FAQ, which used to be posted regularly to the comp.os.vms newsgroup, describes the steps for each model.</p>
+
+<h2 id="Unix">9. Unix</h2>
+<p>Digital Unix was formerly known as DEC OSF/1, since it was designed to meet the IEEE POSIX (1003) standards, intended to establish a standard operating system interface and environment based on Unix, and was endorsed by the Open Software Foundation. Compaq renamed it Tru64 UNIX, and HP ended support for it in 2012. I am not a Unix fan, as you can tell from my web pages.</p>
+
+<h2 id="Yezerski_Roper">10. Yezerski Roper</h2>
+<p>Yezerski Roper Ltd. employed a whole bunch of clever, talented people who could do just about anything with VMS and Windows. Sadly they are no more, and like Merlin, have disappeared into the Pennine Hills until such time as the land is in time of peril, and needs their magic again.</p>
+
+<h2 id="VMS_Web_Links">11. VMS Web Links</h2>
+<p>Here are a few of my favourite web pages related to VMS. Many of the ones in earlier versions of this page have long since disappeared, along with DEC.</p>
+<ul>
+<li><a href="https://vmssoftware.com/" target="_blank" rel="noopener">VMS Software Inc. (VSI)</a>, who develop and support OpenVMS today.</li>
+<li><a href="https://docs.vmssoftware.com/" target="_blank" rel="noopener">The VSI OpenVMS documentation</a>, the place to look for anything that has changed since the books below were written.</li>
+<li>VSI’s <a href="https://vmssoftware.com/community/community-license/" target="_blank" rel="noopener">Community License</a>, to run OpenVMS free of charge for learning, open source development and sharing knowledge of the system.</li>
+<li>The <a href="https://forum.vmssoftware.com/" target="_blank" rel="noopener">VSI OpenVMS forum</a>, where VMS people gather to ask and answer questions.</li>
+<li><a href="https://www.goatley.com/" target="_blank" rel="noopener">Hunter Goatley</a>, formerly of MadGoat Software, with lots of utilities and the commercial strength MX SMTP mail server.</li>
+<li><a href="https://x.com/HoffmanLabs" target="_blank" rel="noopener">HoffmanLabs</a>. Steve Hoffman was a VMS engineer at HP and a regular contributor to comp.os.vms.</li>
+<li><a href="https://www.montagar.com/" target="_blank" rel="noopener">Montagar Software</a>.</li>
+<li><a href="https://www.montagar.com/~patj/freevms.htm" target="_blank" rel="noopener">OPCOM’s VMS Hobbyist Zone</a>, with great tips for setting up a VMS system of your own.</li>
+<li><a href="https://www.openvmshobbyist.com/news.php" target="_blank" rel="noopener">OpenVMS Hobbyist</a>, which still carries community news.</li>
+<li><a href="http://www.jcameron.com/vms/" target="_blank" rel="noopener">Jeff Cameron’s OpenVMS Pages</a>, with good tips and tricks, and a sense of humour. Try Jeff’s VMS System Manager’s Quiz !</li>
+<li><a href="https://neilrieck.net/links/openvms_resources.html" target="_blank" rel="noopener">Neil Rieck’s OpenVMS Resources</a>, a big collection of links and notes.</li>
+<li><a href="http://decwarch.free.fr/" target="_blank" rel="noopener">The DECW and VMS CENA archive</a> of Motif/X Window software for VMS, including XVMSUTILS.</li>
+<li><a href="https://www.gnu.org/software/vmslib/" target="_blank" rel="noopener">The GNU on VMS project</a>.</li>
+<li><a href="http://ftp.riken.go.jp/" target="_blank" rel="noopener">RIKEN’s software archive</a>.</li>
+<li><a href="https://www.process.com/" target="_blank" rel="noopener">Process Software</a>, makers of the MultiNet TCP/IP stack for VMS.</li>
+<li><a href="https://opensimh.org/" target="_blank" rel="noopener">Open SIMH</a>, the emulator for the VAX and many other historic computers.</li>
+</ul>
+<p>Thanks to David L. Cathey of Montagar Software Concepts, I have also been able to add his DECUS presentation on how to delete a process stuck in RWAST, which I converted from PostScript to HTML. It contains numerous useful tips and information, and some example code in MACRO-32. Read David’s <i>Resource Waits in the OpenVMS Operating System</i>, also known as <a href="rwast.html">What to do when you R-WASTed by OpenVMS</a>.</p>
+
+<h2 id="Bibliography">12. Bibliography</h2>
+<p>This bibliography is based on postings to the Info-VAX mailing list by Professor David D. Miller, Arne Vajhøj and others, with additions, corrections, and formatting by Richard B. Gilbert. Some books may appear in more than one category, and many are now out of print, though most turn up second-hand. The VSI documentation above is the place for anything that has changed since they were written. This is an <b>approved Amazon.com Associates site</b>, and if you click on the linked titles below it will take you straight to the Amazon page for that book.</p>
+<h3>Introduction to VMS – for New Users</h3>
+<ul>
+<li>Hughes, Roland. <i>The Minimum You Need to Know to Be an OpenVMS Application Developer</i>. Logikal Solutions, ISBN 0-9770866-0-7</li>
+<li>Bynon, David W. and Shannon, Terry C. <a href="http://www.amazon.com/exec/obidos/ISBN=096147291X/drkara-20/" target="_blank" rel="noopener"><i>Introduction to VAX/VMS</i></a>. Cardinal Business Media</li>
+<li>Peters, James F. III and Holmay, Patrick J. <a href="http://www.amazon.com/exec/obidos/ISBN=1555582036/drkara-20/" target="_blank" rel="noopener"><i>The VMS User’s Guide</i></a>. Digital Press, 1990</li>
+<li>Sawey, Ronald M. and Stokes, Troy T. <a href="http://www.amazon.com/exec/obidos/ISBN=1555580661/drkara-20/" target="_blank" rel="noopener"><i>A Beginner’s Guide to VAX/VMS Utilities &amp; Applications</i></a>. Digital Press, 1992 (very elementary; may be suitable for readers with little or no computer experience)</li>
+<li>Sharick, Paula. <a href="http://www.amazon.com/exec/obidos/ISBN=0442002661/drkara-20/" target="_blank" rel="noopener"><i>The Essential Guide to VMS Utilities and Commands</i></a>. Van Nostrand Reinhold, ISBN 0-442-00266-1</li>
+<li>Wright, Michael. <a href="http://www.amazon.com/exec/obidos/ISBN=0898921058/drkara-20/" target="_blank" rel="noopener"><i>VAX-VMS Primer</i></a>. Contemporary Publishing Co.</li>
+</ul>
+<h3>Advanced VMS Users</h3>
+<ul>
+<li>Bynon, David W. <a href="http://www.amazon.com/exec/obidos/ISBN=0961472979/drkara-20/" target="_blank" rel="noopener"><i>Mastering VMS</i></a>. Cardinal Business Media, 1990</li>
+</ul>
+<h3>VMS System Management</h3>
+<ul>
+<li>Bates, Ken. <a href="http://www.amazon.com/exec/obidos/ISBN=1878956027/drkara-20/" target="_blank" rel="noopener"><i>VAX I/O Subsystems: Optimizing Performance</i></a>. Cardinal Business Media (formerly Professional Press)</li>
+<li>Coburn, James W. <a href="http://www.amazon.com/exec/obidos/ISBN=1555581269/drkara-20/" target="_blank" rel="noopener"><i>OpenVMS Performance Management: Tuning Techniques for OpenVMS/VAX and OpenVMS/AXP</i></a>. 2nd Edition, CBM Books</li>
+<li>Stith, Joseph. <a href="http://www.amazon.com/exec/obidos/ISBN=0442004036/drkara-20/" target="_blank" rel="noopener"><i>Introductory Guide to VMS System Management</i></a>. Van Nostrand Reinhold, 1992, ISBN 0-442-00403-6</li>
+<li>Baldwin, Lawrence. <i>OpenVMS System Management Guide</i>. Digital Press, 1995, ISBN 1-55558-143-9</li>
+<li>Ellis, Bruce. <a href="http://www.amazon.com/exec/obidos/ISBN=1878956116/drkara-20/" target="_blank" rel="noopener"><i>The Hitchhiker’s Guide to VMS Performance</i></a>. Cardinal Business Media</li>
+</ul>
+<h3>Introduction to VMS Internals</h3>
+<ul>
+<li>Ellis, Bruce. <a href="http://www.amazon.com/exec/obidos/ISBN=1878956000/drkara-20/" target="_blank" rel="noopener"><i>The Hitchhiker’s Guide to VMS</i></a>. Cardinal Business Media</li>
+<li>Levy, Henry M. and Eckhouse, Richard H. Jr. <i>Computer Programming and Architecture – The VAX</i>. Digital Press, 1989</li>
+<li>Miller, David Donald. <a href="http://www.amazon.com/exec/obidos/ISBN=1555581579/drkara-20/" target="_blank" rel="noopener"><i>VAX/VMS Operating System Concepts</i></a>. Digital Press, 1990</li>
+<li>Sewell, Wayne. <a href="http://www.amazon.com/exec/obidos/ISBN=0442004745/drkara-20/" target="_blank" rel="noopener"><i>Inside VMS: The System Manager’s and System Programmer’s Guide to VMS Internals</i></a>. Van Nostrand Reinhold, 1992, ISBN 0-442-00474-5</li>
+</ul>
+<h3>Advanced VMS Internals</h3>
+<ul>
+<li>Goldenberg, Ruth E. and Kenah, Lawrence J. <a href="http://www.amazon.com/exec/obidos/ISBN=1555580599/drkara-20/" target="_blank" rel="noopener"><i>VAX/VMS Internals and Data Structures</i></a>. Digital Press, 1991</li>
+<li>Goldenberg, Ruth E. and Saravanan, Saro. <a href="http://www.amazon.com/exec/obidos/ISBN=155558120X/drkara-20/" target="_blank" rel="noopener"><i>OpenVMS AXP Internals and Data Structures</i></a>. Digital Press, 1994</li>
+<li>Goldenberg, Ruth E. and Saravanan, Saro. <i>VMS for Alpha Platforms Internals and Data Structures, Preliminary Edition</i>. Digital Press, softcover, in three volumes: Vol. 1, 1992, ISBN 1-55558-095-5; Vol. 2, 1992, ISBN 1-55558-105-6; Vol. 3, 1993, ISBN 1-55558-109-9</li>
+<li>Hanrahan, Jamie E. and Leahy, Lee. <a href="http://www.amazon.com/exec/obidos/ISBN=0961472952/drkara-20/" target="_blank" rel="noopener"><i>VMS Advanced Device Driver Techniques</i></a>. Professional Press Books (now Cardinal Business Media), 1988</li>
+<li>Sherlock, Margie and Szubowicz, Lenny. <a href="http://www.amazon.com/exec/obidos/ISBN=1555581331/drkara-20/" target="_blank" rel="noopener"><i>Writing OpenVMS Alpha Device Drivers in C</i></a>. Digital Press, ISBN 1-55558-133-1</li>
+<li>McCoy, Kirby. <a href="http://www.amazon.com/exec/obidos/ISBN=1555580564/drkara-20/" target="_blank" rel="noopener"><i>VMS File System Internals</i></a>. Digital Press, 1990</li>
+</ul>
+<h3>DCL Books</h3>
+<ul>
+<li>Anagnostopoulos, Paul C. <i>Writing Real Programs in DCL</i>. Digital Press, 1989</li>
+<li>Leisner, K. M. and Cook, David B. <i>VAX DCL Programmer’s Reference, VMS 5</i>. Van Nostrand Reinhold, 1990</li>
+<li>Shah, Jay. <i>VAX/VMS Concepts and Facilities</i>. McGraw-Hill, 1991</li>
+</ul>
+<h3>VAX Architecture and Assembler Language</h3>
+<ul>
+<li>Brunner, Richard A. <i>VAX Architecture Reference Manual</i>. Second edition, Digital Press, 1991</li>
+<li>Frank, T. S. <i>Introduction to VAX-11 Architecture and Assembly Language</i>. Prentice-Hall, 1987</li>
+<li>Levy, Henry M. and Eckhouse, Richard H. Jr. <i>Computer Programming and Architecture – The VAX</i>. Digital Press, 1989</li>
+<li>Kapps, Charles and Stafford, Robert L. <i>VAX Assembly Language and Architecture</i>. Prindle, Weber &amp; Schmidt (PWS Publishers), 1985</li>
+<li>Sebesta, Robert W. <i>VAX Structured Assembly Language Programming</i>. Benjamin/Cummings</li>
+<li>Baase, Sara. <i>VAX-11 Assembly Language Programming</i>. Prentice-Hall, 1983</li>
+<li>Federighi, Francis D. and Reilly, Edwin D. <i>VAX Assembly Language</i>. Macmillan, 1991</li>
+</ul>
+<h3>Other VMS Books</h3>
+<ul>
+<li>De Klerk, Theo. <i>Writing VAX/VMS Applications Using Pascal</i>. Digital Press, 1991</li>
+<li>Davis, Roy G. <i>VAXcluster Principles</i>. Digital Press, 1993</li>
+<li>Merusi, Donald E. <i>Software Implementation Techniques – VMS, UNIX, OS/2 &amp; MS-DOS</i>. Digital Press, 1992. The book runs examples in parallel for all four systems – sort of a Rosetta Stone.</li>
+<li>Sethi, Joginder. <i>OpenVMS Performance Management</i>. Digital Press, 1995</li>
+<li>Shah, Jay. <i>VAX C Programming Guide</i>. McGraw-Hill, 1992</li>
+<li>Shah, Jay. <i>VAXclusters: Architecture, Programming and Management</i>. McGraw-Hill</li>
+<li>Sites, Richard L. <i>Alpha Architecture Reference Manual</i>. Digital Press, 1992, ISBN 1-55558-098-X</li>
+<li>Spencer. <i>The Complete Guide to Pathworks</i>. Cardinal Business Media (formerly Professional Press), 1993</li>
+</ul>
+<h3>Motif and X Window Books</h3>
+<ul>
+<li>Brain, Marshall. <i>Motif Programming: The Essentials... and More</i>. Digital Press</li>
+<li>Scheifler, Robert W. and Gettys, James. <i>X Window System: The Complete Reference to Xlib, X Protocol, ICCCM, XLFD – X Version 11, Release 5</i>. Digital Press</li>
+<li>Asente, Paul J. and Swick, Ralph R. <i>X Window System Toolkit: The Complete Programmer’s Guide and Specification</i>. Digital Press</li>
+<li>Rost, Randi J. <i>X and Motif Quick Reference Guide</i>. Digital Press, 1993</li>
+<li>Heller, Dan. <i>Motif Programming Manual for OSF/Motif Version 1.1</i>. O’Reilly &amp; Associates</li>
+</ul>
+<h3>Miscellaneous Books</h3>
+<ul>
+<li>Sandler, Corey and Benedict, Tom. <i>VAX to VAX</i>. John Wiley &amp; Sons, 1990</li>
+<li>Simon, Alan R. <i>Application Migration: IBM to VAX</i>. Van Nostrand Reinhold, 1992, ISBN 0-442-00146-0</li>
+<li>Pendharkar, Sumant S. and Biegel, Richard A. <i>dBASE IV for VMS and UNIX: Technical Support Approach</i>. Van Nostrand Reinhold, ISBN 0-442-00908-9</li>
+<li>Malamud, Carl. <i>Analyzing DECnet/OSI Phase V</i>. Van Nostrand Reinhold, ISBN 0-442-00375-7</li>
+<li>Weinman, David G. <i>VAX Fortran, Second Edition</i>. PWS-KENT Publishing Company</li>
+</ul>
+<p><a href="#Top_Of_Page">Back to Top</a></p>
+<p>See also <a href="index.html">Kara’s VMS Tutorial</a>, a beginner’s guide to OpenVMS and DCL, with example files for its exercises, <a href="../c_course/index.html">Kara’s C Tutorial</a>, an introduction to <span class="c-code">C</span> for programmers who already know another language, particularly DEC <span class="fortran">FORTRAN</span>, and <a href="../cpp_stl_course/index.html">Kara’s STL Tutorial</a>, a Monty Python-themed tutorial on the <span class="cplusplus">C++</span> Standard Template Library.</p>
+<hr>
+<h3 id="KLO_Software">More from KLO Software</h3>
+<p>If you have enjoyed this page, please have a look at my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. They describe a family of free Windows programs, all available from the Microsoft Store and each with its own help page: <b>BeebRFSMaker</b>, <b>BeebRFSTool</b> and <b>BeebFileUtilities</b> for BBC Micro enthusiasts, which view disk images, decode tokenised BASIC and pack files into compressed sideways ROMs; <b>KOContour</b>, which turns elevation data into contour maps; <b>KOBrot</b>, a Mandelbrot and Julia set explorer that redraws the matching Julia set live as you move the pointer; and <b>SnapDragger</b>, which tidies a folder of photographs and video clips into dated, sorted folders with an HTML contact sheet. Suggestions, bug reports and ideas for new features are always welcome.</p>
+<!-- Light/dark/automatic theme switch, shared with the KLO-Software pages.
+     KLO-Software and KLO-Tutorials are sibling folders, on disk and on Git. -->
+<script src="../../KLO-Software/KLODarkModeSwitch.js" defer></script>
+</body>
+</html>
