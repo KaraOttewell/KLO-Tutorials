@@ -105,8 +105,8 @@ figure.screenshot figcaption { font-style: italic; color: var(--note); font-size
 .dcl { color: var(--dcl); }
 .note { color: var(--note); font-style: italic; }
 
-/* The box near the top advertising the VMS Free Software page, which still
-   lives on the pottsoft WordPress site */
+/* The box near the top advertising the VMS Free Software page, which lives
+   in the sibling KLO-Software repository, at KLO-Software/pds */
 div.showcase { background: var(--showcase-background); border: 1px solid var(--showcase-edge);
                border-left: 6px solid var(--showcase-edge); border-radius: 6px; padding: 0.6em 1.1em 0.9em; margin: 1.2em 0; }
 div.showcase h2 { border-bottom: none; margin-top: 0.3em; padding-bottom: 0; }
@@ -151,8 +151,7 @@ a.showcase-button:hover { text-decoration: underline; }
 <li><b>Web Count 2.4</b> – the classic “car odometer” web page hit counter.</li>
 <li>…and <b>LiteClue</b> help bubbles for Motif, <b>GIFMerge</b>, <b>TGD and GD</b>, <b>Mandelsteg</b>, <b>MBOX</b>, <b>GIFShuf and SNOW</b>, and how to use <b>PGP from TPU</b>.</li>
 </ul>
-<p class="note">Please note: the VMS Free Software page still lives on my old WordPress site. It is in the process of being migrated to GitHub, and parts of it need updating. For example, get my PGP public key from the <a href="../../KLO-Software/index.htm#contact_info">PGP Key and Contact Information</a> section of my KLO Software page, rather than from the link on the WordPress page.</p>
-<p><a class="showcase-button" href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">Browse the VMS Free Software &#8594;</a></p>
+<p><a class="showcase-button" href="../../KLO-Software/pds/index.html">Browse the VMS Free Software &#8594;</a></p>
 </div>
 
 <h2 id="Contents">Table of Contents</h2>
@@ -178,7 +177,7 @@ a.showcase-button:hover { text-decoration: underline; }
 <h2 id="Introduction">1. Introduction</h2>
 <p>OpenVMS, or VMS as it is still affectionately known to us VMS stalwarts, is a high reliability, high security operating system, produced, if not always very well marketed, by Digital Equipment Corporation (DEC), then by Compaq and Hewlett-Packard, and since 2014 by <a href="https://vmssoftware.com/" target="_blank" rel="noopener">VMS Software Inc.</a> (VSI). Digital’s slogan for OpenVMS was “24×365”, which whilst not very catchy, is pretty accurate in what you can expect from a well configured VMS system.</p>
 <p>It is quite common for VMS sites to go a couple of <em>years</em> between reboots, power supply allowing. Due to the gradations of privilege that can be granted to users or particular images, it is fairly straightforward to create a secure, robust environment to keep your business going “24×365”. Or “5×24×52” if you’re closed at weekends.</p>
-<p>Have a look at my <a href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">VMS Free Software Page</a>, described <a href="#Free_Software">at the top of this page</a>, for various bits of software I have written for, or ported to, VMS. A list of VMS related web links, including more freeware, is <a href="#VMS_Web_Links">at the bottom of this page</a>. To see the latest information on OpenVMS, and where it is going next, look at the <a href="https://vmssoftware.com/about/roadmap/" target="_blank" rel="noopener">VSI roadmap</a>.</p>
+<p>Have a look at my <a href="../../KLO-Software/pds/index.html">VMS Free Software Page</a>, described <a href="#Free_Software">at the top of this page</a>, for various bits of software I have written for, or ported to, VMS. A list of VMS related web links, including more freeware, is <a href="#VMS_Web_Links">at the bottom of this page</a>. To see the latest information on OpenVMS, and where it is going next, look at the <a href="https://vmssoftware.com/about/roadmap/" target="_blank" rel="noopener">VSI roadmap</a>.</p>
 
 <h3 id="Running_VMS">1.1 Running VMS Yourself</h3>
 <p>If you want to run your own VMS system, VSI’s <a href="https://vmssoftware.com/community/community-license/" target="_blank" rel="noopener">Community License</a> lets you run OpenVMS, with its compilers and layered products, free of charge for learning, open source development and sharing knowledge of the system. It replaced the old hobbyist programme, under which a CD with VMS, compilers for C++, C, Pascal, BASIC, Fortran and COBOL, and licences for lots of layered products, including clustering and TCP/IP, used to cost about $30 from <a href="https://www.montagar.com/" target="_blank" rel="noopener">Montagar Software</a>. HP ended that programme in 2020. The easiest route today is to run the x86-64 version of OpenVMS in a virtual machine on your PC, though it is still great fun to run VMS on a real VAX or Alpha, and second-hand ones turn up on <a href="https://www.ebay.com/" target="_blank" rel="noopener">eBay</a>. <a href="https://www.islandco.com/" target="_blank" rel="noopener">Island Computers</a>, who once sold brand new Alphas to hobbyists for $499, still sell and support Alpha and Integrity systems.</p>
@@ -206,7 +205,7 @@ a.showcase-button:hover { text-decoration: underline; }
 <img src="snapper.gif" width="160" height="131" alt="Snapper, a Pac-Man style game for the BBC Micro">
 <figcaption>Acornsoft’s Snapper, a BBC Micro game</figcaption>
 </figure>
-<p>Unfortunately, these don’t exist. A BBC Micro emulator that runs on VMS systems does, however (almost as good) ! I ported <a href="https://www.cloud9.co.uk/james/" target="_blank" rel="noopener">James Fidell’s</a> XBeeb emulator to VAX and Alpha. This can be found on my <a href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">Free Software</a> page.</p>
+<p>Unfortunately, these don’t exist. A BBC Micro emulator that runs on VMS systems does, however (almost as good) ! I ported <a href="https://www.cloud9.co.uk/james/" target="_blank" rel="noopener">James Fidell’s</a> XBeeb emulator to VAX and Alpha. This can be found on my <a href="../../KLO-Software/pds/index.html#XBeeb">Free Software</a> page.</p>
 <div class="clear"></div>
 
 <h2 id="VMS_Tutorial">5. VMS Tutorial</h2>
@@ -222,7 +221,7 @@ a.showcase-button:hover { text-decoration: underline; }
 
 <h2 id="Windows_NT">7. Windows NT and VMS</h2>
 <p>Windows NT was available for the EISA and PCI bus based Alphas. NT allegedly stands for <i>New Technology</i>, but it’s a bit suspicious that the leader of Microsoft’s Windows NT team was Dave Cutler, who contributed large parts of VMS when he worked for Digital, and if you add one to each letter of VMS, you get WNT ! Windows NT, and the versions of Windows descended from it right up to today’s, have many of the features that VMS programmers know and love, like kernel threads, mutexes, semaphores, critical sections and numerous system service calls to play with.</p>
-<p>You’ll find some Windows freeware on my <a href="https://pottsoft.wordpress.com/pottsoft-home/karas-openvms-page/pottsoft-vms-free-software/" target="_blank" rel="noopener">Free Software Page</a>, and more recent programs on my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. Windows NT 4.0 was the last version of Windows for the Alpha, as Compaq stopped supporting Windows on the Alpha in 1999, so a dual boot Alpha could run Windows NT 4.0 and VMS, but nothing newer. Itanium came closest to bringing the two together again: HP Integrity servers could run either OpenVMS or Windows Server, until Microsoft dropped Itanium after Windows Server 2008 R2.</p>
+<p>You’ll find a WHOIS client for Windows and VMS on my <a href="../../KLO-Software/pds/index.html#WHOIS">Free Software Page</a>, and more recent programs on my <a href="../../KLO-Software/index.htm">KLO Software</a> pages. Windows NT 4.0 was the last version of Windows for the Alpha, as Compaq stopped supporting Windows on the Alpha in 1999, so a dual boot Alpha could run Windows NT 4.0 and VMS, but nothing newer. Itanium came closest to bringing the two together again: HP Integrity servers could run either OpenVMS or Windows Server, until Microsoft dropped Itanium after Windows Server 2008 R2.</p>
 
 <h2 id="Consoles">8. Switching Between the ARC and SRM Consoles</h2>
 <p>If you have an Alpha machine that you wish to swap between Windows NT and VMS, you will need to change the console to the ARC (Windows NT) or the SRM (OpenVMS) console. Island Computers used to publish excellent instructions for doing this, and sold the hardware for upgrading Personal Workstation 433a, 500a and 600a machines, which can run Windows NT or Linux, to 433au, 500au and 600au machines, which can run Windows NT, Linux, Tru64 Unix and OpenVMS. For some models of Alpha, such as the AlphaStation 255, only one console at a time can be held in flash ROM, so switching also involves reloading the firmware. Newer models like the 600au can have both resident at the same time. The OpenVMS FAQ, which used to be posted regularly to the comp.os.vms newsgroup, describes the steps for each model.</p>
